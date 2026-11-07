@@ -1,0 +1,24 @@
+{
+  "approved_figures": ["13", "10", "50", "500", "40", "1,000", "1000"],
+  "templates": [
+    {"name": "Template A", "state": "live",
+     "subject": "capacity at {{company}}",
+     "body": "Hi {{first_name}},\n\n{{ice_breaker}}\n\nWe run the bookkeeping behind a practice with 1,000 clients. Their workload dropped 40% in January.\n\nA qualified bookkeeper is £13 an hour, ten-hour minimum. No contract, no notice. One call, then it runs in the background for you.\n\nCan I ring you Thursday at 10am?\n\nSam"},
+    {"name": "Template B", "state": "live",
+     "subject": "support while you hire",
+     "body": "Hi {{first_name}},\n\n{{ice_breaker}}\n\nIf your next hire takes longer than planned, a qualified bookkeeper can cover the workload from next week at £13 an hour. We already do this for a practice with 1,000 clients. No contract, and the work runs in the background.\n\nOpen to a short call on Tuesday?\n\nSam"},
+    {"name": "Draft C", "state": "draft", "request": "Shorter, VAT deadlines",
+     "subject": "vat returns at {{company}}",
+     "body": "Hi {{first_name}},\n\n{{ice_breaker}}\n\nWe prepare VAT returns for UK practices within 48 hours, from £50 a return.\n\nWould a trial batch help?\n\nSam"}
+  ],
+  "writer": {
+    "new": {"subject": "month-end at {{company}}",
+            "body": "Hi {{first_name}},\n\n{{ice_breaker}}\n\nNot pitching you. We run month-end for a practice with 1,000 clients. Their workload dropped 40% in the first quarter.\n\nFifty hours of a qualified bookkeeper is £500, prepaid. No contract. One call, then it runs in the background for you.\n\nCan I ring you Wednesday at 2pm?\n\nSam"},
+    "improve": {"subject": "a lighter january at {{company}}",
+                "body": "Hi {{first_name}},\n\n{{ice_breaker}}\n\nA qualified bookkeeper is £13 an hour, ten-hour minimum, working in your own software.\n\nWould that help this quarter?\n\nSam"},
+    "subjects": {"subject": "cover for {{company}}",
+                 "body": "Hi {{first_name}},\n\n{{ice_breaker}}\n\nWe run the bookkeeping behind a practice with 1,000 clients. A qualified bookkeeper is £13 an hour. No contract.\n\nCan I ring you Friday at 11am?\n\nSam"},
+    "facts": {"subject": "capacity at {{company}}",
+              "body": "Hi {{first_name}},\n\n{{ice_breaker}}\n\nWe run the bookkeeping behind a practice with 1,000 clients, and cut their month-end by 35%.\n\nA qualified bookkeeper is £13 an hour. No contract.\n\nCan I ring you Monday at 9am?\n\nSam"}
+  }
+}

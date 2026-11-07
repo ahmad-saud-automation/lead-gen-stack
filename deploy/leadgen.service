@@ -1,0 +1,22 @@
+# systemd unit for a Linux server. Copy to /etc/systemd/system/leadgen.service, adjust
+# User and the two paths, then:
+#   sudo systemctl daemon-reload && sudo systemctl enable --now leadgen
+#   journalctl -u leadgen -f          # its output
+# See docs/DEPLOY.md.
+[Unit]
+Description=Lead Gen Automation Engine (engine 8771 + screens 3200)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=leadgen
+WorkingDirectory=/opt/leadgen
+ExecStart=/opt/leadgen/start-app.sh
+Environment=LEADGEN_REQUIRE_LOGIN=1
+# the site is served over HTTPS by Caddy, so the session cookie is marked Secure
+Environment=LEADGEN_SECURE_COOKIE=1
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

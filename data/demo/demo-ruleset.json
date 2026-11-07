@@ -1,0 +1,34 @@
+{
+  "id": "practices-ladder",
+  "name": "Practices ladder",
+  "template": "I noticed {company} {fact}. We {shared_ground}, and in our experience that usually means {implication}.",
+  "shared_ground": [
+    "work inside UK practice files every week",
+    "support a practice with about 1,000 clients"
+  ],
+  "rungs": [
+    {"id": "open-role", "name": "Open role", "source": "vacancies", "on": true,
+     "fact": "is hiring a {item}",
+     "implication": "client work is growing faster than the team"},
+    {"id": "award", "name": "Award", "source": "awards", "on": true,
+     "fact": "lists “{item}” on its website",
+     "implication": "new clients are arriving faster than the team can grow"},
+    {"id": "article", "name": "Article or case study", "source": "articles", "on": true,
+     "fact": "published “{item}”",
+     "implication": "the team is busy with advisory work as well as the routine returns"},
+    {"id": "sectors", "name": "Sectors served", "source": "sectors", "on": true,
+     "fact": "works with {item} clients",
+     "implication": "the busy months for those clients land at the same time"},
+    {"id": "software", "name": "Software partner", "source": "software", "on": true,
+     "fact": "runs client work on {item}",
+     "implication": "routine bookkeeping can be shared without changing systems"},
+    {"id": "story", "name": "Company story", "source": "since", "on": false,
+     "fact": "has been in practice since {item}",
+     "implication": "the client list has built up steadily over the years"}
+  ],
+  "default": [
+    {"fact": "works with local businesses", "implication": "the busy months arrive all at once"},
+    {"fact": "looks after owner-managed businesses", "implication": "deadlines bunch up in the same few weeks"},
+    {"fact": "supports clients across the region", "implication": "the team carries more routine work than it would like"}
+  ]
+}

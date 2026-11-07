@@ -1,0 +1,13 @@
+lead_id,company_name,website,town,employees,contact_1_name,contact_1_title,contact_1_email,contact_2_name,contact_2_title,contact_2_email,email,Status
+DM-001,Harbour & Vale Accountants,harbourvale.example,Bristol,14,Sarah Whitcombe,Director,sarah@harbourvale.example,,,,,Call back in January
+DM-002,Kestrel Tax Partners,kestreltax.example,Leeds,9,Daniel Okafor,Managing Partner,,,,,,
+DM-003,Brookfield Ledger Ltd,brookfieldledger.example,Norwich,22,Priya Raman,Director,,,,,,
+DM-004,Northgate Bookkeeping,northgatebooks.example,York,6,Tom Hale,Director,,Emma Clarke,Practice Manager,emma.clarke@northgatebooks.example,,
+DM-005,Millstone Accounting,millstone.example,Derby,11,Grace Lin,Director,,,,,info@millstone.example,
+DM-006,Fenwick & Day,fenwickday.example,Hull,5,Ruth Fenwick,Partner,,,,,,
+DM-007,Orchard Lane Tax,orchardlane.example,Exeter,8,Mark Ellison,Director,mark@orchardlane.example,,,,,
+DM-008,Ridgeway Payroll Services,ridgewaypayroll.example,Reading,17,Alan Shaw,Director,,,,,,
+DM-009,Ashby Clarke LLP,,Leicester,7,Joanna Ashby,Partner,,,,,,
+DM-010,Copperfield Accounts,copperfield.example,Chester,10,Helen Price,Director,,,,,,
+DM-011,Linden Practice Ltd,linden.example,Bath,4,,,,,,,,
+DM-012,Westbury Tax & Accounts,westbury.example,Swindon,19,Owen Morgan,Director,owen@westbury.example,,,,,Met at the autumn trade show

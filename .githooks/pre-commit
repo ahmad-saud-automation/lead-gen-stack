@@ -1,0 +1,21 @@
+#!/bin/sh
+# Leak scanner (workspace Git plan, lock 3): refuse any commit that stages
+# something key-shaped. Switched on once per clone with:
+#     git config core.hooksPath .githooks
+# Never bypass it with --no-verify. A false positive goes in .gitleaks.toml.
+
+GITLEAKS="${GITLEAKS:-/c/ClaudeDeps/tools/gitleaks/gitleaks.exe}"
+
+if [ ! -x "$GITLEAKS" ]; then
+    echo "pre-commit: gitleaks not found at $GITLEAKS - commit refused." >&2
+    echo "It belongs in C:/ClaudeDeps/tools/gitleaks/ (see _shared/reference/workspace-git-security-plan.md)." >&2
+    exit 1
+fi
+
+if ! "$GITLEAKS" git --pre-commit --staged --redact --no-banner --config .gitleaks.toml; then
+    echo "" >&2
+    echo "pre-commit: gitleaks did not pass (a key-shaped value, or the scan failed) - commit refused." >&2
+    echo "Keys live OUTSIDE this project, in C:/ClaudeSecrets/<project>/ or C:/ClaudeDeps/<project>/." >&2
+    echo "Unstage the file, move the key out, then commit again." >&2
+    exit 1
+fi

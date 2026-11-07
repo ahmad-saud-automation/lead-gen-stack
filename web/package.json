@@ -1,0 +1,22 @@
+{
+  "name": "leadgen-web",
+  "version": "3.0.0",
+  "private": true,
+  "description": "Next.js screens for the Lead Gen Automation Engine. Python stays the engine on 8771; this is only what you look at.",
+  "scripts": {
+    "dev": "next dev -H 127.0.0.1 -p 3200",
+    "build": "next build",
+    "start": "next start -H 127.0.0.1 -p 3200"
+  },
+  "dependencies": {
+    "next": "15.5.26",
+    "react": "19.1.1",
+    "react-dom": "19.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.2",
+    "@types/react": "19.0.2",
+    "@types/react-dom": "19.0.2",
+    "typescript": "5.7.2"
+  }
+}

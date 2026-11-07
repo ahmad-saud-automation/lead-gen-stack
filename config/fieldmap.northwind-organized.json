@@ -1,0 +1,23 @@
+{
+  "name": "Northwind Practice Campaigns - Organized (all 9 C-tabs)",
+  "note": "Field map for the 9 trigger tabs in the 'Northwind Practice Campaigns - Organized' spreadsheet (1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx): C1 Hiring, C2 Director Left, C3 Accounts Late, C4 New Director, C5 Near Retirement, C6 New Owner, C7 Xero, C8 Bureaus, C9 New Practice. Left = what the engine calls a field. Right = the real header. Read first-hand from the live sheet on 2026-10-13: all 9 tabs carry the SAME 36 headers A..AJ, and the grid is exactly 36 columns wide, so there is no room to add one - a write to a 37th column fails outright instead of being silently dropped. ⛔ This is a DIFFERENT document from the Practices sheet (1bbbbbbb...) the nine CH/Northwind lanes read, which is why every campaign using this map carries its own 'sheet_url'. final_status is mapped to enrich_status ON PURPOSE: organize.is_processable treats any non-blank value there as 'this row is done', which is exactly his selection rule (skip a row whose enrich_status is filled) for free. contact_2..5_name/title and contact_1..5_email are read by the recipe under their own header names, so they need no entry here. Deliberately absent, because the tabs have no such column: reg_number, contact_first, contact_last, contact_age, send_gate, email_type, verification_status, mv_date, alternate_emails, campaign_tag, campaign_type, gateway_provider, phone, region, industry - every one is optional and the engine skips that step.",
+  "mapping": {
+    "row_key": "lead_id",
+    "company_name": "company_name",
+    "status": "status",
+    "final_status": "enrich_status",
+    "email_status": "enrich_status",
+    "push_status": "status",
+    "website": "website",
+    "contact_name": "contact_1_name",
+    "job_title": "contact_1_title",
+    "seniority_rank": "seniority",
+    "address": "address",
+    "employees": "employees",
+    "trading_years": "trading_years",
+    "reference_email": "email",
+    "icebreaker": "icebreaker",
+    "found_email": "final_email",
+    "email_source": "final_email_source"
+  }
+}

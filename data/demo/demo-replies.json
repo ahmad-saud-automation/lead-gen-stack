@@ -1,0 +1,10 @@
+{
+  "note": "Stand-in reply inbox. A reply is returned only for a lead that was pushed in the demo.",
+  "replies": {
+    "DM-001": {"minutes_ago": 46, "message": "Yes, please send more information. Could we speak on Tuesday?"},
+    "DM-002": {"minutes_ago": 68, "message": "Not for us at the moment, thank you."},
+    "DM-003": {"minutes_ago": 90, "message": "I am out of the office until Monday 10 November."},
+    "DM-004": {"minutes_ago": 1095, "message": "I have left the company. Please contact james@northgatebooks.example instead."},
+    "DM-012": {"minutes_ago": 1500, "message": "Please remove me from your list."}
+  }
+}

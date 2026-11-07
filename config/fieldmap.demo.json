@@ -1,0 +1,18 @@
+{
+  "name": "Demo firms",
+  "note": "Field map for data/demo/demo-firms.csv (12 fake firms on .example domains). 'status' is the engine's skip memory: it points at push_status, never at the Status column, which holds the user's own notes and is never read or written by a step.",
+  "mapping": {
+    "row_key": "lead_id",
+    "company_name": "company_name",
+    "status": "push_status",
+    "website": "website",
+    "contact_name": "contact_1_name",
+    "job_title": "contact_1_title",
+    "region": "town",
+    "employees": "employees",
+    "reference_email": "email",
+    "email_status": "email_status",
+    "website_status": "website_status",
+    "push_status": "push_status"
+  }
+}

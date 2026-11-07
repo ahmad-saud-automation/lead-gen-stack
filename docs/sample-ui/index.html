@@ -1,0 +1,926 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lead Gen Engine — sample UI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* SAMPLE ONLY — fake data, nothing here talks to the engine. Same tokens as web/app/globals.css. */
+:root {
+  --paper:#f4f3ef; --surface:#fcfbf9; --white:#fff; --ink:#171a21; --body:#41454e; --muted:#686d76; --faint:#9aa0a8;
+  --coral:#ff8c6b; --coral-ink:#b0431f; --coral-wash:#fdeee8;
+  --pos:#157a5b; --pos-wash:#e5f1ec; --neg:#b0431f; --neg-wash:#fbe9e3; --warn:#8a6216; --warn-wash:#fbf1dd;
+  --line:rgba(23,26,33,.1); --line-2:rgba(23,26,33,.06); --line-str:rgba(23,26,33,.2);
+  --fd:"Inter Tight",Inter,system-ui,sans-serif; --fb:Inter,system-ui,-apple-system,"Segoe UI",sans-serif; --fm:"IBM Plex Mono",Consolas,monospace;
+  --r:14px; --r-sm:9px; --lift:0 24px 60px -30px rgba(23,26,33,.35);
+}
+:root[data-theme="dark"] {
+  --paper:#0a0e15; --surface:#121722; --white:#161c29; --ink:#e6e9ef; --body:#c5ccd8; --muted:#8d99ad; --faint:#6b7688;
+  --coral:#3b82f6; --coral-ink:#60a5fa; --coral-wash:#16233c;
+  --pos:#4ade80; --pos-wash:#12261a; --neg:#f87171; --neg-wash:#2a1415; --warn:#fbbf24; --warn-wash:#2a1f0d;
+  --line:#232b3a; --line-2:#1a2130; --line-str:#303a4d; --lift:0 24px 60px -30px rgba(0,0,0,.8);
+}
+* { box-sizing:border-box; }
+html,body { margin:0; }
+body { background:var(--paper); color:var(--body); font:14px/1.55 var(--fb); }
+a { color:var(--coral-ink); text-decoration:none; }
+a:hover { text-decoration:underline; }
+h1,h2,h3 { font-family:var(--fd); color:var(--ink); margin:0; letter-spacing:-.01em; }
+h1 { font-size:26px; font-weight:700; }
+h2 { font-size:18px; font-weight:600; }
+h3 { font-size:15px; font-weight:600; }
+.muted { color:var(--muted); }
+.small { font-size:12.5px; }
+.mono { font-family:var(--fm); font-size:12.5px; }
+
+/* ── frame ── */
+.banner { background:var(--coral-wash); color:var(--coral-ink); text-align:center; font-size:12.5px; padding:6px 12px; border-bottom:1px solid var(--line); }
+.app { display:grid; grid-template-columns:232px minmax(0,1fr); min-height:calc(100vh - 31px); }
+.side { border-right:1px solid var(--line); padding:20px 14px; display:flex; flex-direction:column; gap:4px; position:sticky; top:0; height:calc(100vh - 31px); }
+.brand { display:flex; align-items:center; gap:10px; padding:4px 10px 18px; font-family:var(--fd); font-weight:700; color:var(--ink); font-size:15px; }
+.brand i { width:30px; height:30px; border-radius:9px; background:var(--ink); color:var(--paper); display:grid; place-items:center; font-style:normal; font-size:12px; }
+.nav a { display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:10px; color:var(--body); font-weight:500; }
+.nav a:hover { background:var(--line-2); text-decoration:none; }
+.nav a.on { background:var(--white); color:var(--ink); box-shadow:0 1px 0 var(--line), 0 0 0 1px var(--line); }
+.nav a .count { margin-left:auto; font-size:11px; background:var(--neg-wash); color:var(--neg); border-radius:99px; padding:0 7px; }
+.side-foot { margin-top:auto; display:grid; gap:6px; }
+.mode-box { border:1px solid var(--line); border-radius:12px; padding:10px 12px; font-size:12.5px; }
+.main { padding:26px 34px 120px; max-width:1180px; width:100%; }
+.top { display:flex; gap:16px; align-items:flex-start; justify-content:space-between; margin-bottom:22px; flex-wrap:wrap; }
+.top p { margin:4px 0 0; color:var(--muted); max-width:640px; }
+.back { display:inline-block; font-size:13px; margin-bottom:8px; }
+svg.ic { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.75; stroke-linecap:round; stroke-linejoin:round; flex:none; }
+
+/* ── pieces ── */
+.card { background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:22px; }
+.card + .card, .stack > * + * { margin-top:14px; }
+.card-head { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:14px; }
+.card-head p { margin:3px 0 0; color:var(--muted); font-size:13px; }
+.grid4 { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; }
+.grid3 { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+.grid2 { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+.tile { background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:16px 18px; }
+.tile .lbl { color:var(--muted); font-size:12.5px; }
+.tile .big { font-family:var(--fd); font-size:26px; font-weight:700; color:var(--ink); margin-top:2px; }
+.tile .sub { font-size:12.5px; color:var(--muted); }
+.btn { display:inline-flex; align-items:center; gap:7px; border:1px solid var(--line-str); background:var(--white); color:var(--ink); border-radius:10px; padding:9px 15px; font:500 13.5px var(--fb); cursor:pointer; white-space:nowrap; }
+.btn:hover { border-color:var(--ink); text-decoration:none; }
+.btn.primary { background:var(--ink); color:var(--paper); border-color:var(--ink); }
+.btn.primary:hover { opacity:.9; }
+.btn.danger { color:var(--neg); border-color:var(--neg); background:transparent; }
+.btn.sm { padding:5px 11px; font-size:12.5px; border-radius:8px; }
+.btn.link { border:none; background:none; color:var(--coral-ink); padding:0; }
+.btn[disabled] { opacity:.45; cursor:not-allowed; }
+.row { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+.pill { display:inline-flex; align-items:center; gap:5px; border-radius:99px; padding:2px 10px; font-size:12px; font-weight:500; background:var(--line-2); color:var(--muted); white-space:nowrap; }
+.pill::before { content:""; width:7px; height:7px; border-radius:50%; background:currentColor; opacity:.8; }
+.pill.live { background:var(--pos-wash); color:var(--pos); }
+.pill.test { background:var(--warn-wash); color:var(--warn); }
+.pill.attn { background:var(--neg-wash); color:var(--neg); }
+.proposal { display:inline-block; font-size:11px; font-weight:600; color:var(--coral-ink); border:1px dashed var(--coral-ink); border-radius:6px; padding:1px 7px; vertical-align:middle; margin-left:6px; }
+.note { background:var(--line-2); border-radius:10px; padding:10px 14px; font-size:13px; }
+.note.warn { background:var(--warn-wash); color:var(--warn); }
+.note.good { background:var(--pos-wash); color:var(--pos); }
+.hr { height:1px; background:var(--line); margin:18px 0; }
+
+/* lists */
+.list { border:1px solid var(--line); border-radius:var(--r); overflow:hidden; background:var(--surface); }
+.li { display:grid; align-items:center; gap:14px; padding:14px 18px; border-top:1px solid var(--line); }
+.li:first-child { border-top:none; }
+.li:hover { background:var(--white); }
+.li .t b { color:var(--ink); }
+.li .t div { font-size:12.5px; color:var(--muted); }
+.camp-li { grid-template-columns:22px minmax(0,2.2fr) 130px 150px 150px 160px auto; }
+.handle { cursor:grab; color:var(--faint); font-size:16px; letter-spacing:-2px; user-select:none; }
+.li.dragging { opacity:.4; }
+.li.over { box-shadow:inset 0 3px 0 var(--coral); }
+.listhead { display:grid; gap:14px; padding:8px 18px; font-size:12px; color:var(--muted); }
+
+/* forms */
+.f { display:grid; gap:5px; }
+.f > label, .f > .lab { font-weight:600; color:var(--ink); font-size:13.5px; }
+.f .hint { font-size:12.5px; color:var(--muted); }
+input[type=text], input[type=number], input[type=time], input[type=password], select, textarea {
+  font:14px var(--fb); color:var(--ink); background:var(--white); border:1px solid var(--line-str); border-radius:9px; padding:8px 11px; width:100%; }
+input:focus, select:focus, textarea:focus { outline:2px solid var(--coral); outline-offset:1px; }
+.inline-sel { width:auto; display:inline-block; padding:5px 9px; }
+.inline-num { width:84px; display:inline-block; padding:5px 9px; }
+.fgrid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px 18px; }
+.sw-row { display:flex; justify-content:space-between; gap:16px; align-items:flex-start; padding:12px 0; border-top:1px solid var(--line); }
+.sw-row:first-child { border-top:none; }
+.sw-row b { color:var(--ink); display:block; }
+.sw-row span.d { font-size:12.5px; color:var(--muted); }
+.sw { appearance:none; width:40px; height:23px; border-radius:99px; background:var(--line-str); position:relative; cursor:pointer; flex:none; transition:background .15s; margin-top:2px; }
+.sw::after { content:""; position:absolute; top:3px; left:3px; width:17px; height:17px; border-radius:50%; background:var(--white); transition:left .15s; box-shadow:0 1px 2px rgba(0,0,0,.2); }
+.sw:checked { background:var(--pos); }
+.sw:checked::after { left:20px; }
+.seg { display:inline-flex; border:1px solid var(--line-str); border-radius:10px; padding:3px; background:var(--white); gap:2px; flex-wrap:wrap; }
+.seg button { border:none; background:none; padding:6px 12px; border-radius:7px; font:500 13px var(--fb); color:var(--muted); cursor:pointer; }
+.seg button.on { background:var(--ink); color:var(--paper); }
+
+/* campaign page */
+.status-card { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:18px; }
+.checks { list-style:none; padding:0; margin:10px 0 0; display:grid; gap:6px; }
+.checks li { display:flex; gap:9px; align-items:center; font-size:13.5px; }
+.checks .mk { width:20px; height:20px; border-radius:50%; display:grid; place-items:center; font-size:11px; font-weight:700; flex:none; }
+.checks .ok .mk { background:var(--pos-wash); color:var(--pos); }
+.checks .no .mk { background:var(--neg-wash); color:var(--neg); }
+.checks .todo .mk { background:var(--line-2); color:var(--muted); }
+.progress { height:8px; background:var(--line-2); border-radius:99px; overflow:hidden; margin-top:8px; }
+.progress span { display:block; height:100%; background:var(--pos); border-radius:99px; }
+.step { display:grid; grid-template-columns:34px minmax(0,1fr); gap:14px; }
+.num { width:30px; height:30px; border-radius:50%; background:var(--ink); color:var(--paper); display:grid; place-items:center; font:700 14px var(--fd); }
+.step h2 { margin-top:3px; }
+.step .q { color:var(--muted); margin:2px 0 14px; }
+.count-box { border:1px solid var(--line); background:var(--white); border-radius:12px; padding:12px 16px; display:flex; gap:22px; flex-wrap:wrap; align-items:baseline; margin-top:14px; }
+.count-box b { font-family:var(--fd); font-size:20px; color:var(--ink); }
+.filter { display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding:8px 10px; border:1px solid var(--line); border-radius:10px; background:var(--white); margin-top:8px; }
+.filter .x, .lab-row .x { margin-left:auto; border:none; background:none; color:var(--faint); cursor:pointer; font-size:16px; }
+.flash { animation:flash 1.4s ease; }
+@keyframes flash { 0%,40% { box-shadow:0 0 0 3px var(--coral); } 100% { box-shadow:0 0 0 0 transparent; } }
+details.adv { border:1px dashed var(--line-str); border-radius:var(--r); padding:0 22px; background:transparent; margin-top:14px; }
+details.adv > summary { cursor:pointer; padding:16px 0; font-family:var(--fd); font-weight:600; color:var(--ink); font-size:16px; list-style:none; }
+details.adv > summary::before { content:"▸ "; color:var(--muted); }
+details.adv[open] > summary::before { content:"▾ "; }
+details.adv[open] { padding-bottom:20px; }
+.save-bar { position:fixed; left:50%; bottom:18px; transform:translateX(-50%) translateY(120px); background:var(--ink); color:var(--paper); border-radius:14px; padding:10px 12px 10px 18px; display:flex; gap:12px; align-items:center; box-shadow:var(--lift); transition:transform .2s; z-index:20; }
+.save-bar.show { transform:translateX(-50%) translateY(0); }
+.save-bar .btn { background:transparent; color:var(--paper); border-color:rgba(255,255,255,.35); }
+.save-bar .btn.primary { background:var(--paper); color:var(--ink); }
+
+/* extra info builder */
+.builder { display:grid; grid-template-columns:240px minmax(0,1fr); gap:16px; }
+.chips { display:flex; flex-wrap:wrap; gap:6px; }
+.chip { border:1px solid var(--line-str); background:var(--white); border-radius:99px; padding:3px 10px; font-size:12.5px; cursor:grab; user-select:none; }
+.chip.calc { border-style:dashed; }
+.chip:hover { border-color:var(--ink); }
+.lab-row { display:grid; grid-template-columns:18px minmax(0,1fr) minmax(0,1.3fr) minmax(0,1fr) 20px; gap:8px; align-items:center; padding:7px 8px; border:1px solid var(--line); border-radius:10px; background:var(--white); margin-top:6px; }
+.lab-row input, .lab-row select { padding:5px 8px; font-size:13px; }
+.drop { border:1.5px dashed var(--line-str); border-radius:10px; padding:12px; text-align:center; color:var(--muted); font-size:13px; margin-top:8px; }
+.drop.over { border-color:var(--coral); color:var(--coral-ink); background:var(--coral-wash); }
+.preview { font-size:13px; background:var(--white); border:1px solid var(--line); border-radius:10px; padding:12px 14px; margin-top:12px; }
+.preview code { font-family:var(--fm); font-size:12px; background:var(--line-2); padding:1px 5px; border-radius:5px; }
+.kv { display:grid; grid-template-columns:auto 1fr; gap:3px 12px; font-size:12.5px; margin-top:6px; }
+.kv span:nth-child(odd) { color:var(--muted); font-family:var(--fm); }
+
+/* column matching */
+.map-group h3 { margin:18px 0 6px; font-size:13px; color:var(--muted); font-weight:600; text-transform:none; }
+.map-row { display:grid; grid-template-columns:minmax(0,1.3fr) 24px minmax(0,1.2fr) minmax(0,1fr) 22px; gap:10px; align-items:center; padding:9px 0; border-top:1px solid var(--line-2); }
+.map-row b { color:var(--ink); font-size:13.5px; }
+.map-row .d { font-size:12px; color:var(--muted); }
+.map-row .eg { font-size:12.5px; color:var(--muted); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.tick { color:var(--pos); font-weight:700; } .warnmark { color:var(--warn); font-weight:700; }
+
+/* finding-emails ladder */
+.presets { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+.preset { border:1.5px solid var(--line); border-radius:12px; padding:14px; cursor:pointer; background:var(--white); text-align:left; font:inherit; color:inherit; }
+.preset.on { border-color:var(--ink); box-shadow:0 0 0 1px var(--ink); }
+.preset b { display:block; color:var(--ink); font-family:var(--fd); font-size:15px; }
+.ladder { margin-top:16px; display:grid; gap:10px; }
+.rung { display:grid; grid-template-columns:30px minmax(0,1fr) auto; gap:12px; align-items:start; border:1px solid var(--line); border-radius:12px; padding:14px; background:var(--white); }
+.rung.off { opacity:.55; }
+.rung .sub { margin-top:8px; display:flex; gap:8px; align-items:center; font-size:13px; flex-wrap:wrap; }
+.cost { font-size:12px; color:var(--muted); white-space:nowrap; }
+.arrow { text-align:center; color:var(--faint); font-size:12px; margin:-4px 0; }
+
+/* wizard */
+.stepper { display:flex; gap:6px; margin-bottom:18px; flex-wrap:wrap; }
+.stepper span { padding:6px 12px; border-radius:99px; font-size:13px; background:var(--line-2); color:var(--muted); }
+.stepper span.on { background:var(--ink); color:var(--paper); }
+.stepper span.done { background:var(--pos-wash); color:var(--pos); }
+.wz { display:none; } .wz.on { display:block; }
+
+/* tables */
+table { width:100%; border-collapse:collapse; font-size:13px; }
+th { text-align:left; font-weight:500; color:var(--muted); font-size:12px; padding:8px 10px; border-bottom:1px solid var(--line); }
+td { padding:9px 10px; border-bottom:1px solid var(--line-2); color:var(--body); }
+.scroll { overflow-x:auto; }
+.tabs { display:flex; gap:4px; border-bottom:1px solid var(--line); margin-bottom:14px; }
+.tabs button { border:none; background:none; padding:9px 14px; font:500 13.5px var(--fb); color:var(--muted); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; }
+.tabs button.on { color:var(--ink); border-bottom-color:var(--ink); }
+.tabp { display:none; } .tabp.on { display:block; }
+.act-li { grid-template-columns:28px minmax(0,1fr) auto; }
+.dot { width:26px; height:26px; border-radius:50%; display:grid; place-items:center; font-size:12px; }
+.dot.ok { background:var(--pos-wash); color:var(--pos); } .dot.bad { background:var(--neg-wash); color:var(--neg); } .dot.n { background:var(--line-2); color:var(--muted); }
+.subnav { display:grid; gap:2px; align-content:start; position:sticky; top:20px; }
+.subnav a { padding:8px 12px; border-radius:9px; color:var(--body); font-weight:500; }
+.subnav a:hover { background:var(--line-2); text-decoration:none; }
+.settings-grid { display:grid; grid-template-columns:190px minmax(0,1fr); gap:22px; }
+.conn { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:12px; align-items:center; padding:14px 0; border-top:1px solid var(--line); }
+.conn:first-of-type { border-top:none; }
+.taglist { display:flex; flex-wrap:wrap; gap:6px; border:1px solid var(--line-str); border-radius:9px; padding:6px; background:var(--white); }
+.taglist span { background:var(--line-2); border-radius:6px; padding:2px 8px; font-size:12.5px; }
+.taglist input { border:none; flex:1; min-width:140px; padding:3px; }
+.page { display:none; } .page.on { display:block; }
+.drop-file { border:1.5px dashed var(--line-str); border-radius:12px; padding:22px; text-align:center; background:var(--white); }
+
+@media (max-width: 900px) {
+  .grid4 { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .grid3, .grid2, .fgrid, .presets, .builder, .settings-grid { grid-template-columns:1fr; }
+  .camp-li { grid-template-columns:22px minmax(0,1fr) auto; }
+  .camp-li .hide-m, .listhead.camp { display:none; }
+  .map-row { grid-template-columns:1fr 1fr; } .map-row .arr, .map-row .eg { display:none; }
+  .status-card { grid-template-columns:1fr; }
+  .subnav { position:static; grid-auto-flow:column; overflow-x:auto; }
+}
+@media (max-width: 760px) {
+  .app { grid-template-columns:minmax(0,1fr); }
+  .src-li { grid-template-columns:minmax(0,1fr) auto !important; }
+  .src-li > div:not(.t) { display:none; }
+  .side { position:fixed; bottom:0; top:auto; left:0; right:0; height:auto; flex-direction:row; padding:6px; border-right:none; border-top:1px solid var(--line); background:var(--surface); z-index:30; }
+  .brand, .side-foot { display:none; }
+  .nav { display:flex; width:100%; justify-content:space-around; }
+  .nav a { flex-direction:column; gap:2px; font-size:11px; padding:6px 8px; }
+  .nav a .count { display:none; }
+  .main { padding:18px 16px 110px; }
+  .lab-row { grid-template-columns:1fr; }
+  .lab-row .handle { display:none; }
+}
+</style>
+</head>
+<body>
+<div class="banner">Sample screens — fake data. Nothing here touches the real engine. Marked <span class="proposal" style="margin:0">Proposal</span> = a technical setting shown the way I suggest; decide in chat.</div>
+<div class="app">
+
+<!-- ═══════════ SIDEBAR: 5 places ═══════════ -->
+<aside class="side">
+  <div class="brand"><i>LG</i>Lead Gen Engine</div>
+  <nav class="nav">
+    <a href="#home" data-nav="home"><svg class="ic" viewBox="0 0 24 24"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"/><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"/></svg>Home</a>
+    <a href="#campaigns" data-nav="campaigns"><svg class="ic" viewBox="0 0 24 24"><path d="M13 5h8"/><path d="M13 9h5"/><path d="M13 15h8"/><path d="M13 19h5"/><path d="M3 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/><path d="M3 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/></svg>Campaigns<span class="count">1</span></a>
+    <a href="#leads" data-nav="leads"><svg class="ic" viewBox="0 0 24 24"><path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14"/><path d="M3 10h18"/><path d="M10 3v18"/></svg>Leads</a>
+    <a href="#activity" data-nav="activity"><svg class="ic" viewBox="0 0 24 24"><path d="M3 12h4l3 8l4 -16l3 8h4"/></svg>Activity</a>
+    <a href="#settings" data-nav="settings"><svg class="ic" viewBox="0 0 24 24"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065"/><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/></svg>Settings</a>
+  </nav>
+  <div class="side-foot">
+    <div class="mode-box"><b style="color:var(--ink)">Spent today</b><br>$0.05 of $5.00 limit</div>
+    <button class="btn sm" id="theme">Dark mode</button>
+  </div>
+</aside>
+
+<main class="main">
+
+<!-- ═══════════ HOME ═══════════ -->
+<section class="page" id="p-home">
+  <div class="top">
+    <div><h1>Home</h1><p>What happens today, and anything that needs you.</p></div>
+    <div class="seg" data-seg="homestate"><button class="on" data-val="day">Normal day</button><button data-val="first">First day (new user)</button></div>
+  </div>
+
+  <div data-when="homestate=first">
+    <div class="card">
+      <div class="card-head"><div><h2>Get set up</h2><p>Five short steps. The app tells you when each one is done.</p></div><b style="color:var(--ink)">2 of 5 done</b></div>
+      <div class="progress"><span style="width:40%"></span></div>
+      <ul class="checks" style="margin-top:16px; gap:12px">
+        <li class="ok"><span class="mk">✓</span><div><b style="color:var(--ink)">Connect your Google Sheet</b><div class="small muted">Connected — 5 tabs found.</div></div></li>
+        <li class="ok"><span class="mk">✓</span><div><b style="color:var(--ink)">Add your email-checking key (MillionVerifier)</b><div class="small muted">Working — 12,400 checks left.</div></div></li>
+        <li class="todo"><span class="mk">3</span><div><b style="color:var(--ink)">Add your Instantly key</b><div class="small muted">So the app can show your Instantly campaigns and send leads to them.</div></div><a class="btn sm primary" href="#settings" style="margin-left:auto">Add key</a></li>
+        <li class="todo"><span class="mk">4</span><div><b style="color:var(--ink)">Create your first campaign</b><div class="small muted">Choose which leads, how many, and where they go.</div></div><a class="btn sm" href="#new" style="margin-left:auto">Create</a></li>
+        <li class="todo"><span class="mk">5</span><div><b style="color:var(--ink)">Run a free test</b><div class="small muted">Shows what a real run would do. Nothing is spent and nothing is sent.</div></div><button class="btn sm" disabled style="margin-left:auto">Run test</button></li>
+      </ul>
+    </div>
+  </div>
+
+  <div data-when="homestate=day">
+    <div class="grid4">
+      <div class="tile"><div class="lbl">Next run</div><div class="big">Mon 09:00</div><div class="sub">Practices 2-10 staff · free test</div></div>
+      <div class="tile"><div class="lbl">Emails found this week</div><div class="big">128</div><div class="sub">from 150 leads worked on</div></div>
+      <div class="tile"><div class="lbl">Waiting to be sent</div><div class="big">5</div><div class="sub"><a href="#run">Review and send →</a></div></div>
+      <div class="tile"><div class="lbl">Spent this month</div><div class="big">$0.46</div><div class="sub">limit $5.00 per day</div></div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <div class="card-head"><div><h2>Needs you</h2><p>Each one has a button that takes you to the fix.</p></div></div>
+      <ul class="checks" style="gap:10px">
+        <li class="no"><span class="mk">!</span>“Practices 11-50 staff” has no Instantly campaign, so it cannot send.<a class="btn sm" href="#campaign" data-fix="send" style="margin-left:auto">Fix</a></li>
+        <li class="no"><span class="mk">!</span>3 leads are waiting for an ice breaker from Icebreaker Studio.<a class="btn sm" href="#run" style="margin-left:auto">See them</a></li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-head"><div><h2>Latest activity</h2></div><a href="#activity">All activity →</a></div>
+      <div class="list">
+        <a class="li act-li" href="#run"><span class="dot ok">✓</span><div class="t"><b>Practices 2-10 staff — free test</b><div>Today 09:00 · 5 leads → 4 emails found · $0.00</div></div><span class="muted small">Open</span></a>
+        <a class="li act-li" href="#run"><span class="dot ok">↗</span><div class="t"><b>Sent 2 leads to Instantly</b><div>Yesterday 14:12 · into “NORTHWIND – Practices micro”</div></div><span class="muted small">Open</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ CAMPAIGNS ═══════════ -->
+<section class="page" id="p-campaigns">
+  <div class="top">
+    <div><h1>Campaigns</h1><p>Each campaign takes the leads that fit its filters, finds their emails, and sends them to one Instantly campaign.</p></div>
+    <a class="btn primary" href="#new">+ New campaign</a>
+  </div>
+  <div class="note" style="margin-bottom:12px">If a lead fits two campaigns, the one <b>higher in this list</b> gets it. Drag <span class="handle">⋮⋮</span> to change the order.</div>
+  <div class="listhead camp camp-li" style="display:grid"><span></span><span>Campaign</span><span>Status</span><span>Leads left</span><span>Next run</span><span>Last run</span><span></span></div>
+  <div class="list" id="camp-list">
+    <div class="li camp-li" draggable="true"><span class="handle">⋮⋮</span><div class="t"><b>Practices 2-10 staff</b><div>Practices tab · staff 2–10 · not contacted before</div></div><span><span class="pill test">Free test</span></span><div class="t hide-m"><b>1,670</b><div>1,605 never contacted</div></div><div class="t hide-m"><b>Mon 09:00</b><div>every weekday</div></div><div class="t hide-m"><b>4 of 5 found</b><div>today · test</div></div><a class="btn sm" href="#campaign">Open</a></div>
+    <div class="li camp-li" draggable="true"><span class="handle">⋮⋮</span><div class="t"><b>Practices 11-50 staff</b><div>Practices tab · staff 11–50</div></div><span><span class="pill attn">Needs you</span></span><div class="t hide-m"><b>541</b><div>no Instantly campaign</div></div><div class="t hide-m"><b>—</b><div>manual</div></div><div class="t hide-m"><b>never</b><div></div></div><a class="btn sm" href="#campaign">Open</a></div>
+    <div class="li camp-li" draggable="true"><span class="handle">⋮⋮</span><div class="t"><b>London accountants</b><div>Uploaded file · london-accountants.csv</div></div><span><span class="pill live">Live</span></span><div class="t hide-m"><b>312</b><div>all new</div></div><div class="t hide-m"><b>Tue 10:00</b><div>every day</div></div><div class="t hide-m"><b>18 sent</b><div>yesterday</div></div><a class="btn sm" href="#campaign">Open</a></div>
+    <div class="li camp-li" draggable="true"><span class="handle">⋮⋮</span><div class="t"><b>Owners and leadership</b><div>Practices tab · owners and directors</div></div><span><span class="pill">Off</span></span><div class="t hide-m"><b>1,605</b><div></div></div><div class="t hide-m"><b>—</b><div>manual</div></div><div class="t hide-m"><b>never</b><div></div></div><a class="btn sm" href="#campaign">Open</a></div>
+    <div class="li camp-li" draggable="true"><span class="handle">⋮⋮</span><div class="t"><b>Partners</b><div>Practices tab · partners</div></div><span><span class="pill">Off</span></span><div class="t hide-m"><b>697</b><div></div></div><div class="t hide-m"><b>—</b><div>manual</div></div><div class="t hide-m"><b>never</b><div></div></div><a class="btn sm" href="#campaign">Open</a></div>
+  </div>
+  <p class="small muted" id="order-note" style="margin-top:10px"></p>
+</section>
+
+<!-- ═══════════ ONE CAMPAIGN ═══════════ -->
+<section class="page" id="p-campaign">
+  <a class="back" href="#campaigns">← Campaigns</a>
+  <div class="card status-card">
+    <div>
+      <div class="row"><h1 style="font-size:24px">Practices 2-10 staff</h1><span class="pill test">Free test</span></div>
+      <p class="muted" style="margin:4px 0 0">Next run Mon 6 Oct 09:00 · reads the <b>Practices</b> tab of your Google Sheet</p>
+      <div style="margin-top:14px"><b style="color:var(--ink)">Ready to go live: 4 of 5</b><div class="progress" style="max-width:360px"><span style="width:80%"></span></div></div>
+      <ul class="checks">
+        <li class="ok"><span class="mk">✓</span>Leads found: 1,670 fit the filters</li>
+        <li class="ok"><span class="mk">✓</span>Every column it needs is matched</li>
+        <li class="ok"><span class="mk">✓</span>A free test ran today without problems</li>
+        <li class="ok"><span class="mk">✓</span>Email checking is connected</li>
+        <li class="no"><span class="mk">✕</span>No Instantly campaign chosen <button class="btn sm" data-fix="send">Fix</button></li>
+      </ul>
+    </div>
+    <div style="display:grid; gap:8px; align-content:start; min-width:240px">
+      <label class="row" style="justify-content:space-between; font-weight:600; color:var(--ink)">Campaign is on <input type="checkbox" class="sw" checked></label>
+      <button class="btn primary" data-toast="Free test started — nothing is spent or sent.">Run a free test</button>
+      <button class="btn" data-toast="Sample: a live run asks you to confirm the cost first.">Run live…</button>
+      <a class="btn" href="#run">Send 4 found leads to Instantly</a>
+      <span class="small muted">A live run takes 50 leads and costs about <b>$0.18</b>.</span>
+    </div>
+  </div>
+
+  <!-- 1 WHO -->
+  <div class="card step" id="sec-who" style="margin-top:14px">
+    <span class="num">1</span>
+    <div>
+      <h2>Who <span class="proposal">Proposal</span></h2>
+      <p class="q">Which leads does this campaign take?</p>
+      <div class="fgrid" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+        <div class="f"><label>Lead source</label><select class="track"><option>Google Sheet → Practices (21,714 rows)</option><option>Google Sheet → Construction</option><option>Uploaded → london-accountants.csv</option></select><span class="hint">Where the leads come from. Add more on the <a href="#leads">Leads</a> page.</span></div>
+        <div class="f"><label>A lead must match</label><div><div class="seg" data-seg="match"><button class="on">all of these</button><button>any of these</button></div></div><span class="hint">Use “all” to narrow down, “any” to widen.</span></div>
+      </div>
+      <div style="margin-top:14px"><b style="color:var(--ink)">Include leads where…</b></div>
+      <div id="filters">
+        <div class="filter"><select class="inline-sel track"><option>Staff count</option><option>Job title</option><option>Seniority</option><option>Region</option></select><select class="inline-sel track"><option>is between</option><option>is</option><option>is not</option><option>contains</option><option>is more than</option><option>is less than</option><option>is empty</option><option>is not empty</option><option>is one of</option><option>is older than (days)</option></select><input class="inline-num track" type="number" value="2"> and <input class="inline-num track" type="number" value="10"><button class="x" title="Remove">✕</button></div>
+        <div class="filter"><select class="inline-sel track"><option>Already contacted by Fabrikam</option></select><select class="inline-sel track"><option>is not</option><option>is</option></select><select class="inline-sel track"><option>yes</option><option>no</option></select><button class="x" title="Remove">✕</button></div>
+        <div class="filter"><select class="inline-sel track"><option>OK to send</option></select><select class="inline-sel track"><option>is</option></select><select class="inline-sel track"><option>yes</option><option>no</option></select><button class="x" title="Remove">✕</button></div>
+      </div>
+      <div class="row" style="margin-top:8px"><button class="btn sm" id="add-filter">+ Add a filter</button><button class="btn sm">+ Never include leads where…</button></div>
+      <div class="row" style="margin-top:14px"><b style="color:var(--ink)">Best leads first:</b> sort by <select class="inline-sel track"><option>Seniority</option><option>Staff count</option><option>Years trading</option></select><select class="inline-sel track"><option>owners first</option><option>most senior last</option></select></div>
+      <div class="count-box"><span><b>1,670</b> leads match</span><span><b>1,605</b> never contacted</span><span class="muted">Each run takes the best 50 of them.</span></div>
+    </div>
+  </div>
+
+  <!-- 2 HOW MANY -->
+  <div class="card step" id="sec-many">
+    <span class="num">2</span>
+    <div>
+      <h2>How many</h2>
+      <p class="q">How fast should it work?</p>
+      <div class="fgrid">
+        <div class="f"><label>Leads per run</label><input type="number" value="50" class="track"><span class="hint">How many leads one run works on.</span></div>
+        <div class="f"><label>Leads per day</label><input type="number" value="100" class="track"><span class="hint">Stops after this many in a day. 0 = no limit.</span></div>
+        <div class="f"><label>Most it may spend per run</label><input type="text" value="$2.00" class="track"><span class="hint">The run stops before it costs more.</span></div>
+      </div>
+      <div class="note" style="margin-top:14px">At 50 per run, a live run costs about <b>$0.18</b> (email checks). At 100 a day: about <b>$0.36 a day</b>.</div>
+    </div>
+  </div>
+
+  <!-- 3 SEND TO -->
+  <div class="card step" id="sec-send">
+    <span class="num">3</span>
+    <div>
+      <h2>Send to</h2>
+      <p class="q">Where do the found leads go?</p>
+      <div class="fgrid" style="grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)">
+        <div class="f"><label>Instantly campaign</label><select class="track" id="inst-sel"><option value="">— choose one —</option><option>NORTHWIND – Practices micro (Sept)</option><option>NORTHWIND – Practices small</option><option>CONTOSO – SMEs London</option></select><span class="hint">The list comes from your Instantly account. <button class="btn link small">Refresh</button> · <button class="btn link small">Paste an ID instead</button></span></div>
+      </div>
+      <div style="margin-top:10px">
+        <div class="sw-row"><div><b>Send to Instantly automatically</b><span class="d">Off = you review each batch first, on the run's page. Turn on only when you trust the campaign.</span></div><input type="checkbox" class="sw track"></div>
+        <div class="sw-row"><div><b>Update my Google Sheet with the results</b><span class="d">Writes the email found, its check result and “sent” onto each row, so nobody contacts them twice.</span></div><input type="checkbox" class="sw track" checked></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4 WHEN -->
+  <div class="card step" id="sec-when">
+    <span class="num">4</span>
+    <div>
+      <h2>When</h2>
+      <p class="q">Should it run by itself?</p>
+      <div class="sw-row" style="border:none; padding-top:0"><div><b>Run by itself</b><span class="d">Off = only when you press Run.</span></div><input type="checkbox" class="sw track" checked></div>
+      <div class="row" style="font-size:15px; color:var(--ink)">Run <select class="inline-sel track"><option>every weekday</option><option>every day</option><option>on chosen days</option><option>every few hours</option><option>every few minutes</option></select> at <input type="time" class="inline-num track" value="09:00" style="width:110px"></div>
+      <div class="fgrid" style="grid-template-columns:minmax(0,1fr) minmax(0,1fr); margin-top:14px">
+        <div class="f"><span class="lab">Scheduled runs are</span><div><div class="seg" data-seg="schedmode"><button class="on">Free tests</button><button>Live (spends credits)</button></div></div></div>
+        <div class="f"><span class="lab">Run it from</span><div><div class="seg" data-seg="via"><button class="on">The app (recommended)</button><button>Windows</button></div></div><span class="hint">The app works on any server. Windows works even when the app is closed.</span></div>
+      </div>
+      <div class="note" style="margin-top:14px">Next runs: <b>Mon 6 Oct 09:00</b> · Tue 7 Oct 09:00 · Wed 8 Oct 09:00</div>
+    </div>
+  </div>
+
+  <!-- ADVANCED -->
+  <details class="adv" id="adv">
+    <summary>Advanced settings <span class="muted small" style="font-weight:400">— extra info for Instantly, Instantly safety, sheet label, delete</span></summary>
+
+    <div class="card">
+      <div class="card-head"><div><h3>Extra info sent to Instantly <span class="proposal">Proposal</span></h3><p>Each line becomes a <code style="font-family:var(--fm)">{{variable}}</code> you can use in your Instantly emails. Drag a column from the left onto the list, or drag ⋮⋮ to reorder.</p></div></div>
+      <div class="builder">
+        <div>
+          <div class="small muted" style="margin-bottom:6px">Columns in your sheet</div>
+          <div class="chips" id="col-chips">
+            <span class="chip" draggable="true" data-col="City">City</span><span class="chip" draggable="true" data-col="Website">Website</span><span class="chip" draggable="true" data-col="Staff count">Staff count</span><span class="chip" draggable="true" data-col="Job title">Job title</span><span class="chip" draggable="true" data-col="Region">Region</span><span class="chip" draggable="true" data-col="Years trading">Years trading</span><span class="chip" draggable="true" data-col="Trigger family">Trigger family</span><span class="chip" draggable="true" data-col="Evidence source">Evidence source</span>
+          </div>
+          <div class="small muted" style="margin:12px 0 6px">Worked out by the app</div>
+          <div class="chips">
+            <span class="chip calc" draggable="true" data-col="Seniority tier (worked out)">Seniority tier</span><span class="chip calc" draggable="true" data-col="Company size band (worked out)">Company size band</span>
+          </div>
+          <div class="small muted" style="margin:12px 0 6px">Same text for everyone</div>
+          <div class="chips"><span class="chip calc" draggable="true" data-col="Fixed text">Fixed text…</span></div>
+        </div>
+        <div>
+          <div class="lab-row" style="background:transparent; border:none; font-size:12px; color:var(--muted); padding-bottom:0"><span></span><span>Name in Instantly</span><span>Value comes from</span><span>If it's empty</span><span></span></div>
+          <div id="labels"></div>
+          <div class="drop" id="drop">Drop a column here to send it to Instantly</div>
+          <div class="preview" id="lab-preview"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Instantly safety</h3>
+      <div class="fgrid" style="margin-top:12px">
+        <div class="f"><label>Do-not-contact list in Instantly</label><select><option>Fabrikam global blocklist</option><option>— none —</option></select><span class="hint">Instantly refuses any lead on this list.</span></div>
+        <div class="f"><label>Also add leads to a list</label><select><option>— none —</option><option>Northwind – all practices</option></select></div>
+      </div>
+      <div style="margin-top:10px"><span class="lab" style="font-weight:600; color:var(--ink)">Don't add a lead that is already…</span>
+        <div class="row" style="margin-top:6px"><label class="row"><input type="checkbox" checked> anywhere in my Instantly</label><label class="row"><input type="checkbox" checked> in this campaign</label><label class="row"><input type="checkbox"> in that list</label></div></div>
+    </div>
+
+    <div class="card">
+      <h3>Labels and identity</h3>
+      <div class="fgrid" style="margin-top:12px">
+        <div class="f"><label>Name written in the sheet's “Campaign Type” column</label><input type="text" value="northwind-size-micro"><span class="hint">So you can see which campaign handled a row.</span></div>
+        <div class="f"><label>Column matching used</label><div class="note">Practices matching · <a href="#source">edit on the Leads page</a></div></div>
+        <div class="f"><label>Internal ID</label><div class="mono" style="padding-top:8px">northwind-size-micro</div><span class="hint">Fixed. History and the sheet record it.</span></div>
+      </div>
+      <div class="row" style="margin-top:16px"><button class="btn">Duplicate campaign</button><button class="btn danger">Delete campaign…</button></div>
+    </div>
+  </details>
+</section>
+
+<!-- ═══════════ NEW CAMPAIGN WIZARD ═══════════ -->
+<section class="page" id="p-new">
+  <a class="back" href="#campaigns">← Campaigns</a>
+  <div class="top"><div><h1>New campaign</h1><p>Four short steps. You can change everything later, and it starts with a free test.</p></div></div>
+  <div class="stepper" id="stepper"><span>1 · Who</span><span>2 · How many</span><span>3 · Send to</span><span>4 · When</span><span>5 · Review</span></div>
+  <div class="card">
+    <div class="wz" data-wz="1">
+      <h2>Who should this campaign contact?</h2>
+      <div class="fgrid" style="margin-top:14px; grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+        <div class="f"><label>Name</label><input type="text" placeholder="e.g. Practices 51-200 staff"></div>
+        <div class="f"><label>Lead source</label><select><option>Google Sheet → Practices</option><option>Uploaded → london-accountants.csv</option></select></div>
+      </div>
+      <div style="margin-top:14px"><b style="color:var(--ink)">Include leads where…</b></div>
+      <div class="filter"><select class="inline-sel"><option>Staff count</option></select><select class="inline-sel"><option>is between</option></select><input class="inline-num" type="number" value="51"> and <input class="inline-num" type="number" value="200"></div>
+      <button class="btn sm" style="margin-top:8px">+ Add a filter</button>
+      <div class="count-box"><span><b>288</b> leads match</span><span class="muted">Start broad; you can narrow it after the test.</span></div>
+    </div>
+    <div class="wz" data-wz="2">
+      <h2>How fast should it work?</h2>
+      <div class="fgrid" style="margin-top:14px">
+        <div class="f"><label>Leads per run</label><input type="number" value="50"><span class="hint">Start small: 50.</span></div>
+        <div class="f"><label>Leads per day</label><input type="number" value="100"></div>
+        <div class="f"><label>Most it may spend per run</label><input type="text" value="$2.00"></div>
+      </div>
+      <div class="note" style="margin-top:14px">About <b>$0.18</b> per live run of 50.</div>
+    </div>
+    <div class="wz" data-wz="3">
+      <h2>Where should the leads go?</h2>
+      <div class="f" style="margin-top:14px; max-width:460px"><label>Instantly campaign</label><select><option>— choose one —</option><option>NORTHWIND – Practices medium</option></select><span class="hint">Not there yet? Create it in Instantly, then press Refresh. You can also leave this for later — the free test still works.</span></div>
+      <div class="sw-row" style="margin-top:10px"><div><b>Send automatically</b><span class="d">Leave off for now: you'll review the first batches yourself.</span></div><input type="checkbox" class="sw"></div>
+    </div>
+    <div class="wz" data-wz="4">
+      <h2>Should it run by itself?</h2>
+      <div class="row" style="margin-top:14px; font-size:15px; color:var(--ink)"><label class="row"><input type="radio" name="wzr" checked> Only when I press Run</label></div>
+      <div class="row" style="margin-top:8px; font-size:15px; color:var(--ink)"><label class="row"><input type="radio" name="wzr"> Run</label><select class="inline-sel"><option>every weekday</option></select> at <input type="time" class="inline-num" value="09:00" style="width:110px"></div>
+    </div>
+    <div class="wz" data-wz="5">
+      <h2>Ready to create</h2>
+      <p class="muted">Check the sentence below. It is exactly what the campaign will do.</p>
+      <div class="note" style="font-size:15px; line-height:1.7; color:var(--ink)">Take leads from <b>Practices</b> where <b>staff count is 51–200</b> (288 leads), <b>50 per run</b>, at most <b>100 a day</b> and <b>$2.00 a run</b>, and send them to <b>no Instantly campaign yet</b>. Runs <b>only when you press Run</b>.</div>
+      <ul class="checks" style="margin-top:14px">
+        <li class="ok"><span class="mk">✓</span>Every column it needs is matched</li>
+        <li class="no"><span class="mk">!</span>No Instantly campaign yet — fine for a test, needed before going live</li>
+      </ul>
+    </div>
+    <div class="row" style="justify-content:space-between; margin-top:22px">
+      <button class="btn" id="wz-back">Back</button>
+      <div class="row"><button class="btn" id="wz-create" style="display:none">Create only</button><button class="btn primary" id="wz-next">Next</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ LEADS ═══════════ -->
+<section class="page" id="p-leads">
+  <div class="top">
+    <div><h1>Leads</h1><p>Where your leads come from: tabs of your Google Sheet, and files you upload.</p></div>
+    <button class="btn primary" id="upload-btn">+ Upload a CSV</button>
+  </div>
+  <div class="drop-file" id="upload-box" style="display:none; margin-bottom:14px"><b style="color:var(--ink)">Drop a CSV here, or click to choose</b><div class="small muted">Nothing is spent by uploading. You'll see what's inside before any campaign uses it.</div></div>
+  <div class="note good" style="margin-bottom:12px">Google Sheet connected: “NORTHWIND Leads” · 5 tabs</div>
+  <div class="list">
+    <a class="li src-li" href="#source" style="grid-template-columns:minmax(0,1fr) 150px 170px auto"><div class="t"><b>Practices</b><div>Google Sheet tab · 21,714 rows</div></div><div class="small">Used by 4 campaigns</div><div class="small"><span class="tick">✓</span> 14 of 14 columns matched</div><span class="btn sm">Open</span></a>
+    <a class="li src-li" href="#source" style="grid-template-columns:minmax(0,1fr) 150px 170px auto"><div class="t"><b>Construction</b><div>Google Sheet tab · 3,904 rows</div></div><div class="small muted">Not used yet</div><div class="small"><span class="tick">✓</span> 12 of 14 matched</div><span class="btn sm">Open</span></a>
+    <a class="li src-li" href="#source" style="grid-template-columns:minmax(0,1fr) 150px 170px auto"><div class="t"><b>london-accountants.csv</b><div>Uploaded 2 Oct · 312 rows · never written back to</div></div><div class="small">Used by 1 campaign</div><div class="small"><span class="warnmark">!</span> 9 of 14 matched</div><span class="btn sm">Open</span></a>
+  </div>
+</section>
+
+<!-- ═══════════ ONE LEAD SOURCE ═══════════ -->
+<section class="page" id="p-source">
+  <a class="back" href="#leads">← Leads</a>
+  <div class="top"><div><h1>Practices</h1><p>Google Sheet tab · read live each time a campaign runs.</p></div><button class="btn">Re-check now</button></div>
+  <div class="grid4">
+    <div class="tile"><div class="lbl">Rows</div><div class="big">21,714</div></div>
+    <div class="tile"><div class="lbl">A campaign could use</div><div class="big">20,991</div><div class="sub">before its own filters</div></div>
+    <div class="tile"><div class="lbl">Left out</div><div class="big">723</div><div class="sub">132 repeats · 4 do-not-contact · 10 done before · 577 no company</div></div>
+    <div class="tile"><div class="lbl">Ice breakers written</div><div class="big">2,733</div><div class="sub">from Icebreaker Studio</div></div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="card-head"><div><h2>Column matching <span class="proposal">Proposal</span></h2><p>Tell the app which of your columns holds what. Matched automatically — change one only if it's wrong.</p></div><span class="note good">12 of 14 matched automatically</span></div>
+    <div class="map-group"><h3>About the company</h3>
+      <div class="map-row"><div><b>Company name</b><div class="d">Needed</div></div><span class="arr muted">→</span><select><option>Company Name</option></select><span class="eg">e.g. Smith &amp; Co</span><span class="tick">✓</span></div>
+      <div class="map-row"><div><b>Website</b><div class="d">Without it the app can't guess addresses</div></div><span class="arr muted">→</span><select><option>Clean Website Domain</option></select><span class="eg">e.g. smithco.co.uk</span><span class="tick">✓</span></div>
+      <div class="map-row"><div><b>Company number</b><div class="d">Optional · spots the same firm twice</div></div><span class="arr muted">→</span><select><option>— not in my sheet —</option><option>Company Number</option></select><span class="eg"></span><span class="warnmark">?</span></div>
+      <div class="map-row"><div><b>Staff count</b><div class="d">Optional · for filters</div></div><span class="arr muted">→</span><select><option>employees</option></select><span class="eg">e.g. 8</span><span class="tick">✓</span></div>
+    </div>
+    <div class="map-group"><h3>About the person</h3>
+      <div class="map-row"><div><b>Person to email</b><div class="d">Full name</div></div><span class="arr muted">→</span><select><option>Director Name</option></select><span class="eg">e.g. Ian Smith</span><span class="tick">✓</span></div>
+      <div class="map-row"><div><b>Job title</b><div class="d">Also sent to Instantly</div></div><span class="arr muted">→</span><select><option>Job Title</option></select><span class="eg">e.g. Director</span><span class="tick">✓</span></div>
+      <div class="map-row"><div><b>Seniority</b><div class="d">If set, the app trusts it to pick the best person</div></div><span class="arr muted">→</span><select><option>seniority_label</option></select><span class="eg">e.g. owner</span><span class="tick">✓</span></div>
+    </div>
+    <div class="map-group"><h3>About the email</h3>
+      <div class="map-row"><div><b>Email already found</b><div class="d">Used first — the cheapest source</div></div><span class="arr muted">→</span><select><option>Found Email</option></select><span class="eg">e.g. ian@smithco.co.uk</span><span class="tick">✓</span></div>
+      <div class="map-row"><div><b>OK to send?</b><div class="d">Must say “yes” before anything is sent</div></div><span class="arr muted">→</span><select><option>send_ready</option></select><span class="eg">e.g. yes</span><span class="tick">✓</span></div>
+      <div class="map-row"><div><b>Ice breaker</b><div class="d">The line Icebreaker Studio wrote</div></div><span class="arr muted">→</span><select><option>Ice Breaker</option></select><span class="eg">e.g. Saw your new office…</span><span class="tick">✓</span></div>
+    </div>
+    <div class="map-group"><h3>Keeping track</h3>
+      <div class="map-row"><div><b>Unique ID</b><div class="d">One per row, never repeats</div></div><span class="arr muted">→</span><select><option>lead_id</option></select><span class="eg">e.g. p-18192afad8</span><span class="tick">✓</span></div>
+      <div class="map-row"><div><b>Done / not done</b><div class="d">Blank = not done yet</div></div><span class="arr muted">→</span><select><option>Status</option></select><span class="eg">e.g. (blank)</span><span class="tick">✓</span></div>
+    </div>
+    <details class="adv" style="margin-top:16px"><summary>12 more: columns the app writes results into — matched automatically</summary>
+      <p class="small muted">Verification result, email source, date checked, other addresses found, Campaign Type… Change only if your sheet uses different names.</p>
+    </details>
+  </div>
+
+  <div class="card">
+    <h2>First rows</h2>
+    <div class="scroll" style="margin-top:10px"><table>
+      <tr><th>Company Name</th><th>Clean Website Domain</th><th>Director Name</th><th>employees</th><th>send_ready</th></tr>
+      <tr><td>Smith &amp; Co</td><td>smithco.co.uk</td><td>Ian Smith</td><td>8</td><td>yes</td></tr>
+      <tr><td>Vertex Ltd</td><td>vertex.co.uk</td><td>Carl Elder</td><td>14</td><td>yes</td></tr>
+      <tr><td>Orbit Ltd</td><td>orbit.co.uk</td><td>Amy Poole</td><td>5</td><td>no</td></tr>
+    </table></div>
+  </div>
+</section>
+
+<!-- ═══════════ ACTIVITY ═══════════ -->
+<section class="page" id="p-activity">
+  <div class="top"><div><h1>Activity</h1><p>Every run and every send, newest first. Open one to see each lead.</p></div><button class="btn">Download as CSV</button></div>
+  <div class="row" style="margin-bottom:12px"><div class="seg" data-seg="actf"><button class="on">All</button><button>Runs</button><button>Sends to Instantly</button><button>Problems</button></div><input type="text" placeholder="Search a company or email…" style="max-width:280px"></div>
+  <div class="list">
+    <a class="li act-li" href="#run"><span class="dot ok">✓</span><div class="t"><b>Practices 2-10 staff — free test</b><div>Today 09:00 · 5 leads → 4 emails found, 1 without · $0.00</div></div><span class="muted small">Open</span></a>
+    <a class="li act-li" href="#run"><span class="dot ok">↗</span><div class="t"><b>Sent 18 leads to Instantly</b><div>Yesterday 10:04 · London accountants → “CONTOSO – SMEs London”</div></div><span class="muted small">Open</span></a>
+    <a class="li act-li" href="#run"><span class="dot ok">✓</span><div class="t"><b>London accountants — live run</b><div>Yesterday 10:00 · 25 leads → 18 emails found · $0.09</div></div><span class="muted small">Open</span></a>
+    <a class="li act-li" href="#settings"><span class="dot bad">!</span><div class="t"><b>Icypeas key was refused</b><div>Sat 4 Oct · 3 lookups skipped. Fix it in Settings → Connections.</div></div><span class="muted small">Fix</span></a>
+    <a class="li act-li" href="#run"><span class="dot n">–</span><div class="t"><b>Practices 2-10 staff — stopped by you</b><div>Fri 3 Oct · 12 of 50 leads done · $0.04</div></div><span class="muted small">Open</span></a>
+  </div>
+</section>
+
+<!-- ═══════════ ONE RUN ═══════════ -->
+<section class="page" id="p-run">
+  <a class="back" href="#activity">← Activity</a>
+  <div class="top"><div><h1>Practices 2-10 staff — free test</h1><p>Today 09:00 · finished in 41 seconds · nothing was spent or sent.</p></div></div>
+  <div class="grid4">
+    <div class="tile"><div class="lbl">Leads worked on</div><div class="big">5</div></div>
+    <div class="tile"><div class="lbl">Emails found</div><div class="big">4</div><div class="sub">all checked and valid</div></div>
+    <div class="tile"><div class="lbl">No email found</div><div class="big">1</div><div class="sub">no website to guess from</div></div>
+    <div class="tile"><div class="lbl">Cost</div><div class="big">$0.00</div><div class="sub">free test</div></div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="tabs" data-tabs="run"><button class="on" data-t="res">Leads (5)</button><button data-t="send">Send to Instantly</button><button data-t="log">Step by step</button></div>
+    <div class="tabp on" data-tp="res"><div class="scroll"><table>
+      <tr><th>Company</th><th>Person</th><th>Email</th><th>Result</th></tr>
+      <tr><td>Smith &amp; Co</td><td>Ian Smith</td><td class="mono">ian@smithco.co.uk</td><td><span class="pill live">Ready to send</span></td></tr>
+      <tr><td>Vertex Ltd</td><td>Carl Elder</td><td class="mono">carl.elder@vertex.co.uk</td><td><span class="pill live">Ready to send</span></td></tr>
+      <tr><td>Peak Advisers</td><td>Jane Clark</td><td class="mono">jane@peak.co.uk</td><td><span class="pill test">Waiting for an ice breaker</span></td></tr>
+      <tr><td>Quill &amp; Ledger</td><td>Omar Khan</td><td class="mono">o.khan@quill.co.uk</td><td><span class="pill live">Ready to send</span></td></tr>
+      <tr><td>Orbit Ltd</td><td>Amy Poole</td><td class="muted">—</td><td><span class="pill">No email found</span></td></tr>
+    </table></div></div>
+    <div class="tabp" data-tp="send">
+      <div class="note">3 leads are ready. 1 is waiting for an ice breaker and will stay back until Icebreaker Studio writes one.</div>
+      <div class="preview"><b style="color:var(--ink)">What Instantly gets for Smith &amp; Co</b><div class="kv"><span>email</span><span>ian@smithco.co.uk</span><span>first name</span><span>Ian</span><span>company</span><span>Smith &amp; Co</span><span>Address</span><span>London</span><span>size_band</span><span>micro</span></div></div>
+      <div class="row" style="margin-top:14px"><span class="muted">Into: <b style="color:var(--ink)">NORTHWIND – Practices micro (Sept)</b></span><button class="btn primary" style="margin-left:auto" data-toast="Sample: this asks one last time, then sends 3 leads.">Send 3 leads to Instantly</button></div>
+    </div>
+    <div class="tabp" data-tp="log"><div class="list">
+      <div class="li act-li"><span class="dot ok">✓</span><div class="t"><b>Smith &amp; Co — email already in your sheet</b><div>09:00:04 · checked by MillionVerifier: valid</div></div><span></span></div>
+      <div class="li act-li"><span class="dot ok">✓</span><div class="t"><b>Vertex Ltd — address guessed</b><div>09:00:11 · tried 3 guesses, carl.elder@ was valid</div></div><span></span></div>
+      <div class="li act-li"><span class="dot n">–</span><div class="t"><b>Orbit Ltd — no website</b><div>09:00:19 · nothing to guess from; Icypeas found nothing</div></div><span></span></div>
+    </div></div>
+  </div>
+</section>
+
+<!-- ═══════════ SETTINGS ═══════════ -->
+<section class="page" id="p-settings">
+  <div class="top"><div><h1>Settings</h1><p>Set once, then left alone. The rare ones are under Advanced.</p></div><button class="btn primary" data-toast="Settings saved.">Save settings</button></div>
+  <div class="settings-grid">
+    <nav class="subnav"><a href="#settings" data-jump="s-conn">Connections</a><a href="#settings" data-jump="s-find">Finding emails</a><a href="#settings" data-jump="s-limits">Spending limits</a><a href="#settings" data-jump="s-safety">Lead safety</a><a href="#settings" data-jump="s-login">Login</a><a href="#settings" data-jump="s-adv">Advanced</a></nav>
+    <div class="stack">
+
+      <div class="card" id="s-conn">
+        <h2>Connections</h2><p class="muted small" style="margin:4px 0 6px">Each one has a Test button. A test never spends credits.</p>
+        <div class="conn"><div><b style="color:var(--ink)">Google Sheet</b><div class="small muted">“NORTHWIND Leads” · Google key file chosen</div></div><div class="row"><span class="tick">✓ Connected</span><button class="btn sm" data-test>Test</button><button class="btn sm">Change</button></div></div>
+        <div class="conn"><div><b style="color:var(--ink)">Instantly</b><div class="small muted">Where found leads are sent</div></div><div class="row"><span class="muted small">Not added</span><button class="btn sm primary">Add key</button></div></div>
+        <div class="conn"><div><b style="color:var(--ink)">MillionVerifier</b><div class="small muted">Checks every email before it's sent</div></div><div class="row"><span class="tick">✓ ••••a91c</span><button class="btn sm" data-test>Test</button><button class="btn sm">Change</button></div></div>
+        <div class="conn"><div><b style="color:var(--ink)">Icypeas</b><div class="small muted">Finds emails from a name + company</div></div><div class="row"><span class="warnmark small">! Refused on 4 Oct</span><button class="btn sm" data-test>Test</button><button class="btn sm">Change</button></div></div>
+        <div class="conn"><div><b style="color:var(--ink)">Anymailfinder</b><div class="small muted">A second finder (optional)</div></div><div class="row"><span class="muted small">Not added</span><button class="btn sm">Add key</button></div></div>
+      </div>
+
+      <div class="card" id="s-find">
+        <h2>Finding emails <span class="proposal">Proposal</span></h2>
+        <p class="muted small" style="margin:4px 0 14px">Pick a style, or change the steps below it. The app tries the steps in this order and stops at the first email that passes the check.</p>
+        <div class="presets">
+          <button class="preset" data-preset="cheap"><b>Cheapest</b><span class="small muted">Sheet email + 3 guesses. About $0.004 a lead.</span></button>
+          <button class="preset on" data-preset="bal"><b>Balanced</b><span class="small muted">Recommended. Adds Icypeas when guessing fails.</span></button>
+          <button class="preset" data-preset="max"><b>Find the most</b><span class="small muted">Every finder, 5 guesses. Costs the most.</span></button>
+        </div>
+        <div class="ladder" id="ladder">
+          <div class="rung" data-r="sheet"><span class="num">1</span><div><b style="color:var(--ink)">Use the email already in my sheet</b><div class="small muted">Free. Many rows already have one.</div><div class="sub"><label class="row"><input type="checkbox" data-sub="sheetcheck" checked> Double-check it first (MillionVerifier, ~$0.0018 each) — protects you from old addresses that bounce</label></div></div><input type="checkbox" class="sw" checked></div>
+          <div class="arrow">if none, or it fails the check ↓</div>
+          <div class="rung" data-r="guess"><span class="num">2</span><div><b style="color:var(--ink)">Guess the address from the website</b><div class="small muted">Each guess is checked (~$0.0018 per guess). Skipped when there's no website.</div><div class="sub"><div class="seg" data-seg="guess"><button class="on" data-val="3">Careful — 3 guesses</button><button data-val="5">Thorough — 5 guesses</button></div><span class="small muted" id="guess-eg">ian@ · ian.smith@ · i.smith@</span></div></div><input type="checkbox" class="sw" checked></div>
+          <div class="arrow">if no guess passes ↓</div>
+          <div class="rung" data-r="icy"><span class="num">3</span><div><b style="color:var(--ink)">Ask Icypeas</b><div class="small muted">Works without a website. 1 credit, only when it finds one.</div><div class="sub"><label class="row"><input type="checkbox" data-sub="icycheck"> Double-check what it finds (MillionVerifier)</label></div></div><input type="checkbox" class="sw" checked></div>
+          <div class="arrow">if Icypeas finds nothing ↓</div>
+          <div class="rung off" data-r="amf"><span class="num">4</span><div><b style="color:var(--ink)">Ask Anymailfinder</b><div class="small muted">Not connected — <a href="#settings" data-jump="s-conn">add its key</a>.</div><div class="sub"><label class="row"><input type="checkbox" data-sub="amfcheck"> Double-check what it finds</label></div></div><input type="checkbox" class="sw"></div>
+        </div>
+        <div class="sw-row" style="margin-top:12px"><div><b>Accept “catch-all” addresses</b><span class="d">Some companies accept mail for any name, so the check can't prove the person exists. On = more emails, but some may bounce.</span></div><input type="checkbox" class="sw"></div>
+      </div>
+
+      <div class="card" id="s-limits">
+        <h2>Spending limits</h2>
+        <div class="fgrid" style="margin-top:12px; grid-template-columns:minmax(0,1fr) minmax(0,1fr)">
+          <div class="f"><label>Most leads sent to Instantly per day</label><input type="number" value="300"><span class="hint">Across all campaigns. Match it to what your mailboxes can send.</span></div>
+          <div class="f"><label>Most money spent per day</label><input type="text" value="$5.00"><span class="hint">Across all campaigns. Scheduled runs stop when it's reached.</span></div>
+        </div>
+      </div>
+
+      <div class="card" id="s-safety">
+        <h2>Lead safety</h2>
+        <div class="f" style="margin-top:12px"><label>Never contact these companies</label><div class="taglist"><span>Fabrikam</span><span>Contoso Ltd</span><span>Northwind Outsourcing</span><input placeholder="type a name, press Enter"></div></div>
+        <div class="f" style="margin-top:12px"><label>Never contact these websites</label><div class="taglist"><span>fabrikam.example</span><span>contoso.example</span><input placeholder="type a website, press Enter"></div></div>
+        <div style="margin-top:8px">
+          <div class="sw-row"><div><b>Hold leads without an ice breaker</b><span class="d">They wait until Icebreaker Studio writes one, instead of going out without it.</span></div><input type="checkbox" class="sw" checked></div>
+          <div class="sw-row"><div><b>Hold firms behind Mimecast or Proofpoint</b><span class="d">These email filters bounce cold email hard.</span></div><input type="checkbox" class="sw"></div>
+          <div class="sw-row"><div><b>Never work on the same lead twice</b><span class="d">The app remembers every lead it handled (10 so far). <button class="btn link small">See them</button> · <button class="btn link small" style="color:var(--neg)">Forget all…</button></span></div><input type="checkbox" class="sw" checked></div>
+          <div class="sw-row"><div><b>Try again on “no email found” leads</b><span class="d">Turn on after adding a new finder or key.</span></div><input type="checkbox" class="sw"></div>
+          <div class="sw-row"><div><b>Skip rows that already have something in “Status”</b><span class="d">Blank Status = not done yet.</span></div><input type="checkbox" class="sw" checked></div>
+        </div>
+      </div>
+
+      <div class="card" id="s-login">
+        <h2>Login</h2>
+        <p class="muted small">No password set. On your own computer that's fine; on a server, always set one.</p>
+        <div class="row"><input type="password" placeholder="New password (10+ characters)" style="max-width:300px"><button class="btn">Set password</button></div>
+      </div>
+
+      <details class="adv" id="s-adv">
+        <summary>Advanced <span class="muted small" style="font-weight:400">— speed, prices, test copies, old screens</span></summary>
+        <div class="card">
+          <h3>Speed and retries</h3>
+          <div style="margin-top:10px"><div class="seg" data-seg="speed"><button class="on">Normal</button><button>Gentle (slower, fewer errors)</button><button>Custom</button></div></div>
+          <div class="fgrid" style="margin-top:12px">
+            <div class="f"><label>Seconds between sends to Instantly</label><input type="number" value="3"></div>
+            <div class="f"><label>Tries when a service fails</label><input type="number" value="3"><span class="hint">A wrong key is never retried.</span></div>
+            <div class="f"><label>Seconds between tries</label><input type="number" value="5"></div>
+            <div class="f"><label>Pause between email checks (ms)</label><input type="number" value="0"></div>
+            <div class="f"><label>Pause before each Icypeas lookup (s)</label><input type="number" value="2"></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Prices <span class="muted small" style="font-weight:400">— only used for cost estimates</span></h3>
+          <div class="fgrid" style="margin-top:10px">
+            <div class="f"><label>MillionVerifier, per check</label><input type="text" value="$0.00178"></div>
+            <div class="f"><label>Icypeas, per credit</label><input type="text" value="$0.00"></div>
+            <div class="f"><label>Anymailfinder, per credit</label><input type="text" value="$0.00"></div>
+            <div class="f"><label>Apollo, per credit (comparison only)</label><input type="text" value="$0.0236"></div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Test with a saved copy instead of the live sheet</h3>
+          <p class="small muted">For testing without Google access. Every screen shows an orange warning while one is on.</p>
+          <button class="btn sm">+ Add a saved copy</button>
+        </div>
+        <div class="card">
+          <h3>Old screens (V1)</h3>
+          <p class="small muted">Only the original interface uses these: its Instantly ID, sheet tab, leads per run, ice-breaker templates and the OpenAI option.</p>
+          <a class="btn sm" href="#settings">Open the old screens</a>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+</main>
+</div>
+
+<div class="save-bar" id="save-bar"><span>You have unsaved changes</span><button class="btn sm" id="discard">Discard</button><button class="btn sm primary" id="save">Save campaign</button></div>
+
+<script>
+(() => {
+  const $ = (s, el = document) => el.querySelector(s);
+  const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+
+  /* ── pages ── */
+  const NAV_OF = { home:"home", campaigns:"campaigns", campaign:"campaigns", new:"campaigns", leads:"leads", source:"leads", activity:"activity", run:"activity", settings:"settings" };
+  function show() {
+    const id = (location.hash || "#home").slice(1);
+    const page = $("#p-" + id) ? id : "home";
+    $$(".page").forEach(p => p.classList.toggle("on", p.id === "p-" + page));
+    $$("[data-nav]").forEach(a => a.classList.toggle("on", a.dataset.nav === NAV_OF[page]));
+    window.scrollTo(0, 0);
+    if (page === "new") wizard(1);
+  }
+  window.addEventListener("hashchange", show);
+
+  /* ── segmented choices; data-when="seg=value" shows a block ── */
+  function applyWhen() {
+    $$("[data-when]").forEach(b => {
+      const [seg, val] = b.dataset.when.split("=");
+      const on = $(`[data-seg="${seg}"] button.on`);
+      b.style.display = on && on.dataset.val === val ? "" : "none";
+    });
+  }
+  $$("[data-seg]").forEach(seg => seg.addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return;
+    $$("button", seg).forEach(x => x.classList.toggle("on", x === b));
+    if (seg.dataset.seg === "guess") $("#guess-eg").textContent = b.dataset.val === "5" ? "ian@ · ian.smith@ · i.smith@ · iansmith@ · ismith@" : "ian@ · ian.smith@ · i.smith@";
+    if (seg.closest("#p-campaign")) dirty();
+    applyWhen();
+  }));
+  applyWhen();
+
+  /* ── campaign page: Fix jumps to the section, unsaved-changes bar ── */
+  const FIX = { send:"#sec-send" };
+  document.addEventListener("click", e => {
+    const f = e.target.closest("[data-fix]"); if (!f) return;
+    const go = () => { const s = $(FIX[f.dataset.fix]); s.scrollIntoView({ behavior:"smooth", block:"center" }); s.classList.remove("flash"); void s.offsetWidth; s.classList.add("flash"); $("#inst-sel").focus({ preventScroll:true }); };
+    if (location.hash !== "#campaign") { e.preventDefault(); location.hash = "#campaign"; setTimeout(go, 60); } else { e.preventDefault(); go(); }
+  });
+  const bar = $("#save-bar");
+  function dirty() { bar.classList.add("show"); }
+  $$("#p-campaign input, #p-campaign select").forEach(i => i.addEventListener("change", dirty));
+  $("#discard").onclick = () => bar.classList.remove("show");
+  $("#save").onclick = () => { bar.classList.remove("show"); toast("Campaign saved."); };
+
+  /* ── filters ── */
+  $("#filters").addEventListener("click", e => { if (e.target.classList.contains("x")) { e.target.closest(".filter").remove(); dirty(); } });
+  $("#add-filter").onclick = () => {
+    const d = document.createElement("div"); d.className = "filter";
+    d.innerHTML = '<select class="inline-sel"><option>Region</option><option>Job title</option><option>Staff count</option></select><select class="inline-sel"><option>is one of</option><option>is</option><option>contains</option></select><input class="inline-sel" type="text" placeholder="London, Manchester"><button class="x" title="Remove">✕</button>';
+    $("#filters").append(d); dirty();
+  };
+
+  /* ── campaigns: drag to reorder ── */
+  let dragRow = null;
+  $$("#camp-list .li").forEach(r => {
+    r.addEventListener("dragstart", () => { dragRow = r; r.classList.add("dragging"); });
+    r.addEventListener("dragend", () => { r.classList.remove("dragging"); $$("#camp-list .li").forEach(x => x.classList.remove("over")); });
+    r.addEventListener("dragover", e => { e.preventDefault(); if (r !== dragRow) r.classList.add("over"); });
+    r.addEventListener("dragleave", () => r.classList.remove("over"));
+    r.addEventListener("drop", e => {
+      e.preventDefault(); r.classList.remove("over");
+      if (dragRow && dragRow !== r) { r.parentNode.insertBefore(dragRow, r); $("#order-note").textContent = "Order changed — “" + $("b", dragRow).textContent + "” now gets shared leads before “" + $("b", r).textContent + "”. Saved."; }
+    });
+  });
+
+  /* ── extra info for Instantly: drag columns in, reorder, live preview ── */
+  const SAMPLE = { "City":"London", "Website":"smithco.co.uk", "Staff count":"8", "Job title":"Director", "Region":"Greater London", "Years trading":"12", "Trigger family":"V0_volume", "Evidence source":"companies_house", "Seniority tier (worked out)":"owner", "Company size band (worked out)":"micro", "Fixed text":"northwind-q4" };
+  let labels = [
+    { name:"Address", from:"City", empty:"send blank" },
+    { name:"trigger_family", from:"Trigger family", empty:"V0_volume" },
+    { name:"evidence_source", from:"Evidence source", empty:"unlabelled" },
+    { name:"seniority_tier", from:"Seniority tier (worked out)", empty:"unknown" },
+    { name:"size_band", from:"Company size band (worked out)", empty:"unknown" },
+  ];
+  const ALL = Object.keys(SAMPLE);
+  const slug = s => s.replace(/\s*\(worked out\)/, "").toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, "");
+  function drawLabels() {
+    $("#labels").innerHTML = labels.map((l, i) => `
+      <div class="lab-row" draggable="true" data-i="${i}">
+        <span class="handle">⋮⋮</span>
+        <input type="text" value="${l.name}" data-k="name" data-i="${i}" title="How you write it in Instantly: {{${l.name}}}">
+        <select data-k="from" data-i="${i}">${ALL.map(c => `<option ${c === l.from ? "selected" : ""}>${c}</option>`).join("")}</select>
+        <select data-k="empty" data-i="${i}"><option ${l.empty === "send blank" ? "selected" : ""}>send blank</option><option ${l.empty === "don't send" ? "selected" : ""}>don't send</option>${["send blank","don't send"].includes(l.empty) ? "" : `<option selected>use “${l.empty}”</option>`}</select>
+        <button class="x" data-del="${i}" title="Remove">✕</button>
+      </div>`).join("");
+    const ex = labels.map(l => `<span>{{${l.name}}}</span><span>${SAMPLE[l.from] ?? ""}</span>`).join("");
+    $("#lab-preview").innerHTML = `<b style="color:var(--ink)">Preview — what Instantly gets for Smith &amp; Co</b><div class="kv">${ex}</div><div style="margin-top:8px">In an email: “Hi Ian, I saw you're based in <code>{{Address}}</code>” → “Hi Ian, I saw you're based in <b>${SAMPLE.City}</b>”</div>`;
+  }
+  drawLabels();
+  $("#labels").addEventListener("input", e => { const i = e.target.dataset.i; if (i === undefined) return; const k = e.target.dataset.k; if (k === "empty") return; labels[i][k] = e.target.value; drawLabels(); dirty(); });
+  $("#labels").addEventListener("click", e => { const d = e.target.dataset.del; if (d !== undefined) { labels.splice(+d, 1); drawLabels(); dirty(); } });
+  let dragLab = null, dragCol = null;
+  $("#labels").addEventListener("dragstart", e => { const r = e.target.closest(".lab-row"); if (r) { dragLab = +r.dataset.i; dragCol = null; } });
+  $("#labels").addEventListener("dragover", e => e.preventDefault());
+  $("#labels").addEventListener("drop", e => {
+    e.preventDefault(); const r = e.target.closest(".lab-row"); if (!r) return; const to = +r.dataset.i;
+    if (dragLab !== null && dragLab !== to) { const [m] = labels.splice(dragLab, 1); labels.splice(to, 0, m); drawLabels(); dirty(); }
+    else if (dragCol) addCol(dragCol, to);
+    dragLab = null;
+  });
+  $$(".chip").forEach(c => c.addEventListener("dragstart", () => { dragCol = c.dataset.col; dragLab = null; }));
+  $$(".chip").forEach(c => c.addEventListener("click", () => addCol(c.dataset.col)));   // click works too (phones)
+  function addCol(col, at) {
+    const l = { name: slug(col) || "info", from: col, empty: "send blank" };
+    if (at === undefined) labels.push(l); else labels.splice(at, 0, l);
+    drawLabels(); dirty(); dragCol = null;
+  }
+  const drop = $("#drop");
+  drop.addEventListener("dragover", e => { e.preventDefault(); drop.classList.add("over"); });
+  drop.addEventListener("dragleave", () => drop.classList.remove("over"));
+  drop.addEventListener("drop", e => { e.preventDefault(); drop.classList.remove("over"); if (dragCol) addCol(dragCol); });
+
+  /* ── wizard ── */
+  let wzStep = 1;
+  function wizard(n) {
+    wzStep = Math.max(1, Math.min(5, n));
+    $$(".wz").forEach(w => w.classList.toggle("on", +w.dataset.wz === wzStep));
+    $$("#stepper span").forEach((s, i) => { s.className = i + 1 === wzStep ? "on" : i + 1 < wzStep ? "done" : ""; });
+    $("#wz-back").style.visibility = wzStep === 1 ? "hidden" : "visible";
+    $("#wz-next").textContent = wzStep === 5 ? "Create and run a free test" : "Next";
+    $("#wz-create").style.display = wzStep === 5 ? "" : "none";
+  }
+  $("#wz-next").onclick = () => wzStep === 5 ? (toast("Created. A free test is running."), location.hash = "#campaign") : wizard(wzStep + 1);
+  $("#wz-back").onclick = () => wizard(wzStep - 1);
+  $("#wz-create").onclick = () => { toast("Created. It's off until you switch it on."); location.hash = "#campaigns"; };
+
+  /* ── run tabs ── */
+  $$("[data-tabs]").forEach(t => t.addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return;
+    $$("button", t).forEach(x => x.classList.toggle("on", x === b));
+    $$("[data-tp]", t.parentNode).forEach(p => p.classList.toggle("on", p.dataset.tp === b.dataset.t));
+  }));
+
+  /* ── settings: jump links, presets, rungs, test buttons ── */
+  $$("[data-jump]").forEach(a => a.addEventListener("click", e => {
+    e.preventDefault(); if (location.hash !== "#settings") location.hash = "#settings";
+    setTimeout(() => { const t = $("#" + a.dataset.jump); if (t.tagName === "DETAILS") t.open = true; t.scrollIntoView({ behavior:"smooth", block:"start" }); }, 60);
+  }));
+  const PRESETS = {
+    cheap: { sheet:[1,0], guess:[1], icy:[0,0], amf:[0,0], g:"3" },
+    bal:   { sheet:[1,1], guess:[1], icy:[1,0], amf:[0,0], g:"3" },
+    max:   { sheet:[1,1], guess:[1], icy:[1,1], amf:[1,1], g:"5" },
+  };
+  $$("[data-preset]").forEach(p => p.addEventListener("click", () => {
+    $$("[data-preset]").forEach(x => x.classList.toggle("on", x === p));
+    const P = PRESETS[p.dataset.preset];
+    for (const r of ["sheet","guess","icy","amf"]) {
+      const rung = $(`[data-r="${r}"]`); const sw = $(".sw", rung); sw.checked = !!P[r][0]; rung.classList.toggle("off", !sw.checked);
+      const sub = $("[data-sub]", rung); if (sub) sub.checked = !!P[r][1];
+    }
+    $$('[data-seg="guess"] button').forEach(b => b.classList.toggle("on", b.dataset.val === P.g));
+    $("#guess-eg").textContent = P.g === "5" ? "ian@ · ian.smith@ · i.smith@ · iansmith@ · ismith@" : "ian@ · ian.smith@ · i.smith@";
+  }));
+  $$("#ladder .rung > .sw").forEach(sw => sw.addEventListener("change", () => {
+    sw.closest(".rung").classList.toggle("off", !sw.checked);
+    $$("[data-preset]").forEach(x => x.classList.remove("on"));
+  }));
+  $$("[data-test]").forEach(b => b.addEventListener("click", () => {
+    b.textContent = "Checking…"; b.disabled = true;
+    setTimeout(() => { b.textContent = "✓ Works"; }, 700);
+  }));
+
+  /* ── leads upload box ── */
+  $("#upload-btn").onclick = () => { const box = $("#upload-box"); box.style.display = box.style.display === "none" ? "" : "none"; };
+
+  /* ── small things ── */
+  let tt;
+  function toast(msg) {
+    let t = $("#toast");
+    if (!t) { t = document.createElement("div"); t.id = "toast"; t.style.cssText = "position:fixed;top:44px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:10px;z-index:40;box-shadow:var(--lift);font-size:13.5px"; document.body.append(t); }
+    t.textContent = msg; t.style.display = ""; clearTimeout(tt); tt = setTimeout(() => t.style.display = "none", 2600);
+  }
+  $$("[data-toast]").forEach(b => b.addEventListener("click", () => toast(b.dataset.toast)));
+  $("#theme").onclick = () => {
+    const d = document.documentElement.dataset.theme === "dark";
+    document.documentElement.dataset.theme = d ? "light" : "dark";
+    $("#theme").textContent = d ? "Dark mode" : "Light mode";
+  };
+
+  show();
+})();
+</script>
+</body>
+</html>

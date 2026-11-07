@@ -1,0 +1,732 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lead Gen Stack</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" rel="stylesheet">
+<style>
+:root{--paper:#f4f3ef;--surface:#fcfbf9;--white:#fff;--ink:#171a21;--body:#41454e;--muted:#686d76;--faint:#9aa0a8;--coral:#ff8c6b;--coral-ink:#b0431f;--coral-wash:#fdeee8;--pos:#157a5b;--pos-wash:#e5f1ec;--neg:#b0431f;--neg-wash:#fbe9e3;--warn:#8a6216;--warn-wash:#fbf1dd;--line:rgba(23,26,33,.1);--line-2:rgba(23,26,33,.06);--line-str:rgba(23,26,33,.2);--fd:"Inter Tight",Inter,system-ui,sans-serif;--fb:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;--fm:"IBM Plex Mono",Consolas,monospace;--r:14px;--bar:37px}
+:root[data-theme="dark"]{--paper:#0a0e15;--surface:#121722;--white:#161c29;--ink:#e6e9ef;--body:#c5ccd8;--muted:#8d99ad;--faint:#6b7688;--coral:#3b82f6;--coral-ink:#60a5fa;--coral-wash:#16233c;--pos:#4ade80;--pos-wash:#12261a;--neg:#f87171;--neg-wash:#2a1415;--warn:#fbbf24;--warn-wash:#2a1f0d;--line:#232b3a;--line-2:#1a2130;--line-str:#303a4d}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--paper);color:var(--body);font:14px/1.55 var(--fb)}
+a{color:var(--coral-ink);text-decoration:none;cursor:pointer}a:hover{text-decoration:underline}
+h1,h2,h3{font-family:var(--fd);color:var(--ink);margin:0;letter-spacing:-.01em}h1{font-size:24px;font-weight:700}h2{font-size:17px;font-weight:600}h3{font-size:15px;font-weight:600}
+.muted{color:var(--muted)}.small{font-size:12.5px}.mono{font-family:var(--fm);font-size:12px}b{color:var(--ink)}
+.banner{height:var(--bar);background:var(--surface);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:center;gap:10px;font-size:12.5px;color:var(--muted);padding:0 12px;white-space:nowrap;overflow:hidden}
+.banner .pill{flex:none}
+.app{display:grid;grid-template-columns:236px minmax(0,1fr);min-height:calc(100vh - var(--bar))}
+.side{border-right:1px solid var(--line);padding:16px 12px;display:flex;flex-direction:column;gap:2px;position:sticky;top:0;height:calc(100vh - var(--bar));overflow-y:auto}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 10px 12px;font-family:var(--fd);font-weight:700;color:var(--ink);font-size:15px}
+.brand i{width:30px;height:30px;border-radius:9px;background:var(--ink);color:var(--paper);display:grid;place-items:center;font-style:normal;font-size:12px}
+.grp{font-size:11px;color:var(--faint);padding:12px 12px 4px;font-weight:500}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav a{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:10px;color:var(--body);font-weight:500;white-space:nowrap}
+.nav a .ti{font-size:18px}.nav a:hover{background:var(--line-2);text-decoration:none}
+.nav a.on{background:var(--white);color:var(--ink);box-shadow:0 0 0 1px var(--line)}
+.nav a .count{margin-left:auto;font-size:11px;background:var(--neg-wash);color:var(--neg);border-radius:99px;padding:0 7px}
+.nav a .n{width:18px;height:18px;border-radius:50%;background:var(--line-2);font-size:11px;display:grid;place-items:center;flex:none}
+.nav a.demo{color:var(--coral-ink)}
+.side-foot{margin-top:auto;display:grid;gap:6px;padding-top:12px}
+.mode-box{border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:12.5px}
+.main{padding:24px 32px 80px;max-width:1240px;width:100%;min-width:0}
+.top{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap}
+.top p{margin:4px 0 0;color:var(--muted);max-width:660px}
+.back{display:inline-block;font-size:13px;margin-bottom:8px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin-top:14px;min-width:0}
+.card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.card-head p{margin:3px 0 0;color:var(--muted);font-size:13px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.grid2>.card,.grid3>.card{margin-top:14px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;min-width:0}
+.tile .lbl{color:var(--muted);font-size:12.5px}.tile .big{font-family:var(--fd);font-size:24px;font-weight:700;color:var(--ink);margin-top:2px}.tile .sub{font-size:12.5px;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line-str);background:var(--white);color:var(--ink);border-radius:10px;padding:8px 14px;font:500 13.5px var(--fb);cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:var(--ink);text-decoration:none}.btn.primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn.sm{padding:5px 11px;font-size:12.5px;border-radius:8px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:5px;border-radius:99px;padding:2px 10px;font-size:12px;font-weight:500;background:var(--line-2);color:var(--muted);white-space:nowrap}
+.pill.ok{background:var(--pos-wash);color:var(--pos)}.pill.wn{background:var(--warn-wash);color:var(--warn)}.pill.bad{background:var(--neg-wash);color:var(--neg)}.pill.ac{background:var(--coral-wash);color:var(--coral-ink)}
+.note{background:var(--line-2);border-radius:10px;padding:10px 14px;font-size:13px;margin-top:12px}
+.note.warn{background:var(--warn-wash);color:var(--warn)}.note.good{background:var(--pos-wash);color:var(--pos)}
+.checks{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.checks li{display:flex;gap:10px;align-items:center;font-size:13.5px;flex-wrap:wrap}
+.mk{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;flex:none}
+.mk.ok{background:var(--pos-wash);color:var(--pos)}.mk.no{background:var(--neg-wash);color:var(--neg)}.mk.n{background:var(--line-2);color:var(--muted)}
+.chain{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+.st{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--white);display:block;color:inherit;min-width:0}
+a.st:hover{text-decoration:none;border-color:var(--ink)}
+.st .h{font-size:12px;color:var(--muted);display:flex;gap:6px;align-items:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.st .v{font-family:var(--fd);font-size:22px;font-weight:700;color:var(--ink)}.st .s{font-size:12px;color:var(--muted)}
+.st.done{border-color:var(--pos)}.st.run{border-color:var(--coral);box-shadow:0 0 0 1px var(--coral)}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-weight:500;color:var(--muted);font-size:12px;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--surface)}
+td{padding:9px 10px;border-bottom:1px solid var(--line-2);color:var(--body);vertical-align:top}
+tr.click{cursor:pointer}tr.click:hover td{background:var(--white)}tr.sel td{background:var(--coral-wash)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:14px;overflow-x:auto}
+.tabs button{border:none;background:none;padding:9px 14px;font:500 13.5px var(--fb);color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
+.tabs button.on{color:var(--ink);border-bottom-color:var(--ink)}
+.tabp{display:none}.tabp.on{display:block}
+.page{display:none}.page.on{display:block}
+.rung{display:grid;grid-template-columns:18px 28px minmax(0,1fr) auto;gap:12px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--white);margin-top:8px}
+.rung.off{opacity:.5}.handle{color:var(--faint);cursor:grab;letter-spacing:-2px}
+.num{width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--paper);display:grid;place-items:center;font:700 13px var(--fd)}
+.sw{appearance:none;width:38px;height:22px;border-radius:99px;background:var(--line-str);position:relative;cursor:pointer;flex:none;vertical-align:middle;margin:0}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--white)}
+.sw:checked{background:var(--pos)}.sw:checked::after{left:19px}
+.list{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;background:var(--surface)}
+.li{display:grid;align-items:center;gap:14px;padding:14px 18px;border-top:1px solid var(--line)}.li:first-child{border-top:none}
+.li.click{cursor:pointer}.li.click:hover{background:var(--white)}
+.camp-li{grid-template-columns:minmax(0,2fr) minmax(0,1.4fr) minmax(0,2fr) 80px 16px}
+.src-li{grid-template-columns:40px minmax(0,2fr) minmax(0,1.2fr) minmax(0,1.2fr) auto}
+.ico{width:36px;height:36px;border-radius:10px;background:var(--line-2);display:grid;place-items:center;font-size:19px;color:var(--ink)}
+input[type=text],select,textarea{font:14px var(--fb);color:var(--ink);background:var(--white);border:1px solid var(--line-str);border-radius:9px;padding:8px 11px;width:100%;max-width:100%}
+.inline-sel{width:auto;display:inline-block;padding:6px 9px}
+.chip{display:inline-block;border:1px solid var(--line-str);border-radius:99px;padding:1px 9px;font-size:12px;margin:2px 3px 2px 0;background:var(--white);white-space:nowrap}
+.var{font-family:var(--fm);font-size:12px;background:var(--coral-wash);color:var(--coral-ink);padding:1px 5px;border-radius:5px;white-space:nowrap}
+.mail{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:13.5px;line-height:1.65;overflow-wrap:anywhere}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.stp{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--white);font-size:13px}
+.stp b{display:block;margin-bottom:2px}
+.kv{display:grid;grid-template-columns:190px minmax(0,1fr);gap:8px 14px;font-size:13px;align-items:center}.kv>span:nth-child(odd){color:var(--muted)}
+.ev{font-size:12.5px;background:var(--line-2);border-radius:8px;padding:8px 10px;margin-top:6px;overflow-wrap:anywhere}
+.progress{height:8px;background:var(--line-2);border-radius:99px;overflow:hidden;margin-top:14px}.progress span{display:block;height:100%;width:0;background:var(--pos);transition:width .3s}
+/* master-detail: list scrolls on the left, the record stays in view on the right */
+.split{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(320px,1fr);gap:14px;height:calc(100vh - var(--bar) - 190px);min-height:440px}
+.pane{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:auto;min-width:0;min-height:0}
+.pane table th{position:sticky;top:0;z-index:1}
+.pane.detail{padding:18px}
+.empty{color:var(--muted);font-size:13px;text-align:center;padding:40px 10px}
+@media (max-width:1100px){.chain{grid-template-columns:repeat(3,minmax(0,1fr))}.steps{grid-template-columns:repeat(2,minmax(0,1fr))}.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}.grid3{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .camp-li{grid-template-columns:minmax(0,1fr) 80px 16px}.camp-li>.hide-t{display:none}.src-li{grid-template-columns:40px minmax(0,1fr) auto}.src-li>.hide-t{display:none}}
+@media (max-width:900px){.split{grid-template-columns:1fr;height:auto}.split .pane.list-pane{max-height:420px}.grid2,.grid3{grid-template-columns:1fr}.kv{grid-template-columns:1fr;gap:2px 0}.kv>span:nth-child(even){margin-bottom:8px}}
+@media (max-width:760px){:root{--bar:auto}.banner{white-space:normal;padding:6px 12px;height:auto;flex-wrap:wrap}
+ .app{grid-template-columns:minmax(0,1fr)}
+ .side{position:sticky;top:0;height:auto;flex-direction:row;align-items:center;padding:8px;border-right:none;border-bottom:1px solid var(--line);background:var(--surface);z-index:30;overflow-x:auto}
+ .brand,.side-foot,.grp{display:none}.nav{flex-direction:row}.nav a{padding:6px 10px;font-size:13px}.nav a .count{display:none}
+ .main{padding:16px 14px 60px}.chain,.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}.steps{grid-template-columns:1fr}
+ .rung{grid-template-columns:28px minmax(0,1fr)}.rung .handle{display:none}.rung>.row{grid-column:1/-1}
+ h1{font-size:21px}.top .row,.top>.btn{width:100%}}
+</style>
+</head>
+<body>
+<div class="banner"><span class="pill wn">Demo workspace</span>Sample data only. Sending runs in test mode.</div>
+<div class="app">
+
+<aside class="side">
+  <div class="brand"><i>LG</i>Lead Gen Stack</div>
+  <nav class="nav">
+    <a data-go="demo" class="demo"><i class="ti ti-player-play"></i>Live demo</a>
+    <a data-go="home"><i class="ti ti-home"></i>Home<span class="count">3</span></a>
+    <a data-go="campaigns"><i class="ti ti-list-details"></i>Campaigns</a>
+    <a data-go="leads"><i class="ti ti-table"></i>Leads</a>
+    <a data-go="sources"><i class="ti ti-file-spreadsheet"></i>Lead sources</a>
+    <div class="grp">Pipeline</div>
+    <a data-go="research"><span class="n">1</span>Website research</a>
+    <a data-go="find"><span class="n">2</span>Find email</a>
+    <a data-go="ice"><span class="n">3</span>Ice breakers</a>
+    <a data-go="email"><span class="n">4</span>Cold email<span class="count">1</span></a>
+    <a data-go="send"><span class="n">5</span>Sending</a>
+    <a data-go="replies"><span class="n">6</span>Replies<span class="count">2</span></a>
+    <div class="grp">Operations</div>
+    <a data-go="schedules"><i class="ti ti-clock"></i>Schedules</a>
+    <a data-go="health"><i class="ti ti-heartbeat"></i>Health<span class="count">1</span></a>
+    <a data-go="settings"><i class="ti ti-settings"></i>Settings</a>
+  </nav>
+  <div class="side-foot">
+    <div class="mode-box"><b>Test mode</b><br><span class="muted">Emails are prepared, not sent.</span></div>
+    <div class="mode-box"><b>Spend today</b><br><span class="muted">$0.21 of $5.00 daily limit</span></div>
+    <button class="btn sm" id="theme">Dark mode</button>
+  </div>
+</aside>
+
+<main class="main">
+
+<!-- HOME -->
+<section class="page" id="p-home">
+  <div class="top"><div><h1>Home</h1><p>Today's results across all campaigns, and the items that need a decision.</p></div>
+    <button class="btn primary" data-go="demo"><i class="ti ti-player-play"></i>Run all campaigns</button></div>
+  <div class="grid4">
+    <div class="tile"><div class="lbl">Active leads</div><div class="big">60</div><div class="sub">3 campaigns</div></div>
+    <div class="tile"><div class="lbl">Emails found</div><div class="big">31</div><div class="sub">60% of leads with a website</div></div>
+    <div class="tile"><div class="lbl">Sent this week</div><div class="big">24</div><div class="sub">Test mode</div></div>
+    <div class="tile"><div class="lbl">Replies</div><div class="big">5</div><div class="sub">2 interested</div></div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div><h2>Pipeline</h2><p>Leads that have completed each step.</p></div></div>
+    <div class="chain">
+      <a class="st done" data-go="research"><div class="h">1 · Website research</div><div class="v">52</div><div class="s">8 without a website</div></a>
+      <a class="st done" data-go="find"><div class="h">2 · Find email</div><div class="v">31</div><div class="s">21 not found</div></a>
+      <a class="st" data-go="ice"><div class="h">3 · Ice breakers</div><div class="v">29</div><div class="s">2 waiting</div></a>
+      <a class="st" data-go="email"><div class="h">4 · Cold email</div><div class="v">29</div><div class="s">Ready to send</div></a>
+      <a class="st" data-go="send"><div class="h">5 · Sending</div><div class="v">24</div><div class="s">5 queued</div></a>
+      <a class="st" data-go="replies"><div class="h">6 · Replies</div><div class="v">5</div><div class="s">2 interested</div></a>
+    </div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-head"><div><h2>Needs your decision</h2></div></div>
+      <ul class="checks">
+        <li><span class="mk no"><i class="ti ti-alert-circle"></i></span><span style="flex:1;min-width:180px">Hartley and Co replied: interested</span><a class="btn sm" data-go="replies">Open reply</a></li>
+        <li><span class="mk no"><i class="ti ti-alert-circle"></i></span><span style="flex:1;min-width:180px">1 new email template is waiting for approval</span><a class="btn sm" data-go="emailcamp" data-tab="tp-tpl">Review</a></li>
+        <li><span class="mk no"><i class="ti ti-alert-circle"></i></span><span style="flex:1;min-width:180px">Email finder credits are used up. Step 2 is paused for 1 campaign.</span><a class="btn sm" data-go="health">Details</a></li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-head"><div><h2>System health, today</h2></div><a class="btn sm" data-go="health">Open Health</a></div>
+      <ul class="checks">
+        <li><span class="mk n">3</span>Issues detected</li>
+        <li><span class="mk ok">2</span>Resolved automatically</li>
+        <li><span class="mk no">1</span>Waiting for you</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CAMPAIGNS -->
+<section class="page" id="p-campaigns">
+  <div class="top"><div><h1>Campaigns</h1><p>Each campaign sets which leads to use, how emails are found, what is written, and where it is sent.</p></div>
+    <button class="btn primary"><i class="ti ti-plus"></i>New campaign</button></div>
+  <div class="list">
+    <div class="li camp-li" style="font-size:12px;color:var(--muted);padding:8px 18px"><div>Campaign</div><div class="hide-t">Lead source</div><div class="hide-t">Progress</div><div>Status</div><div></div></div>
+    <div class="li camp-li click" data-go="camp"><div><b>UK practices – hiring</b><div class="small muted">Accountancy firms with open roles</div></div><div class="small hide-t">Practices list → Hiring</div><div class="small hide-t">20 leads · 12 emails · 10 sent · 3 replies</div><div><span class="pill wn">Test</span></div><div class="muted">›</div></div>
+    <div class="li camp-li click" data-go="camp"><div><b>UK small businesses – finance</b><div class="small muted">Businesses with 10–50 staff</div></div><div class="small hide-t">Main lead list → SMEs</div><div class="small hide-t">20 leads · 11 emails · 9 sent · 2 replies</div><div><span class="pill wn">Test</span></div><div class="muted">›</div></div>
+    <div class="li camp-li click" data-go="camp"><div><b>Advisory – finance director</b><div class="small muted">Firms needing part-time finance leadership</div></div><div class="small hide-t">Uploaded file → advisory.csv</div><div class="small hide-t">20 leads · 8 emails · 5 sent · 0 replies</div><div><span class="pill">Paused</span></div><div class="muted">›</div></div>
+  </div>
+</section>
+
+<!-- ONE CAMPAIGN -->
+<section class="page" id="p-camp">
+  <a class="back" data-go="campaigns">‹ Campaigns</a>
+  <div class="top"><div><h1>UK practices – hiring</h1><p>Sends to sending campaign <b>UK practices – phase 1</b> · <span class="pill wn">Test mode</span></p></div>
+    <div class="row"><button class="btn">Run one step ▾</button><button class="btn primary" data-go="demo"><i class="ti ti-player-play"></i>Run full pipeline</button></div></div>
+  <div class="card">
+    <div class="card-head"><div><h2>Pipeline for this campaign</h2><p>Each step works only on leads the previous step has completed. Select a step to open it.</p></div></div>
+    <div class="chain">
+      <a class="st done" data-go="research"><div class="h">1 · Website research</div><div class="v">17</div><div class="s">3 without a website</div></a>
+      <a class="st done" data-go="find"><div class="h">2 · Find email</div><div class="v">12</div><div class="s">5 not found · $0.21</div></a>
+      <a class="st run" data-go="icecamp"><div class="h">3 · Ice breakers</div><div class="v">11</div><div class="s">1 waiting</div></a>
+      <a class="st" data-go="emailcamp"><div class="h">4 · Cold email</div><div class="v">11</div><div class="s">Templates A and B</div></a>
+      <a class="st" data-go="send"><div class="h">5 · Sending</div><div class="v">10</div><div class="s">1 queued</div></a>
+      <a class="st" data-go="replies"><div class="h">6 · Replies</div><div class="v">3</div><div class="s">1 interested</div></a>
+    </div>
+  </div>
+  <div class="card">
+    <div class="tabs" data-tabs="camp">
+      <button class="on" data-tab="c-who">Leads</button><button data-tab="c-find">Find email</button><button data-tab="c-ice">Ice breakers</button><button data-tab="c-mail">Cold email</button><button data-tab="c-send">Sending</button><button data-tab="c-when">Schedule</button>
+    </div>
+    <div class="tabp on" id="c-who"><div class="kv">
+      <span>Lead source</span><span><select class="inline-sel" id="who-src" style="max-width:100%"><option>Practices list → Hiring</option><option>Demo – UK accountancy firms → Firms</option><option>Main lead list → SMEs</option><option>Uploaded file → advisory.csv</option></select> <a data-go="sources" class="small">Manage sources</a></span>
+      <span>Lead filter</span><span><span class="chip">trigger is hiring</span><span class="chip">email status is empty</span></span>
+      <span>Leads per run</span><span>20</span></div></div>
+    <div class="tabp" id="c-find"><div class="kv"><span>Email recipe</span><span><b>Director waterfall</b> · 5 rungs · <a data-go="find">Open recipe</a></span><span>Spend limit per run</span><span>$2.00</span></div></div>
+    <div class="tabp" id="c-ice"><div class="kv"><span>Rule set</span><span><b>Practices ladder</b> · 6 rungs and a default · <a data-go="icecamp">Open rules</a></span><span>A/B test</span><span>Opening line, 50/50 split</span></div></div>
+    <div class="tabp" id="c-mail"><div class="kv"><span>Templates</span><span><b>Template A</b> (score 92) and <b>Template B</b> (score 85), 50/50 split · <a data-go="emailcamp">Open templates</a></span></div></div>
+    <div class="tabp" id="c-send"><div class="kv"><span>Sending campaign</span><span>UK practices – phase 1</span><span>Daily limit</span><span>50 emails</span><span>Test mode</span><span><input type="checkbox" class="sw" checked> On. Emails are prepared, not sent.</span></div></div>
+    <div class="tabp" id="c-when"><div class="kv"><span>Pipeline start</span><span>Weekdays at 07:00</span><span>Sending</span><span>Weekdays at 09:00</span><span>Reply check</span><span>Every 30 minutes</span></div></div>
+  </div>
+</section>
+
+<!-- LEADS -->
+<section class="page" id="p-leads">
+  <div class="top"><div><h1>Leads</h1><p>All leads in a campaign. Select a lead to see its full record.</p></div>
+    <select class="inline-sel"><option>UK practices – hiring</option><option>UK small businesses – finance</option><option>All campaigns</option></select></div>
+  <div class="row" id="lead-chips" style="margin-bottom:12px"></div>
+  <div class="split">
+    <div class="pane list-pane" id="lead-list"><table id="lead-table"></table></div>
+    <div class="pane detail" id="lead-detail"></div>
+  </div>
+</section>
+
+<!-- LEAD SOURCES -->
+<section class="page" id="p-sources">
+  <div class="top"><div><h1>Lead sources</h1><p>Google Sheets and files the app reads leads from. A campaign uses one tab from one source.</p></div>
+    <div class="row"><button class="btn"><i class="ti ti-upload"></i>Upload file</button><button class="btn"><i class="ti ti-folder"></i>Link local file</button><button class="btn primary" id="show-connect"><i class="ti ti-plus"></i>Connect Google Sheet</button></div></div>
+  <div class="card" id="connect-box" style="display:none">
+    <div class="card-head"><div><h2>Connect Google Sheet</h2><p>Paste the sheet link. The app checks access and lists the tabs.</p></div></div>
+    <div class="row"><input type="text" id="connect-link" placeholder="https://docs.google.com/spreadsheets/d/…" style="flex:1;min-width:200px"><button class="btn primary" id="do-connect">Connect</button></div>
+    <div id="connect-result" style="display:none">
+      <div class="note good">Connected: <b>Demo – UK accountancy firms</b> · 1 tab (Firms, 12 rows) · read and write access</div>
+      <div class="note">Columns matched: company name, website, contact name, contact email (4 of 4). Pipeline columns missing: 5. <button class="btn sm primary" id="add-cols">Add pipeline columns</button> <span id="cols-done" class="pill ok" style="display:none">5 columns added</span></div>
+    </div>
+  </div>
+  <div class="list" style="margin-top:14px" id="src-list">
+    <div class="li src-li"><div class="ico"><i class="ti ti-file-spreadsheet"></i></div><div><b>Main lead list</b><div class="small muted">Google Sheet · 3 tabs · 2,140 rows</div></div><div class="small hide-t">1 campaign</div><div class="hide-t"><span class="pill ok">Read and write</span></div><button class="btn sm">Tabs</button></div>
+    <div class="li src-li"><div class="ico"><i class="ti ti-file-spreadsheet"></i></div><div><b>Practices list</b><div class="small muted">Google Sheet · 9 tabs · 24,853 rows</div></div><div class="small hide-t">1 campaign</div><div class="hide-t"><span class="pill ok">Read and write</span></div><button class="btn sm">Tabs</button></div>
+    <div class="li src-li"><div class="ico"><i class="ti ti-file-spreadsheet"></i></div><div><b>Advisory list</b><div class="small muted">Google Sheet · 4 tabs · 1,128 rows</div></div><div class="small hide-t">Not in use</div><div class="hide-t"><span class="pill wn">Read only</span></div><button class="btn sm">Fix access</button></div>
+    <div class="li src-li"><div class="ico"><i class="ti ti-upload"></i></div><div><b>advisory.csv</b><div class="small muted">Uploaded file · 20 rows · 6 Nov</div></div><div class="small hide-t">1 campaign</div><div class="hide-t"><span class="pill">Results kept in app</span></div><button class="btn sm">Export</button></div>
+    <div class="li src-li"><div class="ico"><i class="ti ti-folder"></i></div><div><b>new-firms.xlsx</b><div class="small muted">Local file · checked every 10 minutes</div></div><div class="small hide-t">Not in use</div><div class="hide-t"><span class="pill ok">Available</span></div><button class="btn sm">Tabs</button></div>
+  </div>
+  <div class="card">
+    <h2>How lead sources work</h2>
+    <div class="steps" style="margin-top:12px">
+      <div class="stp"><b>1. Add a source</b>Google Sheet link, uploaded CSV or Excel file, or a file on this computer.</div>
+      <div class="stp"><b>2. Choose a tab</b>In a campaign, under Leads → Lead source.</div>
+      <div class="stp"><b>3. Match columns</b>Company, website and contact columns are matched automatically. Missing columns are listed.</div>
+      <div class="stp"><b>4. Write results</b>Google Sheets: results go into the pipeline columns only. Files: results stay in the app and can be exported.</div>
+    </div>
+    <div class="note">Pipeline columns: <span class="mono">website_status · email_status · icebreaker_status · push_status · reply_status</span>. They are added only after you confirm. Other columns are never changed.</div>
+  </div>
+</section>
+
+<!-- 1 WEBSITE RESEARCH -->
+<section class="page" id="p-research">
+  <div class="top"><div><h1>Website research</h1><p>Step 1. Reads each company website and stores the facts used for ice breakers.</p></div>
+    <div class="row"><select class="inline-sel"><option>UK practices – hiring</option><option>UK small businesses – finance</option></select><button class="btn primary"><i class="ti ti-world-search"></i>Research 3 new leads</button></div></div>
+  <div class="card">
+    <h2>How it works</h2>
+    <div class="steps" style="margin-top:12px">
+      <div class="stp"><b>1. Check the domain</b>Unreachable domains are marked and skipped.</div>
+      <div class="stp"><b>2. Read key pages</b>Home, About, Services, Careers and News, up to 5 pages.</div>
+      <div class="stp"><b>3. Extract facts</b>Open roles, awards, sectors served, software partnerships, case studies.</div>
+      <div class="stp"><b>4. Store</b>Facts are saved in the app. The sheet receives <span class="mono">website_status</span> only.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div><h2>Results</h2><p>Select a company to see the extracted facts.</p></div></div>
+    <div class="scroll"><table id="res-table"></table></div>
+    <div id="res-detail"></div>
+  </div>
+  <div class="card">
+    <h2>Data storage</h2>
+    <div class="scroll"><table style="margin-top:8px"><tr><th>Data</th><th>Location</th></tr>
+      <tr><td>Extracted facts per company</td><td>App database on this computer, one record per company</td></tr>
+      <tr><td>Research result</td><td>Sheet column <span class="mono">website_status</span>: found, not found, unreachable, blocked</td></tr>
+      <tr><td>Refresh</td><td>Companies researched in the last 30 days are skipped</td></tr></table></div>
+  </div>
+</section>
+
+<!-- 2 FIND EMAIL -->
+<section class="page" id="p-find">
+  <div class="top"><div><h1>Find email</h1><p>Step 2. Tries each rung in order and stops at the first verified address.</p></div>
+    <div class="row"><select class="inline-sel"><option>UK practices – hiring</option></select><button class="btn primary"><i class="ti ti-mail-search"></i>Find emails for 17 leads</button></div></div>
+  <div class="grid4">
+    <div class="tile"><div class="lbl">Leads processed</div><div class="big">17</div><div class="sub">3 skipped: no website</div></div>
+    <div class="tile"><div class="lbl">Emails found</div><div class="big">12</div><div class="sub">8 from sheet · 4 found</div></div>
+    <div class="tile"><div class="lbl">Not found</div><div class="big">5</div><div class="sub">All rungs tried</div></div>
+    <div class="tile"><div class="lbl">Cost</div><div class="big">$0.21</div><div class="sub">Verification and finder</div></div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div><h2>Recipe: Director waterfall</h2><p>Free methods run first. Paid methods run only when needed.</p></div><button class="btn sm">Edit recipe</button></div>
+    <div class="rung"><span class="handle">⋮⋮</span><span class="num">1</span><div><b>Address in sheet, contact 1</b><div class="small muted">Uses the address already in the sheet. No cost.</div></div><span class="pill ok">8 found</span></div>
+    <div class="rung"><span class="handle">⋮⋮</span><span class="num">2</span><div><b>Pattern and verify, contact 1</b><div class="small muted">first@, first.last@, flast@ checked by the verification service. About $0.002 each.</div></div><span class="pill ok">2 found</span></div>
+    <div class="rung"><span class="handle">⋮⋮</span><span class="num">3</span><div><b>Email finder, contact 1</b><div class="small muted">Charged only when an address is found. About $0.03.</div></div><span class="pill ok">1 found</span></div>
+    <div class="rung"><span class="handle">⋮⋮</span><span class="num">4</span><div><b>Contact 2, same methods</b><div class="small muted">Runs only if contact 1 has no address.</div></div><span class="pill ok">1 found</span></div>
+    <div class="rung"><span class="handle">⋮⋮</span><span class="num">5</span><div><b>Company address</b><div class="small muted">General address such as info@.</div></div><span class="pill">0 used</span></div>
+  </div>
+  <div class="note">Writes <span class="mono">email_status</span> and the address to the sheet. Values: from sheet, found, company address, not found, no website.</div>
+</section>
+
+<!-- 3 ICE BREAKERS: campaigns -->
+<section class="page" id="p-ice">
+  <div class="top"><div><h1>Ice breakers</h1><p>Step 3. Each campaign uses one rule set. Select a campaign to write, review or change its ice breakers.</p></div></div>
+  <div class="grid3">
+    <div class="tile"><div class="row" style="justify-content:space-between"><b>UK practices – hiring</b><span class="pill wn">Test</span></div><div class="small muted" style="margin:4px 0 10px">Rule set: Practices ladder</div><div class="small">11 written · 1 waiting · 2 without facts</div><button class="btn sm primary" style="margin-top:12px" data-go="icecamp">Open</button></div>
+    <div class="tile"><div class="row" style="justify-content:space-between"><b>UK small businesses – finance</b><span class="pill wn">Test</span></div><div class="small muted" style="margin:4px 0 10px">Rule set: Small business ladder</div><div class="small">10 written · 1 waiting</div><button class="btn sm primary" style="margin-top:12px" data-go="icecamp">Open</button></div>
+    <div class="tile"><div class="row" style="justify-content:space-between"><b>Advisory – finance director</b><span class="pill">Paused</span></div><div class="small muted" style="margin:4px 0 10px">Rule set: not selected</div><div class="small">0 written</div><button class="btn sm" style="margin-top:12px">Select rule set</button></div>
+  </div>
+  <div class="card">
+    <div class="card-head"><div><h2>Rule sets</h2><p>A rule set holds the rungs and the template. Campaigns can share a rule set.</p></div><button class="btn sm"><i class="ti ti-plus"></i>New rule set</button></div>
+    <div class="scroll"><table><tr><th>Rule set</th><th>Rungs</th><th>Used by</th><th>Written</th></tr>
+      <tr><td><b>Practices ladder</b></td><td>6 and a default</td><td>UK practices – hiring</td><td>11</td></tr>
+      <tr><td><b>Small business ladder</b></td><td>4 and a default</td><td>UK small businesses – finance</td><td>10</td></tr></table></div>
+  </div>
+</section>
+
+<!-- 3 ICE BREAKERS: one campaign -->
+<section class="page" id="p-icecamp">
+  <a class="back" data-go="ice">‹ Ice breakers</a>
+  <div class="top"><div><h1>Ice breakers · UK practices – hiring</h1><p>Rule set: Practices ladder. Leads need an email address and website facts.</p></div>
+    <div class="row"><button class="btn">Rewrite selected</button><button class="btn primary"><i class="ti ti-pencil"></i>Write 1 waiting</button></div></div>
+  <div class="card">
+    <div class="tabs" data-tabs="ice"><button class="on" data-tab="i-rungs">Rungs</button><button data-tab="i-tpl">Template</button><button data-tab="i-prev">Preview</button><button data-tab="i-leads">Leads</button></div>
+    <div class="tabp on" id="i-rungs">
+      <p class="muted small" style="margin:0 0 4px">Rungs are checked from top to bottom. The first rung with a matching fact is used. Drag to reorder.</p>
+      <div class="rung"><span class="handle">⋮⋮</span><span class="num">1</span><div><b>Open role</b><div class="small muted">Requires a job listing on the careers page</div></div><div class="row"><span class="pill ok">5 used</span><a class="small">Edit</a><input type="checkbox" class="sw" checked></div></div>
+      <div class="rung"><span class="handle">⋮⋮</span><span class="num">2</span><div><b>Award</b><div class="small muted">Requires an award on the news page</div></div><div class="row"><span class="pill ok">2 used</span><a class="small">Edit</a><input type="checkbox" class="sw" checked></div></div>
+      <div class="rung"><span class="handle">⋮⋮</span><span class="num">3</span><div><b>Article or case study</b><div class="small muted">Requires a recent post or client story</div></div><div class="row"><span class="pill ok">1 used</span><a class="small">Edit</a><input type="checkbox" class="sw" checked></div></div>
+      <div class="rung"><span class="handle">⋮⋮</span><span class="num">4</span><div><b>Sectors served</b><div class="small muted">Requires named sectors, for example care homes</div></div><div class="row"><span class="pill ok">2 used</span><a class="small">Edit</a><input type="checkbox" class="sw" checked></div></div>
+      <div class="rung"><span class="handle">⋮⋮</span><span class="num">5</span><div><b>Software partner</b><div class="small muted">Requires an accounting software partner badge</div></div><div class="row"><span class="pill ok">1 used</span><a class="small">Edit</a><input type="checkbox" class="sw" checked></div></div>
+      <div class="rung off"><span class="handle">⋮⋮</span><span class="num">6</span><div><b>Company story</b><div class="small muted">Requires an "about us" history statement</div></div><div class="row"><span class="pill">Off</span><a class="small">Edit</a><input type="checkbox" class="sw"></div></div>
+      <div class="rung"><span class="handle"></span><span class="num">D</span><div><b>Default</b><div class="small muted">Used when no rung matches. 3 versions, assigned evenly.</div></div><div class="row"><span class="pill">0 used</span><a class="small">Edit</a></div></div>
+      <button class="btn sm" style="margin-top:10px"><i class="ti ti-plus"></i>Add rung</button>
+    </div>
+    <div class="tabp" id="i-tpl">
+      <p class="muted small" style="margin:0 0 8px">Highlighted fields are filled for each lead.</p>
+      <div class="mail">Hi <span class="var">{first_name}</span>, I noticed <span class="var">{company}</span> <span class="var">{fact}</span>. We <span class="var">{shared_ground}</span>, and in our experience that usually means <span class="var">{implication}</span>.</div>
+      <div class="scroll"><table style="margin-top:12px"><tr><th>Field</th><th>Source</th></tr>
+        <tr><td><span class="var">{company}</span></td><td>Short company name</td></tr>
+        <tr><td><span class="var">{shared_ground}</span></td><td>Fixed per campaign, A/B tested: "work inside UK practice files every week" / "support a practice with about 1,000 clients"</td></tr>
+        <tr><td><span class="var">{fact}</span> <span class="var">{implication}</span></td><td>The matching rung, from website research</td></tr></table></div>
+    </div>
+    <div class="tabp" id="i-prev">
+      <div class="row" style="margin-bottom:10px"><span class="small muted">Lead</span><select class="inline-sel"><option>Hartley and Co</option><option>Kestrel Accounts</option></select></div>
+      <div class="kv"><span>Rung</span><span><b>1 · Open role</b></span><span>Fact</span><span>Careers page lists "Payroll Senior (care sector)"</span></div>
+      <div class="mail" style="margin-top:10px">Hi Jane, I noticed Hartley is hiring a payroll senior for the care sector. We work inside UK practice files every week, and in our experience that usually means care clients are growing faster than the team.</div>
+    </div>
+    <div class="tabp" id="i-leads">
+      <div class="scroll"><table><tr><th></th><th>Company</th><th>Rung</th><th>Ice breaker</th><th>Status</th></tr>
+        <tr><td><input type="checkbox"></td><td>Hartley and Co</td><td>Open role</td><td>I noticed Hartley is hiring a payroll senior…</td><td><span class="pill ok">Written</span></td></tr>
+        <tr><td><input type="checkbox"></td><td>Brookside Tax</td><td>Award</td><td>I noticed Brookside was named Practice of the Year…</td><td><span class="pill ok">Written</span></td></tr>
+        <tr><td><input type="checkbox"></td><td>Kestrel Accounts</td><td>Sectors served</td><td>—</td><td><span class="pill wn">Waiting</span></td></tr>
+        <tr><td><input type="checkbox"></td><td>Oakfield Books</td><td>—</td><td>—</td><td><span class="pill">No facts</span></td></tr></table></div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 COLD EMAIL: campaigns -->
+<section class="page" id="p-email">
+  <div class="top"><div><h1>Cold email</h1><p>Step 4. Email templates for each campaign, scored against the copy rulebook.</p></div></div>
+  <div class="grid3">
+    <div class="tile"><b>UK practices – hiring</b><div class="small muted" style="margin:4px 0 10px">2 live templates · 1 awaiting approval</div><div class="small">Top score: <b>92</b></div><button class="btn sm primary" style="margin-top:12px" data-go="emailcamp">Open</button></div>
+    <div class="tile"><b>UK small businesses – finance</b><div class="small muted" style="margin:4px 0 10px">1 live template</div><div class="small">Top score: <b>88</b></div><button class="btn sm primary" style="margin-top:12px" data-go="emailcamp">Open</button></div>
+    <div class="tile"><b>Advisory – finance director</b><div class="small muted" style="margin:4px 0 10px">No template</div><div class="small">Request one from Claude</div><button class="btn sm" style="margin-top:12px" data-go="emailcamp" data-tab="tp-ask">New request</button></div>
+  </div>
+</section>
+
+<!-- 4 COLD EMAIL: one campaign -->
+<section class="page" id="p-emailcamp">
+  <a class="back" data-go="email">‹ Cold email</a>
+  <div class="top"><div><h1>Cold email · UK practices – hiring</h1><p>Leads are split evenly between live templates. Drafts are used only after approval.</p></div></div>
+  <div class="card">
+    <div class="tabs" data-tabs="mail"><button class="on" data-tab="tp-tpl">Templates</button><button data-tab="tp-ask">Requests to Claude</button><button data-tab="tp-prev">Preview</button></div>
+    <div class="tabp on" id="tp-tpl">
+      <div class="grid3">
+        <div class="tile"><div class="row" style="justify-content:space-between"><b>Template A</b><span class="pill ok">Live · 50%</span></div><div class="small muted">Score 92 · 6 sent · 2 replies</div>
+          <div class="mail" style="margin-top:10px;font-size:12.5px"><b>Subject:</b> capacity at <span class="var">{{company}}</span><br><br>Hi <span class="var">{{first_name}}</span>,<br><span class="var">{{ice_breaker}}</span><br><br>We take on overflow bookkeeping for UK practices, starting with a fixed trial block.<br><br>Would that be useful this quarter?</div></div>
+        <div class="tile"><div class="row" style="justify-content:space-between"><b>Template B</b><span class="pill ok">Live · 50%</span></div><div class="small muted">Score 85 · 4 sent · 1 reply</div>
+          <div class="mail" style="margin-top:10px;font-size:12.5px"><b>Subject:</b> support while you hire<br><br>Hi <span class="var">{{first_name}}</span>,<br><span class="var">{{ice_breaker}}</span><br><br>If the role takes longer to fill, we can cover the workload from next week.<br><br>Open to a short call?</div></div>
+        <div class="tile" style="border-color:var(--coral)"><div class="row" style="justify-content:space-between"><b>Draft C</b><span class="pill ac">Awaiting approval</span></div><div class="small muted">Score 88 · request: "shorter, VAT deadlines"</div>
+          <div class="mail" style="margin-top:10px;font-size:12.5px"><b>Subject:</b> VAT returns at <span class="var">{{company}}</span><br><br>Hi <span class="var">{{first_name}}</span>,<br><span class="var">{{ice_breaker}}</span><br><br>We prepare VAT returns for UK practices within 48 hours.<br><br>Would a trial batch help?</div>
+          <div class="row" style="margin-top:10px"><button class="btn sm primary">Approve</button><button class="btn sm">Edit</button><button class="btn sm">Reject</button></div></div>
+      </div>
+      <div class="note">Score: 7 checks from the copy rulebook. Any figure in an email must have a recorded source, or the template is blocked.</div>
+    </div>
+    <div class="tabp" id="tp-ask">
+      <div class="grid2" style="align-items:start">
+        <div>
+          <div class="small muted" style="margin-bottom:6px">Request type</div>
+          <select style="margin-bottom:8px"><option>New template</option><option>Improve a template</option><option>Subject lines</option><option>Add facts to a template</option></select>
+          <div class="small muted" style="margin-bottom:6px">Instructions</div>
+          <textarea rows="4">New template for small businesses. Shorter. Lead with month-end close.</textarea>
+          <button class="btn primary" style="margin-top:8px">Submit request</button>
+          <div class="note">Requests are processed by Claude Code with the rulebook and approved facts, either on demand or every morning at 08:00. Results return here as drafts.</div>
+        </div>
+        <div>
+          <div class="small muted" style="margin-bottom:6px">Request history</div>
+          <div class="scroll"><table><tr><th>Request</th><th>Status</th></tr>
+            <tr><td>Shorter, VAT deadlines</td><td><span class="pill ac">Draft ready</span></td></tr>
+            <tr><td>Small businesses, month-end close</td><td><span class="pill wn">Queued</span></td></tr>
+            <tr><td>5 subject lines for Template A</td><td><span class="pill ok">Approved</span></td></tr></table></div>
+        </div>
+      </div>
+    </div>
+    <div class="tabp" id="tp-prev">
+      <div class="row" style="margin-bottom:10px"><span class="small muted">Lead</span><select class="inline-sel"><option>Hartley and Co · Jane Hartley</option></select><span class="small muted">Template</span><select class="inline-sel"><option>Template A</option></select></div>
+      <div class="mail"><span class="muted">To:</span> jane@hartleyco.example<br><span class="muted">Subject:</span> capacity at Hartley<br><br>Hi Jane,<br>I noticed Hartley is hiring a payroll senior for the care sector. We work inside UK practice files every week, and in our experience that usually means care clients are growing faster than the team.<br><br>We take on overflow bookkeeping for UK practices, starting with a fixed trial block.<br><br>Would that be useful this quarter?</div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 SENDING -->
+<section class="page" id="p-send">
+  <div class="top"><div><h1>Sending</h1><p>Step 5. Queues ready leads in the sending platform. A lead is ready when it has an email, an ice breaker and an approved template.</p></div>
+    <button class="btn primary"><i class="ti ti-send"></i>Send 5 queued leads</button></div>
+  <div class="card"><div class="scroll"><table><tr><th>Campaign</th><th>Sending campaign</th><th>Queued</th><th>Sent today</th><th>Daily limit</th><th>Mode</th></tr>
+    <tr><td><b>UK practices – hiring</b></td><td>UK practices – phase 1</td><td>1</td><td>10</td><td>50</td><td><span class="pill wn">Test</span></td></tr>
+    <tr><td><b>UK small businesses – finance</b></td><td>UK SMEs – phase 1</td><td>1</td><td>9</td><td>50</td><td><span class="pill wn">Test</span></td></tr>
+    <tr><td><b>Advisory – finance director</b></td><td>Not selected</td><td>3</td><td>0</td><td>—</td><td><span class="pill">Paused</span></td></tr></table></div>
+    <div class="note">Writes <span class="mono">push_status</span> to the sheet: sent, held or failed. Leads added outside the app are recorded so they are never sent twice.</div></div>
+</section>
+
+<!-- 6 REPLIES -->
+<section class="page" id="p-replies">
+  <div class="top"><div><h1>Replies</h1><p>Step 6. New replies are collected every 30 minutes and classified. Select a reply to open it.</p></div>
+    <button class="btn"><i class="ti ti-refresh"></i>Check now</button></div>
+  <div class="split">
+    <div class="pane list-pane"><table id="rep-table"></table></div>
+    <div class="pane detail" id="rep-detail"></div>
+  </div>
+  <div class="card">
+    <h2>How replies are handled</h2>
+    <div class="steps" style="margin-top:12px">
+      <div class="stp"><b>1. Collect</b>New replies from the sending platform, every 30 minutes.</div>
+      <div class="stp"><b>2. Classify</b>Interested, not interested, out of office, wrong person or unsubscribe.</div>
+      <div class="stp"><b>3. Record</b><span class="mono">reply_status</span> is written to the sheet, so the lead is not contacted again by mistake.</div>
+      <div class="stp"><b>4. Notify</b>Interested replies appear on Home under Needs your decision.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SCHEDULES -->
+<section class="page" id="p-schedules">
+  <div class="top"><div><h1>Schedules</h1><p>Each step starts at a set time, or when the previous step completes.</p></div>
+    <select class="inline-sel"><option>UK practices – hiring</option><option>UK small businesses – finance</option></select></div>
+  <div class="card"><div class="scroll"><table id="sch-table"></table></div></div>
+  <div class="grid2">
+    <div class="card"><h2>Trigger types</h2><ul class="checks" style="margin-top:12px">
+      <li><span class="mk n"><i class="ti ti-clock"></i></span><div><b>Time</b><div class="small muted">A fixed time or interval, for example weekdays at 07:00</div></div></li>
+      <li><span class="mk n"><i class="ti ti-arrow-right"></i></span><div><b>After previous step</b><div class="small muted">Starts as soon as the previous step completes</div></div></li></ul></div>
+    <div class="card"><h2>Approval rules</h2>
+      <div class="kv" style="margin-top:12px"><span>New template from Claude</span><span><label class="row" style="gap:8px"><input type="checkbox" class="sw" checked>Auto-approve at score 90 or above</label></span>
+      <span>Interested reply</span><span><label class="row" style="gap:8px"><input type="checkbox" class="sw">Auto-reply (off: sent to you)</label></span>
+      <span>Spend above limit</span><span><label class="row" style="gap:8px"><input type="checkbox" class="sw">Allow (off: pause and ask)</label></span></div></div>
+  </div>
+</section>
+
+<!-- HEALTH -->
+<section class="page" id="p-health">
+  <div class="top"><div><h1>Health</h1><p>The monitoring agent checks every step every 5 minutes. Known issues are fixed automatically; everything else is escalated.</p></div></div>
+  <div class="grid3">
+    <div class="tile"><div class="lbl">Issues today</div><div class="big">3</div></div>
+    <div class="tile"><div class="lbl">Resolved automatically</div><div class="big">2</div></div>
+    <div class="tile"><div class="lbl">Waiting for you</div><div class="big">1</div></div>
+  </div>
+  <div class="card"><div class="card-head"><div><h2>Incident log</h2></div></div>
+    <div class="scroll"><table><tr><th>Time</th><th>Step</th><th>Issue</th><th>Action taken</th><th>Result</th></tr>
+      <tr><td>09:12</td><td>Find email</td><td>Sheet write limit reached</td><td>Waited 8 seconds and retried. 14 of 14 rows saved.</td><td><span class="pill ok">Resolved</span></td></tr>
+      <tr><td>09:40</td><td>Find email</td><td>Run interrupted by restart</td><td>Closed the old run and resumed from row 77. No leads lost.</td><td><span class="pill ok">Resolved</span></td></tr>
+      <tr><td>10:05</td><td>Find email</td><td>Email finder credits used up</td><td>Paused rung 3 for one campaign. Other rungs continue.</td><td><span class="pill bad">Escalated</span></td></tr></table></div></div>
+  <div class="grid2">
+    <div class="card"><h2>Resolved automatically</h2><ul class="checks" style="margin-top:12px">
+      <li><span class="mk ok">✓</span>Sheet write limit: wait and retry</li>
+      <li><span class="mk ok">✓</span>Interrupted run: close and resume</li>
+      <li><span class="mk ok">✓</span>Unsaved result: save again at no cost</li>
+      <li><span class="mk ok">✓</span>Unreachable website: retry the next day</li></ul></div>
+    <div class="card"><h2>Always escalated</h2><ul class="checks" style="margin-top:12px">
+      <li><span class="mk no"><i class="ti ti-alert-circle"></i></span>Extra spend or credit purchases</li>
+      <li><span class="mk no"><i class="ti ti-alert-circle"></i></span>Changes to existing sheet data</li>
+      <li><span class="mk no"><i class="ti ti-alert-circle"></i></span>Template changes</li>
+      <li><span class="mk no"><i class="ti ti-alert-circle"></i></span>Any issue not on the automatic list</li></ul></div>
+  </div>
+  <div class="card"><div class="card-head"><div><h2>Daily summary</h2><p>Sent at 18:00 each day.</p></div></div>
+    <div class="mail"><b>Daily summary · Thursday 6 November</b><br>Issues: 3 · Resolved automatically: 2 · Waiting for you: 1<br><br>Action needed: email finder credits are used up. Step 2, rung 3 is paused for UK small businesses – finance. Add credits, then select Resume.<br><br>Today: 60 leads · 31 emails found · 24 sent · 5 replies (2 interested)</div></div>
+</section>
+
+<!-- LIVE DEMO -->
+<section class="page" id="p-demo">
+  <div class="top"><div><h1>Live demo</h1><p>Runs the full pipeline on 12 sample leads. A trigger is scheduled 10 seconds ahead, then each step starts automatically.</p></div>
+    <div class="row"><button class="btn" id="demo-reset">Reset</button><button class="btn primary" id="demo-start"><i class="ti ti-player-play"></i>Start demo</button></div></div>
+  <div class="card" id="demo-trigger" style="margin-top:0"></div>
+  <div class="card">
+    <div class="chain" id="demo-chain"></div>
+    <div class="progress"><span id="demo-bar"></span></div>
+  </div>
+  <div class="split" style="height:auto;min-height:0;margin-top:14px">
+    <div class="pane list-pane" style="max-height:560px"><table id="demo-leads"></table></div>
+    <div class="pane detail" style="max-height:560px"><h3 style="margin-bottom:8px">Activity</h3><div id="demo-log" class="small" style="display:grid;gap:6px"></div></div>
+  </div>
+  <div class="card" id="demo-result" style="display:none"></div>
+</section>
+
+<!-- SETTINGS -->
+<section class="page" id="p-settings">
+  <div class="top"><div><h1>Settings</h1><p>Connected services and limits. API keys are stored outside the app folder.</p></div></div>
+  <div class="card"><h2>Connected services</h2>
+    <div class="scroll"><table style="margin-top:8px"><tr><th>Service</th><th>Used for</th><th>Status</th></tr>
+      <tr><td><b>Google Sheets</b></td><td>Reading leads and writing results</td><td><span class="pill ok">Connected</span></td></tr>
+      <tr><td><b>Email verification</b></td><td>Checking pattern-based addresses</td><td><span class="pill ok">43,691 checks left</span></td></tr>
+      <tr><td><b>Email finder</b></td><td>Finding addresses by name</td><td><span class="pill bad">No credits</span></td></tr>
+      <tr><td><b>Sending platform</b></td><td>Sending emails and collecting replies</td><td><span class="pill ok">Connected</span></td></tr>
+      <tr><td><b>Claude Code</b></td><td>Template requests</td><td><span class="pill ok">Connected</span></td></tr>
+      <tr><td><b>Claude API</b></td><td>Reply classification</td><td><span class="pill wn">No credit</span></td></tr></table></div></div>
+  <div class="card"><h2>Limits</h2><div class="kv" style="margin-top:10px"><span>Daily spend</span><span>$5.00</span><span>Daily sends, all campaigns</span><span>300</span><span>New campaigns</span><span>Start in test mode</span></div></div>
+</section>
+
+</main>
+</div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+function go(id,tab){
+  if(!document.getElementById('p-'+id))id='home';
+  $$('.page').forEach(p=>p.classList.toggle('on',p.id==='p-'+id));
+  const navId={camp:'campaigns',icecamp:'ice',emailcamp:'email'}[id]||id;
+  $$('.nav a').forEach(a=>a.classList.toggle('on',a.dataset.go===navId));
+  if(tab){const b=document.querySelector(`.tabs button[data-tab="${tab}"]`);if(b)b.click();}
+  window.scrollTo(0,0);
+  if(location.hash!=='#'+id)history.replaceState(null,'','#'+id);
+}
+document.addEventListener('click',e=>{const a=e.target.closest('[data-go]');if(a){e.preventDefault();go(a.dataset.go,a.dataset.tab);}});
+$$('[data-tabs]').forEach(bar=>bar.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+  bar.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===b));
+  bar.parentElement.querySelectorAll(':scope > .tabp').forEach(p=>p.classList.toggle('on',p.id===b.dataset.tab));
+})));
+$('#theme').onclick=()=>{const d=document.documentElement;const dark=d.dataset.theme!=='dark';d.dataset.theme=dark?'dark':'';$('#theme').textContent=dark?'Light mode':'Dark mode';};
+$('#show-connect').onclick=()=>{$('#connect-box').style.display='block';};
+$('#do-connect').onclick=()=>{$('#connect-result').style.display='block';
+  if(!$('#src-demo'))$('#src-list').insertAdjacentHTML('afterbegin','<div class="li src-li" id="src-demo" style="background:var(--pos-wash)"><div class="ico"><i class="ti ti-file-spreadsheet"></i></div><div><b>Demo – UK accountancy firms</b><div class="small muted">Google Sheet · 1 tab · 12 rows · connected just now</div></div><div class="small hide-t">Not in use</div><div class="hide-t"><span class="pill ok">Read and write</span></div><button class="btn sm">Tabs</button></div>');};
+$('#add-cols').onclick=()=>{$('#cols-done').style.display='inline-flex';};
+/* used by the guided walkthrough */
+window.__tap=(sel,ms=900)=>new Promise(res=>{const el=document.querySelector(sel);if(!el)return res('missing '+sel);
+  el.scrollIntoView({block:'center',behavior:'smooth'});el.style.outline='3px solid #ff8c6b';el.style.outlineOffset='2px';
+  setTimeout(()=>{el.style.outline='';el.click();res('ok '+sel);},ms);});
+window.__type=(sel,text)=>new Promise(res=>{const el=document.querySelector(sel);el.focus();el.value='';let i=0;
+  const iv=setInterval(()=>{el.value+=text[i++];if(i>=text.length){clearInterval(iv);res('typed');}},35);});
+
+/* status values (as stored in the sheet) -> labels shown on screen */
+const LBL={found:['Found','ok'],not_found:['No website','wn'],dead_domain:['Unreachable','bad'],
+  'as-is':['From sheet','ok'],enriched:['Found','ok'],fallback:['Company address','ok'],no_email:['Not found','wn'],no_website:['No website','wn'],
+  written:['Written','ok'],waiting:['Waiting','wn'],pushed:['Sent','ac'],held:['Held','wn'],
+  interested:['Interested','ok'],not_interested:['Not interested',''],ooo:['Out of office','wn'],wrong_person:['Wrong person','wn'],unsubscribe:['Unsubscribe','bad']};
+const pill=v=>v?`<span class="pill ${(LBL[v]||[v,''])[1]}">${(LBL[v]||[v])[0]}</span>`:'<span class="muted">—</span>';
+
+/* LEADS */
+const NAMES=['Hartley and Co','Brookside Tax','Marlow Audit','Kestrel Accounts','Fenwick Payroll','Pennine Ledger','Oakfield Books','Wren Tax LLP','Ashby Accounts','Calder Payroll','Lyle and Moss','Thorne Tax','Harrow Bookkeeping','Selby and Grant','Northgate Tax','Vale Accountants','Mercer Audit','Stanton Payroll','Bishop and Rowe','Elmfield Accounts','Quayside Tax','Redcliffe Ledger','Hollis and Day','Larkspur Accounts'];
+const PEOPLE=['Jane Hartley','Tom Reed','Ian Marlow','Priya Shah','Dan Cole','Ali Khan','Sue Park','Mo Ahmed','Kate Ashby','Ryan Calder','Ben Lyle','Amy Thorne','Lucy Harrow','Sam Selby','Omar Aziz','Rachel Vale','Chris Mercer','Nina Stanton','Paul Bishop','Grace Elm','Dev Patel','Hannah Reid','Mark Hollis','Zoe Lark'];
+const PAT=[['found','enriched','written','pushed','interested'],['found','as-is','written','pushed','not_interested'],['found','enriched','written','pushed','ooo'],['found','enriched','waiting','',''],
+ ['found','as-is','written','',''],['not_found','no_website','','',''],['dead_domain','no_email','','',''],['','','','','']];
+const FACTS=['Careers page lists "Payroll Senior (care sector)"','News page: "Practice of the Year 2026, South West"','Careers page lists "Audit Senior"','Services page: care homes and dental clinics','Accounting software Gold Partner badge'];
+const L=NAMES.map((n,i)=>{const p=PAT[i<8?i:(i*5)%8];const first=PEOPLE[i].split(' ')[0].toLowerCase();const dom=n.toLowerCase().replace(/ and /g,'').replace(/[^a-z]/g,'').slice(0,14)+'.example';
+  const has=['as-is','enriched'].includes(p[1]);
+  return {f:n,p:PEOPLE[i]+(i%3?', Director':', Partner'),w:p[0],e:p[1],i:p[2],s:p[3],r:p[4],mail:has?first+'@'+dom:'',site:p[0]&&p[0]!=='not_found'?dom:'',
+   fact:p[0]==='found'?FACTS[i%5]:'',line:p[2]==='written'?`I noticed ${n.split(' ')[0]} ${['is hiring a payroll senior','was named Practice of the Year','is hiring an audit senior','serves care homes and dental clinics','is an accounting software Gold Partner'][i%5]}…`:''};});
+const F=[['All',()=>1],['Not researched',l=>!l.w],['Waiting for ice breaker',l=>l.i==='waiting'],['Ready to send',l=>l.i==='written'&&!l.s],['Replied',l=>l.r]];
+let lf=0,ls=0;
+function nextStep(l){if(!l.w)return'Website research';if(['no_website','no_email'].includes(l.e))return'None. No email address available.';
+  if(l.i==='waiting')return'Ice breakers';if(l.i==='written'&&!l.s)return'Sending';if(l.s&&!l.r)return'Waiting for reply';return'Complete';}
+function drawLeads(){
+  $('#lead-chips').innerHTML=F.map((x,i)=>`<button class="btn sm ${i===lf?'primary':''}" data-f="${i}">${x[0]} (${L.filter(x[1]).length})</button>`).join('');
+  $$('#lead-chips button').forEach(b=>b.onclick=()=>{lf=+b.dataset.f;drawLeads();});
+  const rows=L.map((l,i)=>[l,i]).filter(([l])=>F[lf][1](l));
+  if(!rows.some(([,i])=>i===ls)&&rows.length)ls=rows[0][1];
+  $('#lead-table').innerHTML='<tr><th>Company</th><th>Website</th><th>Email</th><th>Ice breaker</th><th>Sent</th><th>Reply</th></tr>'+
+    rows.map(([l,i])=>`<tr class="click ${i===ls?'sel':''}" data-i="${i}"><td><b>${l.f}</b><div class="small muted">${l.p.split(',')[0]}</div></td><td>${pill(l.w)}</td><td>${pill(l.e)}</td><td>${pill(l.i)}</td><td>${pill(l.s)}</td><td>${pill(l.r)}</td></tr>`).join('');
+  $$('#lead-table tr.click').forEach(t=>t.onclick=()=>{ls=+t.dataset.i;drawLeads();});
+  const l=L[ls];
+  if(!rows.length){$('#lead-detail').innerHTML='<div class="empty">No leads match this filter.</div>';return;}
+  $('#lead-detail').innerHTML=`<div class="small muted">Lead record</div><h2 style="margin:2px 0">${l.f}</h2><div class="muted small" style="margin-bottom:14px">${l.p}</div>
+   <div class="kv" style="margin-bottom:14px"><span>Email</span><span>${l.mail||'—'}</span><span>Website</span><span>${l.site||'—'}</span><span>Next step</span><span><b>${nextStep(l)}</b></span></div>
+   <h3 style="font-size:13px;margin-bottom:4px">Pipeline status</h3>
+   <table><tr><th>Step</th><th>Status</th><th>Sheet column</th></tr>
+   <tr><td>1 · Website research</td><td>${pill(l.w)}</td><td class="mono">website_status</td></tr>
+   <tr><td>2 · Find email</td><td>${pill(l.e)}</td><td class="mono">email_status</td></tr>
+   <tr><td>3 · Ice breaker</td><td>${pill(l.i)}</td><td class="mono">icebreaker_status</td></tr>
+   <tr><td>5 · Sending</td><td>${pill(l.s)}</td><td class="mono">push_status</td></tr>
+   <tr><td>6 · Reply</td><td>${pill(l.r)}</td><td class="mono">reply_status</td></tr></table>
+   ${l.fact?`<h3 style="font-size:13px;margin:14px 0 2px">Website fact</h3><div class="ev">${l.fact}</div>`:''}
+   ${l.line?`<h3 style="font-size:13px;margin:14px 0 2px">Ice breaker</h3><div class="ev">${l.line}</div>`:''}
+   <h3 style="font-size:13px;margin:14px 0 2px">History</h3>
+   <div class="ev">${[l.w&&'Website researched',l.e&&'Email step completed',l.i==='written'&&'Ice breaker written',l.s&&'Queued in sending platform',l.r&&'Reply received'].filter(Boolean).map(x=>'• '+x).join('<br>')||'No activity yet'}</div>`;
+  $('#lead-detail').scrollTop=0;
+}
+drawLeads();
+
+/* RESEARCH */
+const R=[['Hartley and Co','hartleyco.example','found',['Open role','Sector: care'],'Careers: "Payroll Senior (care sector)". Services: payroll, care home accounts, VAT. About: family practice since 1998.'],
+ ['Brookside Tax','brooksidetax.example','found',['Award'],'News: "Practice of the Year 2026, South West". Services: tax, R&D claims.'],
+ ['Kestrel Accounts','kestrel.example','found',['Sectors: care, dental'],'Services: accounts for care homes and dental clinics. No careers page.'],
+ ['Pennine Ledger','—','not_found',[],'No website in the sheet. Search returned no match.'],
+ ['Oakfield Books','oakfieldbooks.example','dead_domain',[],'Domain did not respond on two checks, one day apart.']];
+let rs=0;
+function drawRes(){
+  $('#res-table').innerHTML='<tr><th>Company</th><th>Website</th><th>Result</th><th>Facts</th><th>Checked</th></tr>'+R.map((r,i)=>`<tr class="click ${i===rs?'sel':''}" data-i="${i}"><td><b>${r[0]}</b></td><td class="mono">${r[1]}</td><td>${pill(r[2])}</td><td>${r[3].map(c=>`<span class="chip">${c}</span>`).join('')||'<span class="muted">—</span>'}</td><td class="small muted">Today 08:5${i}</td></tr>`).join('');
+  $$('#res-table tr.click').forEach(t=>t.onclick=()=>{rs=+t.dataset.i;drawRes();});
+  $('#res-detail').innerHTML=`<div class="ev" style="margin-top:12px"><b>${R[rs][0]}:</b> ${R[rs][4]}</div>`;
+}
+drawRes();
+
+/* REPLIES */
+const Q=[['Jane Hartley','Hartley and Co','Yes, please send more information. Could we speak on Tuesday?','interested','Book a call. Tuesday was offered.','UK practices – hiring','Today 10:14'],
+ ['Tom Reed','Brookside Tax','Not for us at the moment, thank you.','not_interested','No action. Follow-ups stopped.','UK practices – hiring','Today 09:52'],
+ ['Ian Marlow','Marlow Audit','I am out of the office until Monday 10 November.','ooo','No action. Sequence resumes after the return date.','UK practices – hiring','Today 09:30'],
+ ['Sara Lin','Lin Logistics','I have left the company. Please contact james@linlogistics.example instead.','wrong_person','Add James as a new contact for this company.','UK small businesses – finance','Yesterday 16:05'],
+ ['Raj Patel','Patel Dental','Interested. What would this cost for a 12-person clinic?','interested','Reply with pricing for 12 staff.','UK small businesses – finance','Yesterday 11:41'],
+ ['Helen Stone','Stone Builders','Please remove me from your list.','unsubscribe','Removed from all campaigns.','UK small businesses – finance','Yesterday 09:20']];
+let qs=0;
+function drawRep(){
+  $('#rep-table').innerHTML='<tr><th>From</th><th>Message</th><th>Category</th></tr>'+Q.map((q,i)=>`<tr class="click ${i===qs?'sel':''}" data-i="${i}"><td><b>${q[0]}</b><div class="small muted">${q[1]}</div></td><td class="small">${q[2].length>52?q[2].slice(0,52)+'…':q[2]}<div class="muted">${q[6]}</div></td><td>${pill(q[3])}</td></tr>`).join('');
+  $$('#rep-table tr.click').forEach(t=>t.onclick=()=>{qs=+t.dataset.i;drawRep();});
+  const q=Q[qs];
+  $('#rep-detail').innerHTML=`<div class="small muted">${q[5]} · ${q[6]}</div><h2 style="margin:2px 0 12px">${q[0]} · ${q[1]}</h2><div class="mail">${q[2]}</div>
+   <div class="kv" style="margin-top:14px"><span>Category</span><span>${pill(q[3])}</span><span>Recommended action</span><span>${q[4]}</span><span>Sheet update</span><span class="mono">reply_status = ${q[3]}</span></div>
+   <div class="row" style="margin-top:14px"><button class="btn sm primary">Open conversation</button><button class="btn sm">Change category</button><button class="btn sm">Mark as handled</button></div>`;
+  $('#rep-detail').scrollTop=0;
+}
+drawRep();
+
+/* SCHEDULES */
+const S=[['1 · Website research','Time','Weekdays at 07:00','Tomorrow 07:00',1],
+ ['2 · Find email','After previous step','—','After step 1',1],
+ ['3 · Ice breakers','After previous step','—','After step 2',1],
+ ['4 · Cold email','After previous step','—','After step 3',1],
+ ['5 · Sending','Time','Weekdays at 09:00, up to 50','Tomorrow 09:00',1],
+ ['6 · Replies','Time','Every 30 minutes','In 12 minutes',1],
+ ['Health check','Time','Every 5 minutes','In 3 minutes',1],
+ ['Daily summary','Time','Daily at 18:00','Today 18:00',1]];
+function drawSch(){
+  $('#sch-table').innerHTML='<tr><th>Step</th><th>Trigger</th><th>Schedule</th><th>Next run</th><th>Enabled</th></tr>'+
+   S.map(s=>`<tr${s[5]?' style="background:var(--coral-wash)"':''}><td><b>${s[0]}</b></td><td>${s[1]}</td><td>${s[2]}</td><td class="small muted">${s[3]}</td><td><input type="checkbox" class="sw" ${s[4]?'checked':''}></td></tr>`).join('');
+}
+drawSch();
+
+/* LIVE DEMO (simulated in this sample; the real app runs the real pipeline on sample data) */
+const ST=[['w','Website research'],['e','Find email'],['i','Ice breakers'],['m','Cold email'],['s','Sending'],['r','Replies']];
+const DF=[['Hartley and Co','found','enriched','Open role','A','interested'],['Brookside Tax','found','as-is','Award','B','not_interested'],
+ ['Marlow Audit','found','enriched','Open role','A','ooo'],['Kestrel Accounts','found','enriched','Sectors served','B',''],
+ ['Fenwick Payroll','found','as-is','Software partner','A',''],['Pennine Ledger','not_found','no_website','','',''],
+ ['Oakfield Books','dead_domain','no_email','','',''],['Wren Tax LLP','found','enriched','Article','B','interested'],
+ ['Ashby Accounts','found','no_email','','',''],['Calder Payroll','found','as-is','Default','A',''],
+ ['Lyle and Moss','found','enriched','Award','B',''],['Thorne Tax','found','as-is','Sectors served','A','']];
+let DS=[],run=0;
+const SPEED=()=>window.DEMO_SPEED||1;
+const sleep=ms=>new Promise(r=>setTimeout(r,ms/SPEED()));
+const now=()=>new Date().toTimeString().slice(0,8);
+function dlog(txt,kind){const d=document.createElement('div');d.className='ev';d.style.marginTop='0';
+  if(kind==='bad')d.style.background='var(--neg-wash)';if(kind==='good')d.style.background='var(--pos-wash)';
+  d.innerHTML=`<span class="mono muted">${now()}</span> ${txt}`;$('#demo-log').prepend(d);}
+function dDraw(active){
+  const done=k=>DS.filter(f=>f['_'+k]).length;
+  $('#demo-chain').innerHTML=ST.map(([k,n],i)=>{const fin=active>i||active===9,cur=active===i;
+    return `<div class="st ${cur?'run':fin?'done':''}"><div class="h">${fin?'<i class="ti ti-check"></i>':''}${i+1} · ${n}</div><div class="v">${done(k)}<span class="small muted" style="font-weight:400"> / ${DF.length}</span></div><div class="s">${cur?'Running':fin?'Completed':'Pending'}</div></div>`;}).join('');
+  $('#demo-leads').innerHTML='<tr><th>Company</th><th>Website</th><th>Email</th><th>Ice breaker</th><th>Template</th><th>Sent</th><th>Reply</th></tr>'+
+   DS.map(f=>`<tr><td><b>${f.n}</b></td><td>${pill(f.w)}</td><td>${pill(f.e)}</td><td>${pill(f.i)}</td><td>${f.m?`<span class="pill ok">${f.m}</span>`:'<span class="muted">—</span>'}</td><td>${pill(f.s)}</td><td>${pill(f.r)}</td></tr>`).join('');
+  const total=DF.length*ST.length,got=ST.reduce((a,[k])=>a+DS.filter(f=>f['_'+k]).length,0);
+  $('#demo-bar').style.width=Math.round(100*got/total)+'%';
+}
+function trig(icon,cls,title,sub,extra){$('#demo-trigger').innerHTML=`<div class="row"><span class="mk ${cls}"><i class="ti ${icon}"></i></span><div style="flex:1;min-width:200px"><b>${title}</b><div class="small muted">${sub}</div></div>${extra||''}</div>`;}
+function dReset(){run++;DS=DF.map(d=>({n:d[0],d}));$('#demo-log').innerHTML='<div class="muted">No activity yet.</div>';$('#demo-result').style.display='none';
+  trig('ti-clock','n','Ready','Select Start demo. A one-time trigger is scheduled 10 seconds ahead.');
+  S.splice(0,S.length,...S.filter(s=>!s[5]));drawSch();dDraw(-1);}
+async function dStart(){
+  dReset();$('#demo-log').innerHTML='';const me=run,t0=Date.now();
+  const at=new Date(Date.now()+10000/SPEED()).toTimeString().slice(0,8);
+  S.unshift(['Demo run','Time','Once at '+at,'In 10 seconds',1,1]);drawSch();
+  dlog(`Trigger scheduled: full pipeline, once at <b>${at}</b>`);
+  for(let s=10;s>0;s--){if(me!==run)return;trig('ti-clock','n',`Trigger scheduled for ${at}`,`Starts automatically in ${s} seconds.`,'<a class="btn sm" data-go="schedules">View in Schedules</a>');await sleep(1000);}
+  trig('ti-bolt','ok',`Trigger fired at ${now()}`,'Pipeline running on 12 sample leads.');
+  dlog('<b>Trigger fired.</b> Pipeline started.','good');
+  for(let si=0;si<ST.length;si++){const [k,name]=ST[si];if(me!==run)return;dDraw(si);dlog(`<b>Step ${si+1} · ${name}</b> started`);
+    for(let fi=0;fi<DS.length;fi++){if(me!==run)return;const f=DS[fi],d=f.d;await sleep(320);
+      f['_'+k]=1;
+      if(k==='w'){f.w=d[1];if(d[1]!=='found')dlog(`${f.n}: ${LBL[d[1]][0].toLowerCase()}`);}
+      if(k==='e'){if(f.w!=='found'){f.e=d[2];}else{
+          if(fi===4){dDraw(si);dlog(`${f.n}: sheet write limit reached, result not saved`,'bad');await sleep(900);
+            dlog('Health agent: known issue. Waiting 3 seconds, then retrying.');await sleep(1800);
+            dlog(`Health agent: ${f.n} saved. <b>Resolved automatically.</b>`,'good');}
+          f.e=d[2];if(d[2]!=='no_email')dlog(`${f.n}: email ${LBL[d[2]][0].toLowerCase()}`);}}
+      if(k==='i'&&['as-is','enriched'].includes(f.e)){f.i='written';dlog(`${f.n}: ice breaker written (${d[3]})`);}
+      if(k==='m'&&f.i==='written'){f.m='Template '+d[4];}
+      if(k==='s'&&f.m){f.s='pushed';}
+      if(k==='r'&&f.s){if(fi===0)dlog('Collecting replies. Sample replies are used in demo mode.');if(d[5]){f.r=d[5];dlog(`${f.n} replied: <b>${LBL[d[5]][0]}</b>`,d[5]==='interested'?'good':'');}}
+      dDraw(si);}
+    if(k==='m')dlog('Cold email: 9 emails prepared from Templates A and B');
+    if(k==='s')dlog('Sending: 9 leads queued in test mode');
+  }
+  if(me!==run)return;dDraw(9);const secs=Math.round((Date.now()-t0)/1000);
+  const c=k=>DS.filter(f=>f[k]&&!['not_found','dead_domain','no_website','no_email'].includes(f[k])).length;
+  $('#demo-result').style.display='block';
+  $('#demo-result').innerHTML=`<div class="card-head"><div><h2>Pipeline completed in ${secs} seconds</h2><p>Started by a scheduled trigger. No manual steps.</p></div><a class="btn sm" data-go="health">Open Health</a></div>
+   <div class="grid4"><div class="tile"><div class="lbl">Leads</div><div class="big">12</div></div><div class="tile"><div class="lbl">Websites researched</div><div class="big">${c('w')}</div></div><div class="tile"><div class="lbl">Emails found</div><div class="big">${c('e')}</div></div><div class="tile"><div class="lbl">Sent (test)</div><div class="big">${c('s')}</div></div></div>
+   <div class="mail" style="margin-top:12px"><b>Daily summary</b><br>Issues: 1 (sheet write limit) · Resolved automatically: 1 · Waiting for you: 2 interested replies (Hartley and Co, Wren Tax LLP)</div>`;
+  dlog('<b>Pipeline completed.</b> Daily summary updated.','good');
+}
+$('#demo-start').onclick=dStart;$('#demo-reset').onclick=dReset;
+dReset();
+
+go((location.hash||'#home').slice(1)||'home');
+</script>
+</body>
+</html>

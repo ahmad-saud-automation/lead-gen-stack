@@ -1,0 +1,1492 @@
+{
+  "note": "Many campaigns off one sheet. Campaigns are checked in PRIORITY order and the FIRST one whose rules match claims the row - that is how 'one firm, one campaign' is enforced. Everything here starts disabled with no Instantly id: nothing can run or send until you fill those in deliberately. Run `plan` first - it is free and tells you how many rows each lane would take.",
+  "globals": {
+    "daily_push_cap": 300,
+    "daily_spend_cap_usd": 5,
+    "note": "Ceilings across ALL campaigns in one day. 300 leaves headroom under ~350/day across 10 mailboxes (docs/09 PART 4). $5.00/day is roughly 2,800 MillionVerifier checks at $0.00178."
+  },
+  "campaigns": [
+    {
+      "id": "northwind-size-micro",
+      "name": "Practices 2-10 staff",
+      "note": "September WHO test, size arm A. STATE.md counts 1,670 rows in this band - clears the decision agent's 300 floor. LIMITS TEMPORARILY LOWERED TO 5 FOR THE FIRST LIVE TEST (2026-09-06) - raise per_run back to 50 and per_day to 100 once the first push is confirmed in Instantly.",
+      "enabled": true,
+      "priority": 10,
+      "tab": "Practices",
+      "fieldmap": "fieldmap.northwind.json",
+      "rules": {
+        "all": [
+          {
+            "field": "status",
+            "op": "is_blank"
+          },
+          {
+            "field": "final_status",
+            "op": "is_blank"
+          },
+          {
+            "field": "send_gate",
+            "op": "equals",
+            "value": "yes"
+          },
+          {
+            "field": "employees",
+            "op": "between",
+            "value": [
+              2,
+              10
+            ]
+          }
+        ],
+        "none": [
+          {
+            "field": "fabrikam_contacted",
+            "op": "equals",
+            "value": "yes"
+          }
+        ]
+      },
+      "order": [
+        {
+          "field": "contact_source",
+          "order": [
+            "apollo_reveal",
+            "apollo_old",
+            "icypeas",
+            "pattern_mv"
+          ]
+        },
+        {
+          "field": "evidence_strength",
+          "order": [
+            "strong",
+            "medium",
+            "weak",
+            "none"
+          ]
+        },
+        {
+          "field": "trading_years",
+          "dir": "desc"
+        }
+      ],
+      "limits": {
+        "per_run": 5,
+        "per_day": 0,
+        "max_spend_usd": 0.25
+      },
+      "instantly": {
+        "campaign_id": "",
+        "blocklist_id": "",
+        "skip_if_in_workspace": false,
+        "skip_if_in_campaign": false,
+        "skip_if_in_list": true
+      },
+      "labels": [
+        {
+          "send_as": "Address",
+          "type": "column",
+          "source": [
+            "city",
+            "region",
+            "Address"
+          ],
+          "fallback": ""
+        },
+        {
+          "send_as": "trigger_family",
+          "type": "column",
+          "source": "trigger_family",
+          "fallback": "V0_volume"
+        },
+        {
+          "send_as": "evidence_source",
+          "type": "column",
+          "source": "evidence_source",
+          "fallback": "unlabelled"
+        },
+        {
+          "send_as": "evidence_strength",
+          "type": "column",
+          "source": "evidence_strength",
+          "fallback": "unlabelled"
+        },
+        {
+          "send_as": "contact_source",
+          "type": "column",
+          "source": "contact_source",
+          "fallback": "unlabelled"
+        },
+        {
+          "send_as": "verify_status",
+          "type": "column",
+          "source": "verify_status",
+          "fallback": "unlabelled"
+        },
+        {
+          "send_as": "seniority_tier",
+          "type": "derived",
+          "source": "seniority_tier",
+          "fallback": "unknown"
+        },
+        {
+          "send_as": "size_band",
+          "type": "derived",
+          "source": "size_band",
+          "fallback": "unknown"
+        },
+        {
+          "send_as": "Intent",
+          "type": "column",
+          "source": "Intent",
+          "fallback": "none"
+        },
+        {
+          "send_as": "evidence_ref",
+          "type": "column",
+          "source": "evidence_ref",
+          "omit_if_blank": true
+        },
+        {
+          "send_as": "test_arm",
+          "type": "fixed",
+          "value": "size_2_10"
+        },
+        {
+          "send_as": "lead_id",
+          "type": "column",
+          "source": [
+            "lead_id",
+            "row_key"
+          ],
+          "omit_if_blank": true
+        },
+        {
+          "send_as": "campaign",
+          "type": "column",
+          "source": "campaign",
+          "omit_if_blank": true
+        }
+      ],
+      "writeback": {
+        "enabled": true,
+        "campaign_type": "northwind-size-micro"
+      },
+      "schedule": {
+        "enabled": false,
+        "cron": "0 0,30 8-17 * * *"
+      },
+      "auto_push": false
+    },
+    {
+      "id": "northwind-size-small",
+      "name": "Practices 11-50 staff",
+      "note": "September WHO test, size arm B. STATE.md counts 541 rows.",
+      "enabled": false,
+      "priority": 11,
+      "tab": "Practices",
+      "fieldmap": "fieldmap.northwind.json",
+      "rules": {
+        "all": [
+          {
+            "field": "status",
+            "op": "is_blank"
+          },
+          {
+            "field": "final_status",
+            "op": "is_blank"
+          },
+          {
+            "field": "send_gate",
+            "op": "equals",
+            "value": "yes"
+          },
+          {
+            "field": "employees",
+            "op": "between",
+            "value": [
+              11,
+              50
+            ]
+          }
+        ],
+        "none": [
+          {
+            "field": "fabrikam_contacted",
+            "op": "equals",
+            "value": "yes"
+          }
+        ]
+      },
+      "order": [
+        {
+          "field": "contact_source",
+          "order": [
+            "apollo_reveal",
+            "apollo_old",
+            "icypeas",
+            "pattern_mv"
+          ]
+        },
+        {
+          "field": "evidence_strength",
+          "order": [
+            "strong",
+            "medium",
+            "weak",
+            "none"
+          ]
+        },
+        {
+          "field": "trading_years",
+          "dir": "desc"
+        }
+      ],
+      "limits": {
+        "per_run": 50,
+        "per_day": 100,
+        "max_spend_usd": 1.0
+      },
+      "instantly": {
+        "campaign_id": "",
+        "blocklist_id": "",
+        "skip_if_in_workspace": false,
+        "skip_if_in_campaign": false,
+        "skip_if_in_list": true
+      },
+      "labels": [
+        {
+          "send_as": "Address",
+          "type": "column",
+          "source": [
+            "city",
+            "region",
+            "Address"
+          ],
+          "fallback": ""
+        },
+        {
+          "send_as": "trigger_family",
+          "type": "column",
+          "source": "trigger_family",
+          "fallback": "V0_volume"
+        },
+        {
+          "send_as": "evidence_source",
+          "type": "column",
+          "source": "evidence_source",
+          "fallback": "unlabelled"
+        },
+        {
+          "send_as": "evidence_strength",
+          "type": "column",
+          "source": "evidence_strength",
+          "fallback": "unlabelled"
+        },
+        {
+          "send_as": "contact_source",
+          "type": "column",
+          "source": "contact_source",
+          "fallback": "unlabelled"
+        },
+        {
+          "send_as": "verify_status",
+          "type": "column",
+          "source": "verify_status",
+          "fallback": "unlabelled"
+        },
+        {
+          "send_as": "seniority_tier",
+          "type": "derived",
+          "source": "seniority_tier",
+          "fallback": "unknown"
+        },
+        {
+          "send_as": "size_band",
+          "type": "derived",
+          "source": "size_band",
+          "fallback": "unknown"
+        },
+        {
+          "send_as": "Intent",
+          "type": "column",
+          "source": "Intent",
+          "fallback": "none"
+        },
+        {
+          "send_as": "evidence_ref",
+          "type": "column",
+          "source": "evidence_ref",
+          "omit_if_blank": true
+        },
+        {
+          "send_as": "test_arm",
+          "type": "fixed",
+          "value": "size_11_50"
+        },
+        {
+          "send_as": "lead_id",
+          "type": "column",
+          "source": [
+            "lead_id",
+            "row_key"
+          ],
+          "omit_if_blank": true
+        },
+        {
+          "send_as": "campaign",
+          "type": "column",
+          "source": "campaign",
+          "omit_if_blank": true
+        }
+      ],
+      "writeback": {
+        "enabled": true,
+        "campaign_type": "northwind-size-small"
+      },
+      "schedule": {
+        "enabled": false,
+        "cron": "0 0,30 8-17 * * *"
+      },
+      "auto_push": false
+    },
+    {
+      "id": "northwind-sen-owner",
+      "name": "Owners and leadership",
+      "note": "September WHO test, seniority arm A. STATE.md counts owner 893 + leadership 712. ⚠️ Do NOT enable this at the same time as the two size lanes - the size lanes have a lower priority number so they would claim the rows first and neither test would read.",
+      "enabled": false,
+      "priority": 20,
+      "tab": "Practices",
+      "fieldmap": "fieldmap.northwind.json",
+      "rules": {
+        "all": [
+          {
+            "field": "status",
+            "op": "is_blank"
+          },
+          {
+            "field": "final_status",
+            "op": "is_blank"
+          },
+          {
+            "field": "send_gate",
+            "op": "equals",
+            "value": "yes"
+          },
+          {
+            "field": "seniority_rank",
+            "op": "in",
+            "value": [
+              "owner",
+              "leadership"
+            ]
+          }
+        ],
+        "none": [
+          {
+            "field": "fabrikam_contacted",
+            "op": "equals",
+            "value": "yes"
+          }
+        ]
+      },
+      "order": [
+        {
+          "field": "seniority_rank",
+          "order": [
+            "owner",
+            "leadership"
+          ]
+        },
+        {
+          "field": "contact_source",
+          "order": [
+            "apollo_reveal",
+            "apollo_old",
+            "icypeas",
+            "pattern_mv"
+          ]
+        },
+        {
+          "field": "trading_years",
+          "dir": "desc"
+        }
+      ],
+      "limits": {
+        "per_run": 50,
+        "per_day": 100,
+        "max_spend_usd": 1.0
+      },
+      "instantly": {
+        "campaign_id": "",
+        "blocklist_id": "",
+        "skip_if_in_workspace": false,
+        "skip_if_in_campaign": false,
+        "skip_if_in_list": true
+      },
+      "labels": [
+        {
+          "send_as": "Address",
+          "type": "column",
+          "source": [
+            "city",
+            "region",
+            "Address"
+          ],
+          "fallback": ""
+        },
+        {
+          "send_as": "trigger_family",
+          "type": "column",
+          "source": "trigger_family",
+          "fallback": "V0_volume"
+        },
+        {
+          "send_as": "evidence_source",
+          "type": "column",
+          "source": "evidence_source",
+          "fallback": "unlabelled"
+        },
+        {
+          "send_as": "evidence_strength",
+          "type": "column",
+          "source": "evidence_strength",
+          "fallback": "unlabelled"
+        },
+        {
+          "send_as": "contact_source",
+          "type": "column",
+          "source": "contact_source",
+          "fallback": "unlabelled"
+        },
+        {
+          "send_as": "verify_status",
+          "type": "column",
+          "source": "verify_status",
+          "fallback": "unlabelled"
+        },
+        {
+          "send_as": "seniority_tier",
+          "type": "derived",
+          "source": "seniority_tier",
+          "fallback": "unknown"
+        },
+        {
+          "send_as": "size_band",
+          "type": "derived",
+          "source": "size_band",
+          "fallback": "unknown"
+        },
+        {
+          "send_as": "test_arm",
+          "type": "fixed",
+          "value": "seniority_owner"
+        },
+        {
+          "send_as": "lead_id",
+          "type": "column",
+          "source": [
+            "lead_id",
+            "row_key"
+          ],
+          "omit_if_blank": true
+        },
+        {
+          "send_as": "campaign",
+          "type": "column",
+          "source": "campaign",
+          "omit_if_blank": true
+        }
+      ],
+      "writeback": {
+        "enabled": true,
+        "campaign_type": "northwind-sen-owner"
+      },
+      "schedule": {
+        "enabled": false,
+        "cron": "0 0,30 8-17 * * *"
+      },
+      "auto_push": false
+    },
+    {
+      "id": "northwind-sen-partner",
+      "name": "Partners",
+      "note": "September WHO test, seniority arm B. STATE.md counts 688 rows. Same warning as northwind-sen-owner: run the seniority pair OR the size pair, never both.",
+      "enabled": false,
+      "priority": 21,
+      "tab": "Practices",
+      "fieldmap": "fieldmap.northwind.json",
+      "rules": {
+        "all": [
+          {
+            "field": "status",
+            "op": "is_blank"
+          },
+          {
+            "field": "final_status",
+            "op": "is_blank"
+          },
+          {
+            "field": "send_gate",
+            "op": "equals",
+            "value": "yes"
+          },
+          {
+            "field": "seniority_rank",
+            "op": "in",
+            "value": [
+              "partner",
+              "specialist_partner",
+              "accountant_principal"
+            ]
+          }
+        ],
+        "none": [
+          {
+            "field": "fabrikam_contacted",
+            "op": "equals",
+            "value": "yes"
+          }
+        ]
+      },
+      "order": [
+        {
+          "field": "contact_source",
+          "order": [
+            "apollo_reveal",
+            "apollo_old",
+            "icypeas",
+            "pattern_mv"
+          ]
+        },
+        {
+          "field": "trading_years",
+          "dir": "desc"
+        }
+      ],
+      "limits": {
+        "per_run": 50,
+        "per_day": 100,
+        "max_spend_usd": 1.0
+      },
+      "instantly": {
+        "campaign_id": "",
+        "blocklist_id": "",
+        "skip_if_in_workspace": false,
+        "skip_if_in_campaign": false,
+        "skip_if_in_list": true
+      },
+      "labels": [
+        {
+          "send_as": "Address",
+          "type": "column",
+          "source": [
+            "city",
+            "region",
+            "Address"
+          ],
+          "fallback": ""
+        },
+        {
+          "send_as": "trigger_family",
+          "type": "column",
+          "source": "trigger_family",
+          "fallback": "V0_volume"
+        },
+        {
+          "send_as": "evidence_source",
+          "type": "column",
+          "source": "evidence_source",
+          "fallback": "unlabelled"
+        },
+        {
+          "send_as": "evidence_strength",
+          "type": "column",
+          "source": "evidence_strength",
+          "fallback": "unlabelled"
+        },
+        {
+          "send_as": "contact_source",
+          "type": "column",
+          "source": "contact_source",
+          "fallback": "unlabelled"
+        },
+        {
+          "send_as": "verify_status",
+          "type": "column",
+          "source": "verify_status",
+          "fallback": "unlabelled"
+        },
+        {
+          "send_as": "seniority_tier",
+          "type": "derived",
+          "source": "seniority_tier",
+          "fallback": "unknown"
+        },
+        {
+          "send_as": "size_band",
+          "type": "derived",
+          "source": "size_band",
+          "fallback": "unknown"
+        },
+        {
+          "send_as": "test_arm",
+          "type": "fixed",
+          "value": "seniority_partner"
+        },
+        {
+          "send_as": "lead_id",
+          "type": "column",
+          "source": [
+            "lead_id",
+            "row_key"
+          ],
+          "omit_if_blank": true
+        },
+        {
+          "send_as": "campaign",
+          "type": "column",
+          "source": "campaign",
+          "omit_if_blank": true
+        }
+      ],
+      "writeback": {
+        "enabled": true,
+        "campaign_type": "northwind-sen-partner"
+      },
+      "schedule": {
+        "enabled": false,
+        "cron": "0 0,30 8-17 * * *"
+      },
+      "auto_push": false
+    },
+    {
+      "limits": {
+        "per_run": 80,
+        "per_day": 0,
+        "max_spend_usd": 1.5
+      },
+      "rules": {
+        "all": [
+          {
+            "field": "status",
+            "op": "is_blank"
+          },
+          {
+            "field": "company_name",
+            "op": "is_not_blank"
+          }
+        ]
+      },
+      "order": [],
+      "labels": [],
+      "id": "ch-new-loan",
+      "name": "CH — New loan",
+      "enabled": true,
+      "auto_push": false,
+      "priority": 31,
+      "tab": "New loan",
+      "fieldmap": "fieldmap.ch-tabs.json",
+      "writeback": {
+        "enabled": true,
+        "campaign_type": "ch-new-loan"
+      },
+      "note": "CH trigger: a new mortgage/charge filed. 74 rows. Finds the decision-maker's email with the Director waterfall recipe. Push to Instantly is OFF (finding only).",
+      "recipe": "director-waterfall",
+      "instantly": {
+        "campaign_id": "",
+        "blocklist_id": "",
+        "skip_if_in_workspace": false,
+        "skip_if_in_campaign": true,
+        "skip_if_in_list": true
+      },
+      "schedule": {
+        "enabled": false,
+        "cron": "0 0,30 8-17 * * *"
+      }
+    },
+    {
+      "limits": {
+        "per_run": 30,
+        "per_day": 0,
+        "max_spend_usd": 1.0
+      },
+      "rules": {
+        "all": [
+          {
+            "field": "status",
+            "op": "is_blank"
+          },
+          {
+            "field": "company_name",
+            "op": "is_not_blank"
+          }
+        ]
+      },
+      "order": [],
+      "labels": [],
+      "id": "ch-accounts-late",
+      "name": "CH — Accounts late",
+      "enabled": false,
+      "auto_push": false,
+      "priority": 41,
+      "tab": "Accounts late",
+      "fieldmap": "fieldmap.ch-tabs.json",
+      "writeback": {
+        "enabled": true,
+        "campaign_type": "ch-accounts-late"
+      },
+      "note": "CH trigger: accounts filed late / overdue. 553 rows. Finds the decision-maker's email with the Director waterfall recipe. Push to Instantly is OFF (finding only).",
+      "recipe": "director-waterfall",
+      "instantly": {
+        "campaign_id": "",
+        "blocklist_id": "",
+        "skip_if_in_workspace": false,
+        "skip_if_in_campaign": false,
+        "skip_if_in_list": true
+      },
+      "schedule": {
+        "enabled": false,
+        "cron": "0 0,30 8-17 * * *"
+      }
+    },
+    {
+      "limits": {
+        "per_run": 30,
+        "per_day": 0,
+        "max_spend_usd": 1.0
+      },
+      "rules": {
+        "all": [
+          {
+            "field": "status",
+            "op": "is_blank"
+          },
+          {
+            "field": "company_name",
+            "op": "is_not_blank"
+          }
+        ]
+      },
+      "order": [],
+      "labels": [],
+      "id": "ch-director-left",
+      "name": "CH — Director left",
+      "enabled": false,
+      "auto_push": false,
+      "priority": 51,
+      "tab": "Director left",
+      "fieldmap": "fieldmap.ch-tabs.json",
+      "writeback": {
+        "enabled": true,
+        "campaign_type": "ch-director-left"
+      },
+      "note": "CH trigger: a director resigned. 598 rows. Finds the decision-maker's email with the Director waterfall recipe. Push to Instantly is OFF (finding only).",
+      "recipe": "director-waterfall",
+      "instantly": {
+        "campaign_id": "",
+        "blocklist_id": "",
+        "skip_if_in_workspace": false,
+        "skip_if_in_campaign": false,
+        "skip_if_in_list": true
+      },
+      "schedule": {
+        "enabled": false,
+        "cron": "0 0,30 8-17 * * *"
+      }
+    },
+    {
+      "limits": {
+        "per_run": 40,
+        "per_day": 0,
+        "max_spend_usd": 1.0
+      },
+      "rules": {
+        "all": [
+          {
+            "field": "status",
+            "op": "is_blank"
+          },
+          {
+            "field": "company_name",
+            "op": "is_not_blank"
+          }
+        ]
+      },
+      "order": [],
+      "labels": [],
+      "id": "ch-hiring-boards",
+      "name": "CH — Hiring (job boards)",
+      "enabled": false,
+      "auto_push": false,
+      "priority": 61,
+      "tab": "Hiring (job boards)",
+      "fieldmap": "fieldmap.ch-tabs.json",
+      "writeback": {
+        "enabled": true,
+        "campaign_type": "ch-hiring-boards"
+      },
+      "note": "Job-board adverts collector. 70 rows. Finds the decision-maker's email with the Director waterfall recipe. Push to Instantly is OFF (finding only).",
+      "recipe": "director-waterfall",
+      "instantly": {
+        "campaign_id": "",
+        "blocklist_id": "",
+        "skip_if_in_workspace": false,
+        "skip_if_in_campaign": false,
+        "skip_if_in_list": true
+      },
+      "schedule": {
+        "enabled": false,
+        "cron": "0 0,30 8-17 * * *"
+      }
+    },
+    {
+      "limits": {
+        "per_run": 40,
+        "per_day": 0,
+        "max_spend_usd": 1.0
+      },
+      "rules": {
+        "all": [
+          {
+            "field": "status",
+            "op": "is_blank"
+          },
+          {
+            "field": "company_name",
+            "op": "is_not_blank"
+          }
+        ]
+      },
+      "order": [],
+      "labels": [],
+      "id": "ch-hiring-linkedin",
+      "name": "CH — Hiring (LinkedIn)",
+      "enabled": true,
+      "auto_push": false,
+      "priority": 71,
+      "tab": "Hiring (LinkedIn)",
+      "fieldmap": "fieldmap.ch-tabs.json",
+      "writeback": {
+        "enabled": true,
+        "campaign_type": "ch-hiring-linkedin"
+      },
+      "note": "LinkedIn advert collector. 37 rows. Finds the decision-maker's email with the Director waterfall recipe. Push to Instantly is OFF (finding only).",
+      "recipe": "director-waterfall",
+      "instantly": {
+        "campaign_id": "",
+        "blocklist_id": "",
+        "skip_if_in_workspace": false,
+        "skip_if_in_campaign": false,
+        "skip_if_in_list": true
+      },
+      "schedule": {
+        "enabled": false,
+        "cron": "0 0,30 8-17 * * *"
+      }
+    },
+    {
+      "id": "northwind-p1-c1-hiring",
+      "name": "Northwind – UK Practices – Phase 1 (C1 Hiring)",
+      "note": "C1 Hiring of the Organized sheet: 381 rows read live 2026-10-13 — 246 already carry an address in contact_1..5_email (rung 1-5, 0 credits), 112 have a website and a named contact to guess from (rung 6-10), 23 have neither and will end 'no_email'. Finding only: the push to Instantly is OFF until the 16 send variables are built.",
+      "enabled": false,
+      "auto_push": false,
+      "priority": 81,
+      "tab": "C1 Hiring",
+      "sheet_url": "https://docs.google.com/spreadsheets/d/1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/edit",
+      "fieldmap": "fieldmap.northwind-organized.json",
+      "recipe": "northwind-organized",
+      "rules": {
+        "all": [
+          {
+            "field": "enrich_status",
+            "op": "is_blank"
+          },
+          {
+            "field": "company_name",
+            "op": "is_not_blank"
+          }
+        ]
+      },
+      "order": [
+        {
+          "field": "contact_1_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_2_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_3_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_4_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_5_email",
+          "dir": "desc"
+        }
+      ],
+      "labels": [],
+      "limits": {
+        "per_run": 25,
+        "per_day": 0,
+        "max_spend_usd": 2.0
+      },
+      "instantly": {
+        "campaign_id": "",
+        "blocklist_id": "",
+        "skip_if_in_workspace": false,
+        "skip_if_in_campaign": false,
+        "skip_if_in_list": true
+      },
+      "writeback": {
+        "enabled": true,
+        "campaign_type": "northwind-p1-c1-hiring"
+      },
+      "schedule": {
+        "enabled": false,
+        "cron": "0 0,30 8-17 * * *"
+      }
+    },
+    {
+      "id": "northwind-p1-c2-director-left",
+      "name": "Northwind – UK Practices – Phase 1 (C2 Director Left)",
+      "note": "C2 Director Left of the Organized sheet: 740 rows read live 2026-10-13 — 131 already carry an address in contact_1..5_email (rung 1-5, 0 credits), 285 have a website and a named contact to guess from (rung 6-10), 324 have neither and will end 'no_email'. Finding only: the push to Instantly is OFF until the 16 send variables are built.",
+      "enabled": false,
+      "auto_push": false,
+      "priority": 82,
+      "tab": "C2 Director Left",
+      "sheet_url": "https://docs.google.com/spreadsheets/d/1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/edit",
+      "fieldmap": "fieldmap.northwind-organized.json",
+      "recipe": "northwind-organized",
+      "rules": {
+        "all": [
+          {
+            "field": "enrich_status",
+            "op": "is_blank"
+          },
+          {
+            "field": "company_name",
+            "op": "is_not_blank"
+          }
+        ]
+      },
+      "order": [
+        {
+          "field": "contact_1_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_2_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_3_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_4_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_5_email",
+          "dir": "desc"
+        }
+      ],
+      "labels": [],
+      "limits": {
+        "per_run": 25,
+        "per_day": 0,
+        "max_spend_usd": 2.0
+      },
+      "instantly": {
+        "campaign_id": "",
+        "blocklist_id": "",
+        "skip_if_in_workspace": false,
+        "skip_if_in_campaign": false,
+        "skip_if_in_list": true
+      },
+      "writeback": {
+        "enabled": true,
+        "campaign_type": "northwind-p1-c2-director-left"
+      },
+      "schedule": {
+        "enabled": false,
+        "cron": "0 0,30 8-17 * * *"
+      }
+    },
+    {
+      "id": "northwind-p1-c3-accounts-late",
+      "name": "Northwind – UK Practices – Phase 1 (C3 Accounts Late)",
+      "note": "C3 Accounts Late of the Organized sheet: 605 rows read live 2026-10-13 — 67 already carry an address in contact_1..5_email (rung 1-5, 0 credits), 210 have a website and a named contact to guess from (rung 6-10), 328 have neither and will end 'no_email'. Finding only: the push to Instantly is OFF until the 16 send variables are built.",
+      "enabled": false,
+      "auto_push": false,
+      "priority": 83,
+      "tab": "C3 Accounts Late",
+      "sheet_url": "https://docs.google.com/spreadsheets/d/1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/edit",
+      "fieldmap": "fieldmap.northwind-organized.json",
+      "recipe": "northwind-organized",
+      "rules": {
+        "all": [
+          {
+            "field": "enrich_status",
+            "op": "is_blank"
+          },
+          {
+            "field": "company_name",
+            "op": "is_not_blank"
+          }
+        ]
+      },
+      "order": [
+        {
+          "field": "contact_1_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_2_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_3_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_4_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_5_email",
+          "dir": "desc"
+        }
+      ],
+      "labels": [],
+      "limits": {
+        "per_run": 25,
+        "per_day": 0,
+        "max_spend_usd": 2.0
+      },
+      "instantly": {
+        "campaign_id": "",
+        "blocklist_id": "",
+        "skip_if_in_workspace": false,
+        "skip_if_in_campaign": false,
+        "skip_if_in_list": true
+      },
+      "writeback": {
+        "enabled": true,
+        "campaign_type": "northwind-p1-c3-accounts-late"
+      },
+      "schedule": {
+        "enabled": false,
+        "cron": "0 0,30 8-17 * * *"
+      }
+    },
+    {
+      "id": "northwind-p1-c4-new-director",
+      "name": "Northwind – UK Practices – Phase 1 (C4 New Director)",
+      "note": "C4 New Director of the Organized sheet: 311 rows read live 2026-10-13 — 32 already carry an address in contact_1..5_email (rung 1-5, 0 credits), 125 have a website and a named contact to guess from (rung 6-10), 154 have neither and will end 'no_email'. Finding only: the push to Instantly is OFF until the 16 send variables are built.",
+      "enabled": false,
+      "auto_push": false,
+      "priority": 84,
+      "tab": "C4 New Director",
+      "sheet_url": "https://docs.google.com/spreadsheets/d/1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/edit",
+      "fieldmap": "fieldmap.northwind-organized.json",
+      "recipe": "northwind-organized",
+      "rules": {
+        "all": [
+          {
+            "field": "enrich_status",
+            "op": "is_blank"
+          },
+          {
+            "field": "company_name",
+            "op": "is_not_blank"
+          }
+        ]
+      },
+      "order": [
+        {
+          "field": "contact_1_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_2_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_3_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_4_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_5_email",
+          "dir": "desc"
+        }
+      ],
+      "labels": [],
+      "limits": {
+        "per_run": 25,
+        "per_day": 0,
+        "max_spend_usd": 2.0
+      },
+      "instantly": {
+        "campaign_id": "",
+        "blocklist_id": "",
+        "skip_if_in_workspace": false,
+        "skip_if_in_campaign": false,
+        "skip_if_in_list": true
+      },
+      "writeback": {
+        "enabled": true,
+        "campaign_type": "northwind-p1-c4-new-director"
+      },
+      "schedule": {
+        "enabled": false,
+        "cron": "0 0,30 8-17 * * *"
+      }
+    },
+    {
+      "id": "northwind-p1-c5-near-retirement",
+      "name": "Northwind – UK Practices – Phase 1 (C5 Near Retirement)",
+      "note": "C5 Near Retirement of the Organized sheet: 869 rows read live 2026-10-13 — 35 already carry an address in contact_1..5_email (rung 1-5, 0 credits), 203 have a website and a named contact to guess from (rung 6-10), 631 have neither and will end 'no_email'. Finding only: the push to Instantly is OFF until the 16 send variables are built.",
+      "enabled": false,
+      "auto_push": false,
+      "priority": 85,
+      "tab": "C5 Near Retirement",
+      "sheet_url": "https://docs.google.com/spreadsheets/d/1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/edit",
+      "fieldmap": "fieldmap.northwind-organized.json",
+      "recipe": "northwind-organized",
+      "rules": {
+        "all": [
+          {
+            "field": "enrich_status",
+            "op": "is_blank"
+          },
+          {
+            "field": "company_name",
+            "op": "is_not_blank"
+          }
+        ]
+      },
+      "order": [
+        {
+          "field": "contact_1_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_2_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_3_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_4_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_5_email",
+          "dir": "desc"
+        }
+      ],
+      "labels": [],
+      "limits": {
+        "per_run": 25,
+        "per_day": 0,
+        "max_spend_usd": 2.0
+      },
+      "instantly": {
+        "campaign_id": "",
+        "blocklist_id": "",
+        "skip_if_in_workspace": false,
+        "skip_if_in_campaign": false,
+        "skip_if_in_list": true
+      },
+      "writeback": {
+        "enabled": true,
+        "campaign_type": "northwind-p1-c5-near-retirement"
+      },
+      "schedule": {
+        "enabled": false,
+        "cron": "0 0,30 8-17 * * *"
+      }
+    },
+    {
+      "id": "northwind-p1-c6-new-owner",
+      "name": "Northwind – UK Practices – Phase 1 (C6 New Owner)",
+      "note": "C6 New Owner of the Organized sheet: 286 rows read live 2026-10-13 — 15 already carry an address in contact_1..5_email (rung 1-5, 0 credits), 118 have a website and a named contact to guess from (rung 6-10), 153 have neither and will end 'no_email'. Finding only: the push to Instantly is OFF until the 16 send variables are built.",
+      "enabled": false,
+      "auto_push": false,
+      "priority": 86,
+      "tab": "C6 New Owner",
+      "sheet_url": "https://docs.google.com/spreadsheets/d/1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/edit",
+      "fieldmap": "fieldmap.northwind-organized.json",
+      "recipe": "northwind-organized",
+      "rules": {
+        "all": [
+          {
+            "field": "enrich_status",
+            "op": "is_blank"
+          },
+          {
+            "field": "company_name",
+            "op": "is_not_blank"
+          }
+        ]
+      },
+      "order": [
+        {
+          "field": "contact_1_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_2_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_3_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_4_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_5_email",
+          "dir": "desc"
+        }
+      ],
+      "labels": [],
+      "limits": {
+        "per_run": 25,
+        "per_day": 0,
+        "max_spend_usd": 2.0
+      },
+      "instantly": {
+        "campaign_id": "",
+        "blocklist_id": "",
+        "skip_if_in_workspace": false,
+        "skip_if_in_campaign": false,
+        "skip_if_in_list": true
+      },
+      "writeback": {
+        "enabled": true,
+        "campaign_type": "northwind-p1-c6-new-owner"
+      },
+      "schedule": {
+        "enabled": false,
+        "cron": "0 0,30 8-17 * * *"
+      }
+    },
+    {
+      "id": "northwind-p1-c7-xero",
+      "name": "Northwind – UK Practices – Phase 1 (C7 Xero)",
+      "note": "C7 Xero of the Organized sheet: 425 rows read live 2026-10-13 — 21 already carry an address in contact_1..5_email (rung 1-5, 0 credits), 390 have a website and a named contact to guess from (rung 6-10), 14 have neither and will end 'no_email'. Finding only: the push to Instantly is OFF until the 16 send variables are built.",
+      "enabled": false,
+      "auto_push": false,
+      "priority": 87,
+      "tab": "C7 Xero",
+      "sheet_url": "https://docs.google.com/spreadsheets/d/1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/edit",
+      "fieldmap": "fieldmap.northwind-organized.json",
+      "recipe": "northwind-organized",
+      "rules": {
+        "all": [
+          {
+            "field": "enrich_status",
+            "op": "is_blank"
+          },
+          {
+            "field": "company_name",
+            "op": "is_not_blank"
+          }
+        ]
+      },
+      "order": [
+        {
+          "field": "contact_1_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_2_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_3_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_4_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_5_email",
+          "dir": "desc"
+        }
+      ],
+      "labels": [],
+      "limits": {
+        "per_run": 25,
+        "per_day": 0,
+        "max_spend_usd": 2.0
+      },
+      "instantly": {
+        "campaign_id": "",
+        "blocklist_id": "",
+        "skip_if_in_workspace": false,
+        "skip_if_in_campaign": false,
+        "skip_if_in_list": true
+      },
+      "writeback": {
+        "enabled": true,
+        "campaign_type": "northwind-p1-c7-xero"
+      },
+      "schedule": {
+        "enabled": false,
+        "cron": "0 0,30 8-17 * * *"
+      }
+    },
+    {
+      "id": "northwind-p1-c8-bureaus",
+      "name": "Northwind – UK Practices – Phase 1 (C8 Bureaus)",
+      "note": "C8 Bureaus of the Organized sheet: 21095 rows read live 2026-10-13 — 1047 already carry an address in contact_1..5_email (rung 1-5, 0 credits), 6177 have a website and a named contact to guess from (rung 6-10), 13871 have neither and will end 'no_email'. Finding only: the push to Instantly is OFF until the 16 send variables are built.",
+      "enabled": false,
+      "auto_push": false,
+      "priority": 88,
+      "tab": "C8 Bureaus",
+      "sheet_url": "https://docs.google.com/spreadsheets/d/1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/edit",
+      "fieldmap": "fieldmap.northwind-organized.json",
+      "recipe": "northwind-organized",
+      "rules": {
+        "all": [
+          {
+            "field": "enrich_status",
+            "op": "is_blank"
+          },
+          {
+            "field": "company_name",
+            "op": "is_not_blank"
+          }
+        ]
+      },
+      "order": [
+        {
+          "field": "contact_1_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_2_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_3_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_4_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_5_email",
+          "dir": "desc"
+        }
+      ],
+      "labels": [],
+      "limits": {
+        "per_run": 25,
+        "per_day": 0,
+        "max_spend_usd": 2.0
+      },
+      "instantly": {
+        "campaign_id": "",
+        "blocklist_id": "",
+        "skip_if_in_workspace": false,
+        "skip_if_in_campaign": false,
+        "skip_if_in_list": true
+      },
+      "writeback": {
+        "enabled": true,
+        "campaign_type": "northwind-p1-c8-bureaus"
+      },
+      "schedule": {
+        "enabled": false,
+        "cron": "0 0,30 8-17 * * *"
+      }
+    },
+    {
+      "id": "northwind-p1-c9-new-practice",
+      "name": "Northwind – UK Practices – Phase 1 (C9 New Practice)",
+      "note": "C9 New Practice of the Organized sheet: 141 rows read live 2026-10-13 — 0 already carry an address in contact_1..5_email (rung 1-5, 0 credits), 0 have a website and a named contact to guess from (rung 6-10), 141 have neither and will end 'no_email'. Finding only: the push to Instantly is OFF until the 16 send variables are built.",
+      "enabled": false,
+      "auto_push": false,
+      "priority": 89,
+      "tab": "C9 New Practice",
+      "sheet_url": "https://docs.google.com/spreadsheets/d/1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/edit",
+      "fieldmap": "fieldmap.northwind-organized.json",
+      "recipe": "northwind-organized",
+      "rules": {
+        "all": [
+          {
+            "field": "enrich_status",
+            "op": "is_blank"
+          },
+          {
+            "field": "company_name",
+            "op": "is_not_blank"
+          }
+        ]
+      },
+      "order": [
+        {
+          "field": "contact_1_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_2_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_3_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_4_email",
+          "dir": "desc"
+        },
+        {
+          "field": "contact_5_email",
+          "dir": "desc"
+        }
+      ],
+      "labels": [],
+      "limits": {
+        "per_run": 25,
+        "per_day": 0,
+        "max_spend_usd": 2.0
+      },
+      "instantly": {
+        "campaign_id": "",
+        "blocklist_id": "",
+        "skip_if_in_workspace": false,
+        "skip_if_in_campaign": false,
+        "skip_if_in_list": true
+      },
+      "writeback": {
+        "enabled": true,
+        "campaign_type": "northwind-p1-c9-new-practice"
+      },
+      "schedule": {
+        "enabled": false,
+        "cron": "0 0,30 8-17 * * *"
+      }
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "name": "CH trigger tabs (Practices sheet)",
+  "note": "Field map for the 5 Companies House trigger tabs in the 'Practices' spreadsheet (1bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb): Hiring (job boards), Hiring (LinkedIn), New loan, Accounts late, Director left. Left = what the engine calls a field. Right = the real header. Read first-hand from the live sheet on 2026-10-08: all 5 tabs carry the SAME 20 headers A..T, plus the 3 recipe write columns U Found Email / V Found For / W Found By added the same day. Deliberately absent, because the tabs have no such column: final_status, send_gate, email_source, email_type, verification_status, mv_date, alternate_emails, contact_2_email, contact_first, contact_last, reg_number, contact_age, gateway_provider, phone, address, industry, campaign_tag, campaign_type - every one is optional and the engine skips that step. The recipe reads 'Endole director', 'Apollo director', 'Contact 2', 'Email Person', 'Director Who Left' and 'Next Step' by their real header names, so they need no entry here.",
+  "mapping": {
+    "row_key": "lead_id",
+    "company_name": "Company Name",
+    "status": "Status",
+    "website": "Website",
+    "contact_name": "Contact Name",
+    "job_title": "Job Title",
+    "seniority_rank": "Seniority",
+    "region": "Town",
+    "employees": "Employees",
+    "trading_years": "Trading Years",
+    "reference_email": "Email",
+    "found_email": "Found Email",
+    "icebreaker": "Ice Breaker"
+  }
+}

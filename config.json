@@ -1,0 +1,22 @@
+{
+  "use_endole": true,
+  "verify_endole_with_mf": true,
+  "use_patterns": true,
+  "use_icypeas": true,
+  "use_anymailfinder": false,
+  "verify_icypeas_with_mf": false,
+  "verify_anymailfinder_with_mf": false,
+  "use_icebreaker": true,
+  "use_openai_echo": false,
+  "accept_catchall": false,
+  "block_security_gateways": false,
+  "pattern_mode": "lean",
+  "max_firms": 50,
+  "mv_per_verification_usd": 0.00178,
+  "anymailfinder_usd_per_credit": 0.0,
+  "icypeas_usd_per_credit": 0.0,
+  "apollo_credit_usd": 0.0236,
+  "push_delay_seconds": 3,
+  "sheet_tab": "Combined",
+  "sheet_writeback": false
+}

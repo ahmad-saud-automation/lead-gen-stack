@@ -1,0 +1,864 @@
+/* ---------------------------------------------------------------------------
+   Lead Gen Engine's own styles.
+
+   globals.css is the shared theme, copied unchanged from Icebreaker Studio
+   (which has it from Fabrikam View). Never edit it to change a look here: add to
+   this file, or change the token in globals.css and say so.
+   --------------------------------------------------------------------------- */
+
+/* ============================ DARK MODE ============================
+   V2's dark palette (ui/src/index.css, archived 2026-09-29), mapped onto the
+   theme's own tokens so every card, table and form follows without a rule of
+   its own. The accent becomes V2's blue, as it was. Set by the toggle in the
+   sidebar as data-theme on <html>; app/layout.tsx applies it before paint.
+   globals.css says "light only" — this is the user's decision of 2026-09-29
+   to bring V2's dark mode back, kept here so globals.css stays unchanged. */
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --paper: #0a0e15;
+  --surface: #121722;
+  --white: #161c29;
+
+  --ink: #e6e9ef;
+  --body: #c5ccd8;
+  --muted: #8d99ad;
+  --faint: #6b7688;
+
+  --coral: #3b82f6;
+  --coral-ink: #60a5fa;
+  --coral-wash: #16233c;
+
+  --pos: #4ade80;
+  --pos-wash: #12261a;
+  --neg: #f87171;
+  --neg-wash: #2a1415;
+  --warn: #fbbf24;
+  --warn-wash: #2a1f0d;
+
+  --cat-1: #c5ccd8;
+
+  --line: #232b3a;
+  --line-2: #1a2130;
+  --line-str: #303a4d;
+
+  --lift: 0 24px 60px -30px rgba(0, 0, 0, 0.8);
+}
+
+/* The rules in globals.css that name a light colour instead of a token. */
+[data-theme="dark"] .topbar { background: rgba(10, 14, 21, 0.88); }
+[data-theme="dark"] .chip { background: rgba(255, 255, 255, 0.07); }
+[data-theme="dark"] .rail-btn.hot,
+[data-theme="dark"] .phone-nav a:hover,
+[data-theme="dark"] .ctl:hover,
+[data-theme="dark"] .seg button:hover:not(:disabled),
+[data-theme="dark"] .seg a:hover { background: rgba(255, 255, 255, 0.06); }
+[data-theme="dark"] table.stat tbody tr:hover td { background: rgba(255, 255, 255, 0.03); }
+[data-theme="dark"] .scroll-x table.stat tbody tr:hover td:first-child {
+  background: linear-gradient(rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.03)) var(--surface);
+}
+[data-theme="dark"] input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):hover,
+[data-theme="dark"] select:hover,
+[data-theme="dark"] textarea:hover { border-color: rgba(255, 255, 255, 0.3); }
+[data-theme="dark"] .modal-backdrop { background: rgba(0, 0, 0, 0.55); }
+[data-theme="dark"] .skeleton {
+  background: linear-gradient(90deg, rgba(255,255,255,.04), rgba(255,255,255,.08), rgba(255,255,255,.04));
+  background-size: 200% 100%;
+}
+[data-theme="dark"] .saved-note,
+[data-theme="dark"] .editor { box-shadow: 0 14px 34px -18px rgba(0, 0, 0, 0.8); }
+
+/* The primary action in V2's blue, as V2 had it, rather than an inverted ink pill. */
+[data-theme="dark"] .ctl.solid,
+[data-theme="dark"] .seg button.on,
+[data-theme="dark"] .seg a.on {
+  background: var(--coral);
+  border-color: var(--coral);
+  color: #fff;
+}
+[data-theme="dark"] .ctl.solid:hover { background: #2563eb; }
+[data-theme="dark"] .switch:checked { background: var(--coral); }
+[data-theme="dark"] .switch::before { background: #e6e9ef; }
+
+/* White text on light red is unreadable: a destructive action is tinted instead. */
+[data-theme="dark"] .ctl.danger {
+  background: var(--neg-wash);
+  border-color: var(--neg);
+  color: var(--neg);
+}
+[data-theme="dark"] .ctl.danger:hover { background: #3a1719; }
+
+/* The theme toggle in the phone menu, shaped like the menu's links. */
+.phone-theme {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 9px 12px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--body);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.phone-theme:hover {
+  background: var(--line-2);
+}
+
+/* Blocks on a page sit one gap apart, like the cards in a band. */
+.stack > * + * {
+  margin-top: var(--gap);
+}
+
+/* A band of plain figures, not charts: the theme's 248px rows are sized for a
+   tile carrying a chart and leave these half empty. */
+.band.stats {
+  grid-auto-rows: auto;
+}
+
+/* The row of controls under a card's explanation. */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* A campaign's id under its name in a table: what the config file calls it. */
+.lane-id {
+  display: block;
+  font-family: var(--fm);
+  font-size: 10.5px;
+  color: var(--faint);
+  padding-top: 2px;
+}
+
+.faint {
+  color: var(--faint);
+}
+
+/* A judgement that is worth a look but is not a failure: a column 1-29% filled. */
+.warn-ink {
+  color: var(--warn);
+}
+
+.mono {
+  font-family: var(--fm);
+  font-size: 12.5px;
+}
+
+/* ---------- field map ---------- */
+
+.field-tags,
+.map-pick,
+/* Several clipped columns side by side, each capped the same. The theme's `td.clip` is
+   width:100% — built for ONE clipped column — so five of them gave the first 779px and the
+   other four 35px each. */
+table.stat td.cell-clip {
+  max-width: 14rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chip-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.map-pick select {
+  width: 240px;
+}
+
+/* A line under a control that says what it is doing now. */
+.hint {
+  display: block;
+  font-size: 11.5px;
+  color: var(--muted);
+  padding-top: 4px;
+}
+
+.note-text {
+  display: block;
+  max-width: 380px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--muted);
+  white-space: normal;
+}
+
+/* Anything stacked inside a card — explanation, controls, table, warning — sits one step apart. */
+.card .body > * + * {
+  margin-top: 14px;
+}
+
+/* ---------- buttons ---------- */
+
+/* Only for what cannot be undone, or leaves this machine: clear the ledger, a live push. */
+.ctl.danger {
+  background: var(--neg);
+  border-color: var(--neg);
+  color: var(--white);
+}
+
+.ctl.danger:hover {
+  background: #8f3418;
+}
+
+/* ---------- settings ---------- */
+
+.inline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.inline input {
+  flex: 1;
+}
+
+/* The theme styles every span directly inside a form label as its caption. This one wraps a
+   control, so it takes none of that. */
+.form-grid label > span.inline {
+  font: inherit;
+  letter-spacing: normal;
+  text-transform: none;
+  color: inherit;
+}
+
+.switches {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  column-gap: 32px;
+}
+
+.switch-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--line-2);
+  cursor: pointer;
+}
+
+.switch-row .t b {
+  display: block;
+  font-size: 13px;
+  font-weight: 550;
+  color: var(--ink);
+}
+
+.switch-row .t em {
+  display: block;
+  font-style: normal;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--muted);
+  padding-top: 2px;
+}
+
+/* An on/off switch drawn on a real checkbox, so keyboard and screen readers work unchanged. */
+.switch {
+  appearance: none;
+  flex-shrink: 0;
+  position: relative;
+  width: 36px;
+  height: 20px;
+  margin: 1px 0 0;
+  border-radius: var(--pill);
+  background: var(--line-str);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.switch::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--white);
+  box-shadow: 0 1px 2px rgba(23, 26, 33, 0.25);
+  transition: transform 0.15s;
+}
+
+.switch:checked {
+  background: var(--ink);
+}
+
+.switch:checked::before {
+  transform: translateX(16px);
+}
+
+.switch:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--coral-wash);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .switch,
+  .switch::before {
+    transition: none;
+  }
+}
+
+/* A card holding only one column of switches, e.g. the campaign editor's Behaviour. */
+.switches.one {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* ---------- campaigns ---------- */
+
+.row-btns {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+/* Five or six choices do not fit across a phone: the row scrolls inside itself rather than
+   being cut off at the card's edge. */
+.page .seg {
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.page .seg button {
+  flex-shrink: 0;
+}
+
+/* A titled list of editable rows: a rule block, the sort keys, the label table. */
+.rowlist {
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--white);
+}
+
+.rowlist-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line-2);
+  background: var(--paper);
+  border-radius: var(--r-sm) var(--r-sm) 0 0;
+}
+
+.rowlist-head .t b {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.rowlist-head .t em {
+  display: block;
+  font-style: normal;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.rowlist-empty {
+  padding: 12px 14px;
+  font-size: 12.5px;
+  color: var(--faint);
+}
+
+.local-line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) 32px;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border-top: 1px solid var(--line-2);
+}
+
+.rowlist-head + .local-line {
+  border-top: 0;
+}
+
+.rule-line,
+.sort-line,
+.label-line {
+  display: grid;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border-top: 1px solid var(--line-2);
+}
+
+.rowlist-head + .rule-line,
+.rowlist-head + .sort-line,
+.rowlist-head + .label-line {
+  border-top: 0;
+}
+
+.rule-line {
+  grid-template-columns: minmax(0, 1fr) 160px minmax(0, 1fr) 32px;
+}
+
+.sort-line {
+  grid-template-columns: auto minmax(0, 1fr) minmax(0, 2fr) 90px 32px;
+}
+
+.label-line {
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr) minmax(0, 3fr) minmax(0, 3fr) 32px;
+}
+
+.label-omit {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11.5px;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+/* Remove one row from a list. */
+.xbtn {
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--faint);
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.xbtn:hover {
+  background: var(--neg-wash);
+  color: var(--neg);
+}
+
+@media (max-width: 700px) {
+  .rule-line,
+  .sort-line,
+  .label-line {
+    grid-template-columns: minmax(0, 1fr) 32px;
+  }
+
+  .rule-line > :not(.xbtn),
+  .sort-line > :not(.xbtn),
+  .label-line > :not(.xbtn):not(.label-omit) {
+    grid-column: 1;
+  }
+
+  .rule-line > .xbtn,
+  .sort-line > .xbtn,
+  .label-line > .xbtn {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+
+/* ---------- dashboard ---------- */
+
+/* The last run as a funnel: organised → found → verified → ice breaker → pushed. The last
+   step is the outcome, so it alone is green. */
+.funnel {
+  display: grid;
+  gap: 8px;
+}
+
+.funnel-row {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr) 56px;
+  align-items: center;
+  gap: 12px;
+  font-size: 12.5px;
+}
+
+.funnel-label {
+  color: var(--body);
+}
+
+.funnel-track {
+  height: 10px;
+  border-radius: var(--pill);
+  background: var(--line-2);
+  overflow: hidden;
+}
+
+.funnel-fill {
+  display: block;
+  height: 100%;
+  border-radius: var(--pill);
+  background: var(--ink);
+  opacity: 0.7;
+}
+
+.funnel-row.final .funnel-fill {
+  background: var(--pos);
+  opacity: 1;
+}
+
+.funnel-row .num {
+  text-align: right;
+  color: var(--ink);
+  font-weight: 550;
+}
+
+/* ---------- results + log ---------- */
+
+table.stat tr.rowlink {
+  cursor: pointer;
+}
+
+table.stat tr.rowlink.open td {
+  background: var(--paper);
+}
+
+table.stat tr.result-detail td {
+  background: var(--paper);
+  white-space: normal;
+  padding-top: 4px;
+  padding-bottom: 14px;
+}
+
+.kv {
+  display: grid;
+  grid-template-columns: 130px minmax(0, 1fr);
+  gap: 6px 14px;
+  margin: 0;
+  font-size: 12.5px;
+}
+
+.kv dt {
+  color: var(--muted);
+}
+
+.kv dd {
+  margin: 0;
+  color: var(--ink);
+  word-break: break-word;
+}
+
+.tries {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+}
+
+table.stat td.cell-clip.wide {
+  max-width: 32rem;
+}
+
+.log-search {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* ---------- runs ---------- */
+
+.activity {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.activity-main {
+  min-width: 0;
+}
+
+.activity-main h2 {
+  font-family: var(--fd);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  padding: 4px 0 8px;
+}
+
+.live-dot {
+  color: var(--pos);
+}
+
+.live-dot::before {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin: 0 5px 1px 8px;
+  border-radius: 50%;
+  background: var(--pos);
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% { opacity: 0.3; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live-dot::before { animation: none; }
+}
+
+.progress {
+  position: relative;
+  height: 5px;
+  border-radius: var(--pill);
+  background: var(--line-2);
+  overflow: hidden;
+}
+
+.progress-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--ink);
+  border-radius: var(--pill);
+  transition: width 0.5s;
+}
+
+.progress-fill.done {
+  background: var(--pos);
+}
+
+.card .body > .progress + .progress-foot {
+  margin-top: 8px;
+}
+
+.progress-foot {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.band.cols-6 {
+  grid-template-columns: repeat(6, 1fr);
+}
+
+@media (max-width: 1180px) {
+  .band.cols-6 { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 700px) {
+  .band.cols-6 { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* The live event feed: a fixed window that scrolls inside, so the page keeps its shape. */
+.feed {
+  max-height: 26rem;
+  overflow-y: auto;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-sm);
+  background: var(--white);
+}
+
+.feed ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.feed li {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 12px;
+  padding: 8px 14px;
+  border-top: 1px solid var(--line-2);
+}
+
+.feed li:first-child {
+  border-top: 0;
+}
+
+.feed li .chip {
+  justify-self: start;
+}
+
+.feed-text {
+  min-width: 0;
+}
+
+.feed-text b,
+.feed-text span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.feed-text b {
+  font-size: 13px;
+  font-weight: 550;
+  color: var(--ink);
+}
+
+.feed-text span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Push review */
+
+.editor.modal.wide {
+  width: min(820px, 100%);
+}
+
+.figures {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 0;
+}
+
+.figures div {
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+}
+
+.figures dt {
+  font-family: var(--fm);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.figures dd {
+  margin: 4px 0 0;
+  font-family: var(--fd);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.payloads {
+  display: grid;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.payloads details {
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  background: var(--paper);
+}
+
+.payloads summary {
+  cursor: pointer;
+  padding: 8px 12px;
+  font-size: 12.5px;
+}
+
+.payloads pre {
+  margin: 0;
+  padding: 10px 12px;
+  border-top: 1px solid var(--line);
+  overflow-x: auto;
+  font-family: var(--fm);
+  font-size: 11.5px;
+  line-height: 1.55;
+}
+
+@media (max-width: 560px) {
+  .figures { grid-template-columns: 1fr; }
+  .feed li { grid-template-columns: minmax(0, 1fr) auto; }
+  .feed li .chip { grid-column: 1 / -1; }
+}
+
+.confirm-body > * + * {
+  margin-top: 10px;
+}
+
+.issue-list {
+  margin: 8px 0 0;
+  padding-left: 18px;
+}
+
+.confirm-body {
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--body);
+}
+
+.errorbox code,
+.muted code {
+  font-family: var(--fm);
+  font-size: 12px;
+}
+
+/* Import: the CSV drop target. Dashed so it reads as "put something here", not as a card. */
+.dropzone {
+  display: grid;
+  gap: 6px;
+  justify-items: center;
+  text-align: center;
+  padding: 28px 16px;
+  margin-bottom: 14px;
+  border: 1.5px dashed var(--line-str);
+  border-radius: 10px;
+  background: var(--surface-2);
+  cursor: pointer;
+}
+
+.dropzone:hover,
+.dropzone:focus-visible,
+.dropzone.over {
+  border-color: var(--ink);
+}
+
+/* A captioned group in a form-grid that holds several controls (buttons, ticks). A <label>
+   cannot: one label may only own one control, and labels must not nest. */
+.form-grid .fgroup {
+  display: grid;
+  gap: 6px;
+  align-content: start;
+}
+
+.form-grid .fgroup > .cap {
+  font-family: var(--fm);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* The sign-in page: one narrow card, no sidebar. */
+.login-page {
+  max-width: 420px;
+  margin: 14vh auto 0;
+}
+
+/* Schedule: the weekday ticks, in one row that wraps on a phone. */
+.day-picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.day-pick {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+}
+
+.form-grid .day-pick input {
+  width: auto;
+}
+
+.toolbar input {
+  min-width: 0;
+  max-width: 240px;
+}

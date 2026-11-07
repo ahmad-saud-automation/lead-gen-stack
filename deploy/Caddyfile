@@ -1,0 +1,6 @@
+# Caddy in front of the screens: HTTPS certificates are fetched and renewed automatically.
+# Replace the name with your own (sub)domain, whose DNS A record points at this server.
+# Only the screens (3200) are exposed; the engine (8771) stays on 127.0.0.1.
+leads.example.com {
+	reverse_proxy 127.0.0.1:3200
+}

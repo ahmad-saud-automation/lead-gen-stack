@@ -1,0 +1,137 @@
+{
+  "id": "director-waterfall",
+  "name": "Director waterfall",
+  "note": "1st: reuse an address already on the row when it belongs to a director and the firm was never contacted from the Northwind domain (his rule, 2026-10-08) - 95 of 1,332 rows then cost one verify instead of a search. Then 1st director, then 2nd director, then the old 'email on the row' step kept as the LAST resort: dropping it lost 18 rows that hold an address but name no director. Column names checked first-hand against the live CH tabs: 'Endole director' and 'Contact 2' hold a COMMA LIST of directors, 'Contact Name' holds the single 1st director, so rungs 2 and 3 take the 1st name out of their cell. ⛔ 2026-10-13: ICYPEAS IS NOW ASKED BEFORE THE PATTERN GUESS on every rung, his standing rule for all campaign enrichment, so this recipe matches northwind-organized. It used to guess first and keep Icypeas as the fallback. Why he wants it this way: Icypeas reaches the ~41% of firms whose address matches no pattern, and icypeas_company needs no website. The cost is an Icypeas credit plus its polling wait on rows where a bare first@ would have landed in one check. ⚠️ The 3 tabs already run on 2026-10-08 were done under the OLD order, so their numbers in STATE.md are not comparable with anything run after today.",
+  "updated": "2026-10-08",
+  "people": [
+    {
+      "label": "an address already here, if it is a director's",
+      "name_from": [
+        "Email Person"
+      ],
+      "name_pick": "whole",
+      "address_from": "Email",
+      "only_if": {
+        "all": [
+          {
+            "field": "Already Contacted",
+            "op": "is_blank"
+          }
+        ]
+      },
+      "only_if_same_as": [
+        "Contact Name",
+        "Endole director",
+        "Apollo director"
+      ],
+      "never_if_same_as": [],
+      "how": [
+        {
+          "method": "use_as_is",
+          "verify": "must_pass"
+        }
+      ]
+    },
+    {
+      "label": "1st director",
+      "name_from": [
+        "Contact Name",
+        "Endole director",
+        "Apollo director"
+      ],
+      "name_pick": "1st",
+      "address_from": "",
+      "only_if": {},
+      "never_if_same_as": [
+        "Director Who Left",
+        "Email Person"
+      ],
+      "how": [
+        {
+          "method": "icypeas_domain",
+          "verify": "must_pass"
+        },
+        {
+          "method": "icypeas_company",
+          "verify": "must_pass",
+          "note_if_domain_mismatch": true
+        },
+        {
+          "method": "guess_patterns",
+          "patterns": "careful",
+          "verify": "must_pass"
+        }
+      ]
+    },
+    {
+      "label": "2nd director",
+      "name_from": [
+        "Contact 2"
+      ],
+      "name_pick": "1st",
+      "address_from": "",
+      "only_if": {},
+      "never_if_same_as": [
+        "Director Who Left",
+        "Email Person"
+      ],
+      "how": [
+        {
+          "method": "icypeas_domain",
+          "verify": "must_pass"
+        },
+        {
+          "method": "icypeas_company",
+          "verify": "must_pass",
+          "note_if_domain_mismatch": true
+        },
+        {
+          "method": "guess_patterns",
+          "patterns": "careful",
+          "verify": "must_pass"
+        }
+      ]
+    },
+    {
+      "label": "the email already on the row",
+      "name_from": "",
+      "name_pick": "whole",
+      "address_from": "Email",
+      "only_if": {
+        "all": [
+          {
+            "field": "Seniority",
+            "op": "contains",
+            "value": "Director"
+          }
+        ]
+      },
+      "never_if_same_as": [],
+      "how": [
+        {
+          "method": "use_as_is",
+          "verify": "must_pass"
+        }
+      ]
+    }
+  ],
+  "stop": {
+    "stop_when": "first_pass",
+    "skip_row_if": {},
+    "last_resort": true
+  },
+  "write": {
+    "email_to": "Found Email",
+    "person_to": "Found For",
+    "method_to": "Found By",
+    "status_to": "email_status",
+    "write_when": "always"
+  },
+  "limits": {
+    "per_run": 30,
+    "per_day": 0,
+    "daily_spend_cap_usd": 0,
+    "search_same_person_once": true,
+    "push_to": ""
+  }
+}

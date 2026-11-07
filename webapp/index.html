@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lead Gen Automation Engine</title>
+<link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <button class="menubtn" id="menuBtn" title="Show / hide menu" aria-label="Toggle menu">☰</button>
+    <div class="brand"><span class="brand-mark">◆</span> Lead Gen Automation Engine</div>
+    <div class="topbar-right">
+      <label class="testmode" title="When on, no API calls are made and no credits are spent.">
+        <input type="checkbox" id="testMode" checked /><span class="dot"></span> <span>test mode · no spend</span>
+      </label>
+      <button class="themebtn" id="themeBtn" title="Toggle light / dark">◐ Theme</button>
+    </div>
+  </header>
+
+  <nav class="pipeline" id="pipeline" aria-label="Pipeline progress"></nav>
+
+  <div class="body">
+    <div class="scrim" id="scrim"></div>
+    <nav class="side" id="nav">
+      <button class="navb active" data-tab="dashboard" title="Dashboard"><i>▤</i><span class="nlabel">Dashboard</span></button>
+      <button class="navb" data-tab="leads" title="Leads"><i>↴</i><span class="nlabel">Leads</span></button>
+      <button class="navb" data-tab="icebreaker" title="Icebreaker"><i>✎</i><span class="nlabel">Icebreaker</span></button>
+      <button class="navb" data-tab="settings" title="Settings"><i>⚙</i><span class="nlabel">Settings</span></button>
+      <button class="navb" data-tab="run" title="Live run"><i>▶</i><span class="nlabel">Live run</span></button>
+      <button class="navb" data-tab="results" title="Results"><i>☑</i><span class="nlabel">Results</span></button>
+      <button class="navb" data-tab="push" title="Push"><i>↗</i><span class="nlabel">Push</span></button>
+      <button class="navb" data-tab="log" title="Log"><i>≣</i><span class="nlabel">Log</span></button>
+      <button class="navb" data-tab="history" title="History"><i>⟳</i><span class="nlabel">History</span></button>
+      <button class="navb" data-tab="schedule" title="Schedule"><i>◷</i><span class="nlabel">Schedule</span></button>
+    </nav>
+
+    <main class="content">
+
+      <!-- Dashboard -->
+      <section class="panel" data-panel="dashboard">
+        <h1>Dashboard</h1>
+        <p class="lede">Live tracking of the latest run.</p>
+        <div class="stats" id="dashKpis"></div>
+        <div class="card">
+          <div class="card-h">Credits spent</div>
+          <div id="credits" class="credits"></div>
+        </div>
+        <div class="card">
+          <div class="card-h">Funnel</div>
+          <div id="funnel"></div>
+        </div>
+        <div class="card">
+          <div class="card-h">Status breakdown</div>
+          <div id="statusBreakdown" class="chips"></div>
+        </div>
+        <span class="muted" id="dashWhen"></span>
+      </section>
+
+      <!-- Leads -->
+      <section class="panel" data-panel="leads" hidden>
+        <h1>Leads</h1>
+        <p class="lede">Import your lead CSVs - merged, deduped, and reduced to one decision-maker per firm (most senior, oldest on a tie).</p>
+        <div class="btn-row">
+          <button class="btn" id="loadSheetBtn">↧ Load from Google Sheet</button>
+          <span class="muted" id="sheetMsg"></span>
+        </div>
+        <div class="stats" id="leadStats"></div>
+        <div class="drop" id="drop">
+          <input type="file" id="fileInput" accept=".csv" multiple hidden />
+          <span>⬆ Drop CSV(s) here or <button class="link" id="browseBtn">browse</button></span>
+          <small id="dropMeta"></small>
+        </div>
+        <div class="btn-row">
+          <button class="btn" id="clearLeads">Clear leads</button>
+          <span class="muted" id="leadsWhen"></span>
+        </div>
+        <div class="tablewrap">
+          <table id="leadsTable">
+            <thead><tr><th>Company</th><th>Domain</th><th>Selected director</th><th>Gateway</th><th>Status</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Icebreaker -->
+      <section class="panel" data-panel="icebreaker" hidden>
+        <h1>Icebreaker</h1>
+        <p class="lede">The personalized first line sent to Instantly. Edit the copy here - no code change, no restart. Placeholders: <code>{company}</code>, <code>{plain}</code> (the audit finding), <code>{score_clause}</code>.</p>
+
+        <div class="btn-row">
+          <button class="btn primary" id="ibSave">Save copy</button>
+          <button class="btn" id="ibPreview">Refresh preview</button>
+          <button class="btn ghost" id="ibReset">Reset to defaults</button>
+          <span class="muted" id="ibMsg"></span>
+        </div>
+
+        <div class="card">
+          <div class="card-h">Offer - used when there's no site-audit data (rotated evenly)</div>
+          <div id="ibOffer"></div>
+        </div>
+        <div class="card">
+          <div class="card-h">Delivered - used when a site audit found something</div>
+          <div id="ibDelivered"></div>
+        </div>
+        <div class="card">
+          <div class="card-h">Clean - used when the site scored well</div>
+          <div id="ibClean"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-h">Live preview - against your real leads</div>
+          <div id="ibPreviews" class="muted">Click “Refresh preview”.</div>
+        </div>
+      </section>
+
+      <!-- Settings -->
+      <section class="panel" data-panel="settings" hidden>
+        <h1>Settings</h1>
+        <p class="lede">Every switch the pipeline uses. Editable here or in <code>config.json</code>.</p>
+        <div class="form">
+          <div class="fld"><span>Pattern mode</span>
+            <div class="seg" id="modeSeg">
+              <button class="seg-b active" data-val="lean">Lean · 3 tries</button>
+              <button class="seg-b" data-val="plus">Plus · 6 tries</button>
+            </div>
+          </div>
+          <label class="fld switch"><span>Use existing email - try the address already on the row first</span><input type="checkbox" id="use_endole" /></label>
+          <label class="fld switch"><span>Verify existing email - run it through MillionVerifier before trusting it</span><input type="checkbox" id="verify_endole_with_mf" /></label>
+          <label class="fld switch"><span>Guess email patterns - build likely addresses from the director's name</span><input type="checkbox" id="use_patterns" /></label>
+          <label class="fld switch"><span>Accept catch-all domains - count risky/catch-all results as verified</span><input type="checkbox" id="accept_catchall" /></label>
+          <label class="fld switch"><span>Hold gateway-protected leads - skip Mimecast, Proofpoint and similar</span><input type="checkbox" id="block_security_gateways" /></label>
+
+          <div class="card-h" style="margin-top:6px;">Fallback finders - charged 1 credit only when they find an email</div>
+          <label class="fld switch"><span>Icypeas - finds by name + company, so it works without a website</span><input type="checkbox" id="use_icypeas" /></label>
+          <label class="fld switch"><span>Verify Icypeas hits with MillionVerifier</span><input type="checkbox" id="verify_icypeas_with_mf" /></label>
+          <label class="fld switch"><span>Anymailfinder - finds by domain + name</span><input type="checkbox" id="use_anymailfinder" /></label>
+          <label class="fld switch"><span>Verify Anymailfinder hits with MillionVerifier</span><input type="checkbox" id="verify_anymailfinder_with_mf" /></label>
+
+          <div class="card-h" style="margin-top:6px;">Icebreaker</div>
+          <label class="fld switch"><span>Write an icebreaker - a personalized first line for each lead</span><input type="checkbox" id="use_icebreaker" /></label>
+          <label class="fld switch"><span>Route it through OpenAI - costs tokens and returns the same text; off is fine</span><input type="checkbox" id="use_openai_echo" /></label>
+
+          <div class="card-h" style="margin-top:6px;">Keys - stored locally in data/, never committed</div>
+          <label class="fld"><span>MillionVerifier API key</span><input type="password" id="apiKey" placeholder="paste key" /></label>
+          <label class="fld"><span>Icypeas API key</span><input type="password" id="icypeasKey" placeholder="paste key" /></label>
+          <label class="fld"><span>Anymailfinder API key</span><input type="password" id="anymailKey" placeholder="paste key" /></label>
+          <label class="fld"><span>OpenAI API key <span class="muted">(only for the echo above)</span></span><input type="password" id="openaiKey" placeholder="paste key" /></label>
+
+          <div class="card-h" style="margin-top:6px;">Rates + limits</div>
+          <label class="fld"><span>MillionVerifier cost per check ($)</span><input type="number" id="mvCost" value="0.00178" step="0.0001" min="0" /></label>
+          <label class="fld"><span>Icypeas cost per credit ($)</span><input type="number" id="icypeasCost" value="0" step="0.001" min="0" /></label>
+          <label class="fld"><span>Anymailfinder cost per credit ($)</span><input type="number" id="anymailCost" value="0" step="0.001" min="0" /></label>
+          <label class="fld"><span>Apollo cost per credit ($) - for savings math</span><input type="number" id="apolloCost" value="0.0236" step="0.0001" min="0" /></label>
+          <label class="fld"><span>Max leads per run</span><input type="number" id="maxFirms" value="50" min="1" /></label>
+
+          <div class="card-h" style="margin-top:6px;">Reliability - how failed API calls are handled</div>
+          <label class="fld"><span>Retries per API call <span class="muted">(a blip shouldn't cost you a lead)</span></span><input type="number" id="apiTries" value="3" min="1" max="10" /></label>
+          <label class="fld"><span>Wait between retries (seconds)</span><input type="number" id="apiRetryWait" value="5" min="0" max="60" /></label>
+          <label class="fld"><span>Pause between verifications (ms) <span class="muted">- 0 runs at full speed</span></span><input type="number" id="verifyDelay" value="0" min="0" max="10000" step="100" /></label>
+          <label class="fld"><span>Pause before each Icypeas lookup (seconds)</span><input type="number" id="icypeasThrottle" value="2" min="0" max="60" /></label>
+
+          <div class="card-h" style="margin-top:6px;">Instantly - outward-facing, always needs your confirmation</div>
+          <label class="fld"><span>Instantly API key</span><input type="password" id="instantlyKey" placeholder="paste key" /></label>
+          <label class="fld"><span>Instantly campaign id</span><input type="text" id="instantlyCampaign" placeholder="00000000-0000-0000-0000-000000000000" /></label>
+          <label class="fld"><span>Delay between pushes (seconds)</span><input type="number" id="pushDelay" value="3" min="0" max="60" /></label>
+
+          <div class="card-h" style="margin-top:6px;">Google Sheet - source + status write-back</div>
+          <label class="fld"><span>Sheet URL</span><input type="text" id="sheetUrl" placeholder="https://docs.google.com/spreadsheets/d/…" /></label>
+          <label class="fld"><span>Tab name</span><input type="text" id="sheetTab" value="Combined" /></label>
+          <label class="fld"><span>Service-account JSON path <span class="muted">(only needed to write back)</span></span><input type="text" id="sheetSa" placeholder="C:\path\to\service-account.json" /></label>
+          <label class="fld switch"><span>Write statuses back - updates each row live as its lead is handled</span><input type="checkbox" id="sheet_writeback" /></label>
+          <label class="fld switch"><span>Blank Status means "not done" - any value in that column marks the row handled</span><input type="checkbox" id="strict_status" /></label>
+
+          <div class="card-h" style="margin-top:6px;">Processed ledger - stops re-charging for leads already handled</div>
+          <label class="fld switch"><span>Skip leads finished in an earlier run</span><input type="checkbox" id="use_ledger" /></label>
+          <label class="fld switch"><span>Retry "not found" leads on later runs</span><input type="checkbox" id="retry_not_found" /></label>
+          <div class="btn-row">
+            <span class="muted" id="ledgerStats">…</span>
+            <button class="btn" id="clearLedger">Clear ledger</button>
+          </div>
+          <div class="muted" style="font-size:11px;">Reading works with no credentials if the sheet is shared “anyone with the link”. Write-back needs the service-account file shared as an Editor.</div>
+        </div>
+        <div class="btn-row">
+          <button class="btn primary" id="saveSettings">Save settings</button>
+          <span class="muted" id="settingsSaved"></span>
+        </div>
+      </section>
+
+      <!-- Live run -->
+      <section class="panel" data-panel="run" hidden>
+        <h1>Live run</h1>
+        <div class="btn-row">
+          <button class="btn primary" id="runBtn">Run now</button>
+          <button class="btn ghost" id="cancelBtn" hidden>Cancel</button>
+          <span class="muted" id="runMeta">Idle.</span>
+        </div>
+        <div class="stepper" id="stepper"></div>
+        <div class="progress"><div class="bar" id="bar"></div></div>
+        <div class="stats" id="runCounters"></div>
+        <div class="feed" id="feed"></div>
+      </section>
+
+      <!-- Results -->
+      <section class="panel" data-panel="results" hidden>
+        <h1>Results</h1>
+        <div class="simbanner" id="simBanner" hidden>
+          <b>Simulated run - these addresses were not verified.</b>
+          They were generated from each director's name; no mail server was contacted and no credits were spent.
+          Do not import them into a campaign. Turn off <b>test mode</b> and re-run for real results.
+        </div>
+        <div class="btn-row">
+          <span class="muted" id="resultsCount">No run yet.</span>
+          <button class="btn" id="downloadResults">Download CSV</button>
+        </div>
+        <div class="tablewrap">
+          <table id="resultsTable">
+            <thead><tr><th>Company</th><th>Director</th><th>Email</th><th>Source</th><th>Verify</th><th>Icebreaker</th><th>Status</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="hint">Click a row to see every candidate tried and the director columns.</p>
+      </section>
+
+      <!-- Push -->
+      <section class="panel" data-panel="push" hidden>
+        <h1>Push to Instantly</h1>
+        <p class="lede">Adds the verified leads of the latest run to your Instantly campaign, with the icebreaker as the personalization field. Nothing goes out until you confirm.</p>
+
+        <div class="stats" id="pushStats"></div>
+
+        <div class="card">
+          <div class="card-h">Before you send</div>
+          <label class="fld switch"><span><b>I confirm</b> - send these leads to my Instantly campaign</span><input type="checkbox" id="pushConfirm" /></label>
+          <div class="btn-row">
+            <button class="btn" id="pushDryBtn">Dry run (no send)</button>
+            <button class="btn primary" id="pushLiveBtn">Send for real</button>
+            <button class="btn ghost" id="pushCancelBtn" hidden>Cancel</button>
+          </div>
+          <div class="muted" id="pushMeta">Idle.</div>
+          <div class="progress"><div class="bar" id="pushBar"></div></div>
+        </div>
+
+        <div class="card">
+          <div class="card-h">Exactly what will be sent (first 25)</div>
+          <div class="tablewrap">
+            <table id="pushTable">
+              <thead><tr><th>Email</th><th>First</th><th>Company</th><th>Personalization</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="feed" id="pushFeed"></div>
+      </section>
+
+      <!-- Log -->
+      <section class="panel" data-panel="log" hidden>
+        <h1>Log</h1>
+        <p class="lede">Every execution event across all runs - successes and failures with their reason.</p>
+        <div class="btn-row">
+          <div class="seg" id="logFilter">
+            <button class="seg-b active" data-f="all">All</button>
+            <button class="seg-b" data-f="success">Success</button>
+            <button class="seg-b" data-f="failed">Failed</button>
+            <button class="seg-b" data-f="held">Held</button>
+            <button class="seg-b" data-f="skipped">Skipped</button>
+          </div>
+          <input type="text" id="logSearch" placeholder="search company / email / detail" style="max-width:240px;" />
+          <label class="muted" style="display:flex;align-items:center;gap:5px;"><input type="checkbox" id="logThisRun" style="width:auto;" /> this run only</label>
+          <button class="btn" id="downloadLog">Export CSV</button>
+        </div>
+        <div class="tablewrap">
+          <table id="logTable">
+            <thead><tr><th>Time</th><th>Company</th><th>Stage</th><th>Status</th><th>Detail</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- History -->
+      <section class="panel" data-panel="history" hidden>
+        <h1>History</h1>
+        <p class="lede">Past runs.</p>
+        <div class="tablewrap">
+          <table id="historyTable">
+            <thead><tr><th>When</th><th>Leads</th><th>Found</th><th>Held</th><th>Not found</th><th>Spend</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Schedule -->
+      <section class="panel" data-panel="schedule" hidden>
+        <h1>Schedule</h1>
+        <p class="lede">Runs the pipeline on a timer through Windows Task Scheduler - the app doesn't need to be open. Scheduled runs appear in History, Log and Results just like manual ones.</p>
+
+        <div class="card">
+          <div class="card-h">Status</div>
+          <div id="schedStatus" class="muted">Checking…</div>
+        </div>
+
+        <div class="form">
+          <div class="fld"><span>Trigger type</span>
+            <div class="seg" id="schedKind">
+              <button class="seg-b active" data-kind="minute">Minutes</button>
+              <button class="seg-b" data-kind="hourly">Hourly</button>
+              <button class="seg-b" data-kind="daily">Daily</button>
+              <button class="seg-b" data-kind="weekly">Weekly</button>
+            </div>
+          </div>
+          <div class="grid3">
+            <label class="fld"><span id="everyLabel">Every (minutes)</span><input type="number" id="schedEvery" value="30" min="1" max="1439" /></label>
+            <label class="fld"><span id="startLabel">Start (24h)</span><input type="text" id="schedStart" value="08:00" /></label>
+            <label class="fld" id="endWrap"><span>End (24h)</span><input type="text" id="schedEnd" value="17:30" /></label>
+          </div>
+          <div class="fld" id="daysWrap" hidden><span>Days</span>
+            <div id="schedDays" class="chips">
+              <label class="chip"><input type="checkbox" value="MON" checked /> Mon</label>
+              <label class="chip"><input type="checkbox" value="TUE" checked /> Tue</label>
+              <label class="chip"><input type="checkbox" value="WED" checked /> Wed</label>
+              <label class="chip"><input type="checkbox" value="THU" checked /> Thu</label>
+              <label class="chip"><input type="checkbox" value="FRI" checked /> Fri</label>
+              <label class="chip"><input type="checkbox" value="SAT" /> Sat</label>
+              <label class="chip"><input type="checkbox" value="SUN" /> Sun</label>
+            </div>
+          </div>
+          <div class="muted" style="font-size:11px;margin-bottom:10px;" id="schedHint">A common cadence is every 30 minutes between 08:00 and 17:30.</div>
+          <label class="fld switch"><span>Test mode - scheduled runs spend nothing</span><input type="checkbox" id="schedTest" checked /></label>
+          <label class="fld switch"><span>Pull leads from the Google Sheet first</span><input type="checkbox" id="schedSheet" /></label>
+          <label class="fld switch"><span>Also push verified leads to Instantly</span><input type="checkbox" id="schedPush" /></label>
+        </div>
+        <div class="btn-row">
+          <button class="btn primary" id="schedCreate">Create / update schedule</button>
+          <button class="btn" id="schedDelete">Remove schedule</button>
+          <span class="muted" id="schedMsg"></span>
+        </div>
+        <p class="hint">Scheduled output is appended to <code>data/scheduled.log</code>. You can also run it by hand: <code>python scheduled_run.py --test</code></p>
+      </section>
+
+    </main>
+  </div>
+</div>
+<script src="/app.js"></script>
+</body>
+</html>

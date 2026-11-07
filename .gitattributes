@@ -1,0 +1,9 @@
+# cmd.exe can fail to find a `call :label` / `goto` target in a batch file with LF-only line
+# endings, so batch files are always checked out with CRLF.
+*.bat text eol=crlf
+
+# ...and shell scripts and service files always with LF: bash on Linux reads a CR as part of
+# the command ("$'\r': command not found"), and core.autocrlf=true would add one on checkout.
+*.sh text eol=lf
+*.service text eol=lf
+Caddyfile text eol=lf

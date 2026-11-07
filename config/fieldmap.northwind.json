@@ -1,0 +1,39 @@
+{
+  "name": "NORTHWIND Leads",
+  "note": "Field map for the NORTHWIND Leads spreadsheet (1ccccccccccccccccccccccccccccccccccccccccccc). Left = what the engine calls a field. Right = the real header in the sheet, verified against leads/google-sheet/Practices.csv on 2026-09-04 (42 columns). All five tabs share this header, so one map covers every tab. Two engine fields are deliberately absent: contact_age (the sheet has no age column) and gateway_provider (no security-gateway column) - both are optional and the engine simply skips those steps.",
+  "mapping": {
+    "row_key": "lead_id",
+    "company_name": "Company Name",
+    "status": "Status",
+    "final_status": "Final Status",
+    "send_gate": "send_ready",
+    "reg_number": "Reg Number",
+    "website": "Website",
+
+    "contact_name": "Contact Name",
+    "contact_first": "First Name",
+    "contact_last": "Last Name",
+    "job_title": "Job Title",
+    "seniority_rank": "seniority_label",
+
+    "found_email": "Found Email",
+    "reference_email": "Company Email",
+    "email_source": "Email Source",
+    "email_type": "Email Type",
+    "verification_status": "Verification Status",
+    "mv_date": "mv_date",
+    "alternate_emails": "Alternate Emails",
+    "contact_2_email": "Contact 2 Email",
+
+    "phone": "Telephone",
+    "address": "Address",
+    "region": "Region",
+    "employees": "Employees",
+    "industry": "Industry",
+    "trading_years": "Trading Years",
+
+    "campaign_tag": "campaign",
+    "campaign_type": "Campaign Type",
+    "icebreaker": "Ice Breaker"
+  }
+}

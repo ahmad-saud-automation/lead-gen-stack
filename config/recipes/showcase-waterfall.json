@@ -1,0 +1,24 @@
+{
+  "id": "showcase-waterfall",
+  "name": "Owner waterfall",
+  "note": "The Pipeline showcase recipe (2026-11-06): the owner's address guessed and verified, then the email finder on the firm's domain, then the email finder by company name (the only way for a firm with no website, 2026-11-07), then a company address if the sheet has one. Same ways as the built-in demo recipe. 2026-11-07: 3 new firms per run (was 10), so a run fits a live meeting.",
+  "updated": "2026-11-07",
+  "people": [
+    {"label": "as-is contact 1", "name_from": ["contact_1_name"], "name_pick": "whole",
+     "address_from": "contact_1_email", "only_if": {}, "never_if_same_as": [],
+     "how": [{"method": "use_as_is", "verify": "no_check"}]},
+    {"label": "enriched contact 1", "name_from": ["contact_1_name"], "name_pick": "whole",
+     "address_from": "", "only_if": {}, "never_if_same_as": [],
+     "how": [{"method": "guess_patterns", "patterns": "first_then_full", "verify": "must_pass"},
+             {"method": "icypeas_domain", "verify": "must_pass"},
+             {"method": "icypeas_company", "verify": "must_pass", "note_if_domain_mismatch": true}]},
+    {"label": "fallback company address", "name_from": "", "name_pick": "whole",
+     "address_from": "email", "only_if": {}, "never_if_same_as": [],
+     "how": [{"method": "use_as_is", "verify": "no_check"}]}
+  ],
+  "stop": {"stop_when": "first_pass", "skip_row_if": {}, "last_resort": false},
+  "write": {"email_to": "found_email", "person_to": "found_for", "method_to": "found_by",
+            "status_to": "email_status", "write_when": "always"},
+  "limits": {"per_run": 3,"per_day": 0, "daily_spend_cap_usd": 0,
+             "search_same_person_once": true, "push_to": ""}
+}

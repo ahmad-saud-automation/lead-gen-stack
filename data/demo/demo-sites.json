@@ -1,0 +1,133 @@
+{
+  "_note": "Stand-in web for the demo (option A, 2026-11-06). Every firm is fake and every domain ends in .example, which can never resolve. 'pages' is what each page would show; 'mailboxes' is every address the stand-in verifier accepts; 'finder' is what the stand-in email finder returns for a name.",
+  "sites": {
+    "harbourvale.example": {
+      "status": 200,
+      "pages": {
+        "/": {"title": "Harbour & Vale Accountants | Bristol", "meta": "Chartered accountants for owner-managed businesses in Bristol and the South West.",
+              "heads": ["Accounts, tax and payroll for growing businesses", "Supporting dental practices and contractors"],
+              "paras": ["Established in 2004, we look after more than 300 clients across Bristol, from sole traders to dental groups and construction contractors.",
+                        "Our team works in Xero and Dext every day, so your books stay current and your year-end has no surprises."],
+              "hrefs": ["/about", "/careers", "/awards", "/contact"], "alts": ["Xero Gold Partner badge"], "quotes": []},
+        "/careers": {"title": "Careers | Harbour & Vale", "heads": ["We are hiring a Payroll Administrator", "Join a friendly team"],
+              "paras": ["We are looking for an experienced payroll administrator to run monthly payroll for around 40 small business clients."], "hrefs": []},
+        "/awards": {"title": "Awards | Harbour & Vale", "heads": ["Finalist, Regional Accountancy Awards 2025"],
+              "paras": ["We were proud to be named a finalist for small practice of the year at the regional accountancy awards."], "hrefs": []},
+        "/about": {"title": "About us | Harbour & Vale", "heads": ["Over 20 years of local advice"],
+              "paras": ["Two directors and a team of 14 look after clients from our office on the harbourside, with a focus on long relationships."], "hrefs": []}
+      }
+    },
+    "kestreltax.example": {
+      "status": 200,
+      "pages": {
+        "/": {"title": "Kestrel Tax Partners", "meta": "Tax advisers and accountants in Leeds.",
+              "heads": ["Straightforward tax advice for Yorkshire businesses"],
+              "paras": ["We help landlords, contractors and restaurant owners keep on top of tax, VAT and Making Tax Digital deadlines.",
+                        "Founded in 2011, the practice now supports over 180 businesses and individuals across Leeds."],
+              "hrefs": ["/news", "/services"], "alts": [], "quotes": []},
+        "/news": {"title": "News | Kestrel Tax Partners", "heads": ["Making Tax Digital for landlords starts in April", "Our blog"],
+              "paras": ["What the new quarterly reporting rules mean for landlords with income over the threshold, and how to prepare now."], "hrefs": []},
+        "/services": {"title": "Services | Kestrel Tax Partners", "heads": ["Tax returns, VAT and bookkeeping"],
+              "paras": ["We use QuickBooks and Xero to keep records tidy and send monthly figures that owners can actually read."], "hrefs": []}
+      }
+    },
+    "brookfieldledger.example": {
+      "status": 200,
+      "pages": {
+        "/": {"title": "Brookfield Ledger | Norwich accountants", "meta": "Outsourced bookkeeping and management accounts.",
+              "heads": ["Management accounts every month, not once a year"],
+              "paras": ["Our team of 22 produces monthly management accounts for charities, retail chains and property companies across Norfolk.",
+                        "Clients get a named accountant and a monthly call to walk through the numbers and the cash position."],
+              "hrefs": ["/case-studies", "/testimonials"], "alts": ["Sage Gold Partner logo"], "quotes": []},
+        "/case-studies": {"title": "Case studies | Brookfield Ledger", "heads": ["Case studies", "How a regional charity cut its month-end from 15 days to 5"],
+              "paras": ["A charity with eleven shops moved its bookkeeping to a cloud system and now closes each month in under a week."], "hrefs": []},
+        "/testimonials": {"title": "Testimonials | Brookfield Ledger", "heads": ["What our clients say"],
+              "paras": [], "quotes": ["Brookfield gave us monthly figures we finally understand, and they always answer the phone."], "hrefs": []}
+      }
+    },
+    "northgatebooks.example": {
+      "status": 200,
+      "pages": {
+        "/": {"title": "Northgate Bookkeeping, York", "meta": "Bookkeeping and payroll for small businesses.",
+              "heads": ["Bookkeeping that keeps you ready for tax time"],
+              "paras": ["We keep the books for cafes, shops and trades businesses across York, using Xero and FreeAgent for every client.",
+                        "A small team with more than 15 years of experience in hospitality and retail bookkeeping."],
+              "hrefs": ["/about"], "alts": [], "quotes": []},
+        "/about": {"title": "About | Northgate Bookkeeping", "heads": ["A practice built around small businesses"],
+              "paras": ["Started from a kitchen table in 2009, the practice now has six staff and a small office near the city centre."], "hrefs": []}
+      }
+    },
+    "millstone.example": {
+      "status": 200,
+      "pages": {
+        "/": {"title": "Millstone Accounting", "meta": "Accountants in Derby.",
+              "heads": ["Accounts and tax for Derby businesses"],
+              "paras": ["We support haulage and logistics firms with year-end accounts, payroll and construction industry scheme returns.",
+                        "Established in 1998, Millstone has grown to 11 people while staying a family-run practice."],
+              "hrefs": ["/news"], "alts": [], "quotes": []},
+        "/news": {"title": "News | Millstone Accounting", "heads": ["Fuel costs and your haulage business tax return"],
+              "paras": ["How rising fuel costs show up in your accounts, and which expenses you can claim against them this year."], "hrefs": []}
+      }
+    },
+    "fenwickday.example": {"status": 404, "pages": {}},
+    "orchardlane.example": {"status": "unreachable", "pages": {}},
+    "ridgewaypayroll.example": {
+      "status": 200,
+      "pages": {
+        "/": {"title": "Just a moment...", "meta": "", "heads": ["Checking your browser before accessing the site"],
+              "paras": ["This process is automatic. Your browser will redirect to the requested content shortly."], "hrefs": []}
+      }
+    },
+    "copperfield.example": {
+      "status": 200,
+      "pages": {
+        "/": {"title": "Copperfield Accounts | Chester", "meta": "Accountants for landlords and property investors.",
+              "heads": ["Property tax specialists in Chester"],
+              "paras": ["We work almost entirely with landlords and property investors, from a single buy-to-let to portfolios of forty homes.",
+                        "Over 12 years we have helped clients restructure portfolios and plan for changes to mortgage interest relief."],
+              "hrefs": ["/services"], "alts": [], "quotes": []},
+        "/services": {"title": "Services | Copperfield", "heads": ["Landlord accounts and tax returns"],
+              "paras": ["Annual accounts, self assessment and capital gains planning for landlords, prepared in TaxCalc and Xero."], "hrefs": []}
+      }
+    },
+    "linden.example": {
+      "status": 200,
+      "pages": {
+        "/": {"title": "Linden Practice Ltd, Bath", "meta": "Accountancy for start-ups and freelancers.",
+              "heads": ["Accounting for start-ups and freelancers in Bath"],
+              "paras": ["We set up new companies, register them for VAT and keep their books in FreeAgent from the first invoice onwards.",
+                        "A four-person team that answers emails the same day and explains things without jargon."],
+              "hrefs": [], "alts": [], "quotes": []}
+      }
+    },
+    "westbury.example": {
+      "status": 200,
+      "pages": {
+        "/": {"title": "Westbury Tax & Accounts", "meta": "Accountants in Swindon since 2001.",
+              "heads": ["Helping Swindon businesses grow since 2001"],
+              "paras": ["We look after 400 businesses across Wiltshire, with specialist teams for medical practices, solicitors and retail.",
+                        "Our 19 staff work from two offices and use IRIS and Xero to keep every client's records up to date."],
+              "hrefs": ["/case-studies", "/reviews", "/careers"], "alts": ["Accredited by the Institute"], "quotes": []},
+        "/case-studies": {"title": "Case studies | Westbury", "heads": ["Helping a GP surgery move its payroll to the cloud"],
+              "paras": ["A twelve-partner GP surgery moved payroll and pensions to a cloud system with no missed pay dates."], "hrefs": []},
+        "/reviews": {"title": "Reviews | Westbury", "heads": [],
+              "paras": [], "quotes": ["Westbury sorted out three years of muddled VAT returns in a month and saved us a penalty."], "hrefs": []},
+        "/careers": {"title": "Careers | Westbury", "heads": ["Current vacancies"],
+              "paras": ["There are no open roles right now, but we are always happy to hear from qualified accountants in Wiltshire."], "hrefs": []}
+      }
+    }
+  },
+  "mailboxes": [
+    "sarah@harbourvale.example",
+    "daniel.okafor@kestreltax.example",
+    "priya.r@brookfieldledger.example",
+    "emma.clarke@northgatebooks.example",
+    "info@millstone.example",
+    "mark@orchardlane.example",
+    "alan@ridgewaypayroll.example",
+    "owen@westbury.example"
+  ],
+  "finder": {
+    "Priya Raman|brookfieldledger.example": "priya.r@brookfieldledger.example"
+  }
+}
